@@ -1,0 +1,15 @@
+
+Caffeine - C Application Framework built under Caffeine Efects
+
+* Brief
+This is Caffeine, a C application framework, that have some abstraction
+level and wrapper functions to work easy under Unix platforms using common
+standard functions to allow you the construction of services and some
+command line tools.
+
+* Contacts
+    Daniel Molina Wegener <dmw@unete.cl> (Main Author)
+
+* Web Site
+    http://coder.cl/prj/caffeine/
+

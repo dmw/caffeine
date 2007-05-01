@@ -1,0 +1,58 @@
+/* -*- mode: c; c-default-style: "k&r"; indent-tabs-mode: nil; -*- */
+/* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 expandtab: */
+/* kate: space-indent on; indent-width 4; mixedindent off; indent-mode none; */
+/*
+    Caffeine - C Application Framework
+    Copyright (C) 2006 Daniel Molina Wegener
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+    MA 02110-1301 USA
+
+    $Id: caf.h 199 2007-02-17 21:03:28Z dmw $
+ */
+#ifndef CAF_H
+#define CAF_H 1
+/**
+ * @defgroup      caf        Caffeine - C Application Framework
+ * @addtogroup    caf
+ * @{
+ *
+ * @brief     Caffeine - C Application Framework
+ * @date      $Date: 2007-02-17 18:03:28 -0300 (Sat, 17 Feb 2007) $
+ * @version   $Revision: 199 $
+ * @author    Daniel Molina Wegener <dmw@unete.cl>
+ *
+ * Caffeine - C Application Framework
+ */
+
+#include <caf/caf_tool_macro.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* !__cplusplus */
+
+typedef enum {
+    CAF_ERROR_SUB = -1,
+    CAF_OK = 0,
+    CAF_ERROR = 1
+} caf_return_t;
+
+#ifdef __cplusplus
+};
+#endif /* !__cplusplus */
+
+/** }@ */
+#endif /* !CAF_H */
+/* caf_evt_mgr.h ends here */
