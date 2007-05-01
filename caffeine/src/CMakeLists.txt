@@ -77,6 +77,7 @@ set (CAFFEINE_HEADERS
     caf_io_net.h
     caf_io_net_conpool.h
     caf_io_net_svcpool.h
+    caf_evt_fio.h
     caf_evt_nio.h
     caf_evt_nio_pool.h
     caf_process_pool.h
@@ -106,7 +107,8 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set (CAFFEINE_SRCS
          ${CAFFEINE_SRCS}
          caf_evt_nio_epoll.c
-         caf_evt_nio_pool_epoll.c)
+         caf_evt_nio_pool_epoll.c
+         caf_evt_fio_inotify.c)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|NetBSD|OpenBSD")
@@ -114,7 +116,8 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|NetBSD|OpenBSD")
     set (CAFFEINE_SRCS
          ${CAFFEINE_SRCS}
          caf_evt_nio_kevent.c
-         caf_evt_nio_pool_kevent.c)
+         caf_evt_nio_pool_kevent.c
+         caf_evt_fio_kevent.c)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|NetBSD|OpenBSD")
 
 ### opciones

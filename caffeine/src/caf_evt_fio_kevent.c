@@ -36,29 +36,29 @@ static char Id[] = "$Id$";
 #include "caf/caf_data_mem.h"
 
 #define IO_EVENT_USE_KEVENT
-#include "caf/caf_evt_nio.h"
+#include "caf/caf_evt_fio.h"
 
 #define KEVENT_FILTER               (EV_ADD|EV_ENABLE)
 #define KEVENT_FILTER_COUNT         1
 
-io_evt_t *
-caf_io_evt_new  (int fd, int type, int to)
+fio_evt_t *
+caf_fio_evt_new  (int fd, int type, int to)
 {
-    io_evt_t *r = (io_evt_t *)NULL;
+    fio_evt_t *r = (fio_evt_t *)NULL;
     if (fd > -1 && type > 0) {
-        r = (io_evt_t *)xmalloc (IO_EVT_SZ);
-        if (r != (io_evt_t *)NULL) {
+        r = (fio_evt_t *)xmalloc (IO_EVT_SZ);
+        if (r != (fio_evt_t *)NULL) {
             r->ev_mfd = fd;
-            r->ev_use = IO_EVENTS_KEVENT;
             r->ev_type = type;
             r->ev_sz = IO_EVENT_DATA_KEVENT_SZ;
+            r->ev_use = IO_EVENTS_KEVENT;
             r->ev_info = (io_evt_kevent_t *)xmalloc (r->ev_sz);
             r->ev_store = (io_evt_kevent_t *)xmalloc (r->ev_sz);
             r->ev_timeout = to;
             if (r->ev_info == (io_evt_kevent_t *)NULL ||
-                (caf_io_evt_init (r)) != CAF_OK) {
+                (caf_fio_evt_init (r)) != CAF_OK) {
                 xfree (r);
-                r = (io_evt_t *)NULL;
+                r = (fio_evt_t *)NULL;
             }
         }
     }
@@ -67,10 +67,10 @@ caf_io_evt_new  (int fd, int type, int to)
 
 
 int
-caf_io_evt_delete (io_evt_t *e)
+caf_fio_evt_delete (fio_evt_t *e)
 {
-    if (e != (io_evt_t *)NULL) {
-        if ((caf_io_evt_destroy (e)) == CAF_OK) {
+    if (e != (fio_evt_t *)NULL) {
+        if ((caf_fio_evt_destroy (e)) == CAF_OK) {
             if (e->ev_info != (void *)NULL) {
                 xfree (e->ev_info);
             }
@@ -83,10 +83,10 @@ caf_io_evt_delete (io_evt_t *e)
 
 
 int
-caf_io_evt_init (io_evt_t *e)
+caf_fio_evt_init (fio_evt_t *e)
 {
     io_evt_kevent_t *s;
-    if (e != (io_evt_t *)NULL) {
+    if (e != (fio_evt_t *)NULL) {
         s = (io_evt_kevent_t *)e->ev_info;
         if (s != (io_evt_kevent_t *)NULL) {
             e->ev_src = kqueue ();
@@ -109,10 +109,10 @@ caf_io_evt_init (io_evt_t *e)
 
 
 int
-caf_io_evt_reinit (io_evt_t *e)
+caf_fio_evt_reinit (fio_evt_t *e)
 {
     io_evt_kevent_t *s;
-    if (e != (io_evt_t *)NULL) {
+    if (e != (fio_evt_t *)NULL) {
         s = (io_evt_kevent_t *)e->ev_info;
         if (s != (io_evt_kevent_t *)NULL) {
             if (e->ev_src > -1) {
@@ -134,10 +134,10 @@ caf_io_evt_reinit (io_evt_t *e)
 
 
 int
-caf_io_evt_add (io_evt_t *e, int ev, int flg)
+caf_fio_evt_add (fio_evt_t *e, int ev, int flg)
 {
     io_evt_kevent_t *s;
-    if (e != (io_evt_t *)NULL) {
+    if (e != (fio_evt_t *)NULL) {
         s = (io_evt_kevent_t *)e->ev_info;
         if (s != (io_evt_kevent_t *)NULL) {
             if (e->ev_src > -1) {
@@ -151,10 +151,10 @@ caf_io_evt_add (io_evt_t *e, int ev, int flg)
 
 
 int
-caf_io_evt_destroy (io_evt_t *e)
+caf_fio_evt_destroy (fio_evt_t *e)
 {
     io_evt_kevent_t *s;
-    if (e != (io_evt_t *)NULL) {
+    if (e != (fio_evt_t *)NULL) {
         s = (io_evt_kevent_t *)e->ev_info;
         if (s != (io_evt_kevent_t *)NULL) {
             close (e->ev_src);
@@ -166,12 +166,12 @@ caf_io_evt_destroy (io_evt_t *e)
 
 
 int
-caf_io_evt_handle (io_evt_t *e)
+caf_fio_evt_handle (fio_evt_t *e)
 {
     int r = CAF_ERROR;
     io_evt_kevent_t *s;
     struct timespec ts;
-    if (e != (io_evt_t *)NULL) {
+    if (e != (fio_evt_t *)NULL) {
         s = (io_evt_kevent_t *)e->ev_info;
         if (s != (io_evt_kevent_t *)NULL) {
             ts.tv_sec = e->ev_timeout;
@@ -187,11 +187,11 @@ caf_io_evt_handle (io_evt_t *e)
 
 
 int
-caf_io_evt_isread (io_evt_t *e)
+caf_fio_evt_isread (fio_evt_t *e)
 {
     int r = CAF_ERROR;
     io_evt_kevent_t *s;
-    if (e != (io_evt_t *)NULL) {
+    if (e != (fio_evt_t *)NULL) {
         s = (io_evt_kevent_t *)e->ev_store;
         if (s != (io_evt_kevent_t *)NULL) {
             r = s->filter & EVFILT_READ ? CAF_OK : CAF_ERROR;
@@ -202,11 +202,11 @@ caf_io_evt_isread (io_evt_t *e)
 
 
 int
-caf_io_evt_iswrite (io_evt_t *e)
+caf_fio_evt_iswrite (fio_evt_t *e)
 {
     int r = CAF_ERROR;
     io_evt_kevent_t *s;
-    if (e != (io_evt_t *)NULL) {
+    if (e != (fio_evt_t *)NULL) {
         s = (io_evt_kevent_t *)e->ev_store;
         if (s != (io_evt_kevent_t *)NULL) {
             r = s->filter & EVFILT_WRITE ? CAF_OK : CAF_ERROR;
@@ -216,4 +216,4 @@ caf_io_evt_iswrite (io_evt_t *e)
 }
 
 
-/* caf_io_evt_kevent.c ends here */
+/* caf_fio_evt_kevent.c ends here */

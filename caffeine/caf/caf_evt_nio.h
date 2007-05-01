@@ -73,10 +73,10 @@ typedef enum {
 
 #define IO_EVENT_DATA_SELECT_SZ     (sizeof (io_evt_select_t))
 #define IO_EVENT_DATA_POLL_SZ       (sizeof (io_evt_poll_t))
-#ifdef BSD_SYSTEM
+#if defined(BSD_SYSTEM) && !defined(IO_EVENT_DATA_KEVENT_SZ)
 #define IO_EVENT_DATA_KEVENT_SZ     (sizeof (io_evt_kevent_t))
 #endif /* !BSD_SYSTEM */
-#ifdef LINUX_SYSTEM
+#if defined(LINUX_SYSTEM) && !defined(IO_EVENT_DATA_EPOLL_SZ)
 #define IO_EVENT_DATA_EPOLL_SZ      (sizeof (io_evt_epoll_t))
 #endif /* !LINUX_SYSTEM */
 
@@ -97,12 +97,14 @@ struct io_evt_select_s {
 };
 
 
-#ifdef BSD_SYSTEM
+#if defined(BSD_SYSTEM) && !defined(IO_EVT_KEVENT_T_DEFINED)
+#define IO_EVT_KEVENT_T_DEFINED 1
 typedef struct kevent io_evt_kevent_t;
 #endif /* !BSD_SYSTEM */
 
 
-#ifdef LINUX_SYSTEM
+#if defined(LINUX_SYSTEM) && !defined(IO_EVT_EPOLL_T_DEFINED)
+#define IO_EVT_EPOLL_T_DEFINED 1
 typedef struct epoll_event io_evt_epoll_t;
 #endif /* !LINUX_SYSTEM */
 
@@ -142,7 +144,6 @@ struct io_evt_s {
 
 #define EVT_IO_READ_IDX             0
 #define EVT_IO_WRITE_IDX            1
-#define EVT_IO_VNODE_IDX            2
 
 
 /* common */
