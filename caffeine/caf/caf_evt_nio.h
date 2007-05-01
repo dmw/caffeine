@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
     MA 02110-1301 USA
 
-    $Id: caf_evt_nio.h 230 2007-04-02 21:49:24Z dmw $
+    $Id$
  */
 #ifndef CAF_EVT_IO_H
 #define CAF_EVT_IO_H 1
@@ -31,8 +31,8 @@
  * @{
  *
  * @brief     CAF Event Manager.
- * @date      $Date: 2007-04-02 17:49:24 -0400 (Mon, 02 Apr 2007) $
- * @version   $Revision: 230 $
+ * @date      $Date$
+ * @version   $Revision$
  * @author    Daniel Molina Wegener <dmw@unete.cl>
  *
  * I/O Events Manager Abstraction

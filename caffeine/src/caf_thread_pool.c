@@ -21,7 +21,7 @@
     MA 02110-1301 USA
  */
 #ifndef lint
-static char Id[] = "$Id: caf_thread_pool.c 181 2007-02-01 15:48:34Z dmw $";
+static char Id[] = "$Id$";
 #endif /* !lint */
 
 #ifdef HAVE_CONFIG_H

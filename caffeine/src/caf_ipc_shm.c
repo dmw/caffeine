@@ -21,7 +21,7 @@
     MA 02110-1301 USA
  */
 #ifndef lint
-static char Id[] = "$Id: caf_ipc_shm.c 184 2007-02-02 19:23:33Z dmw $";
+static char Id[] = "$Id$";
 #endif /* !lint */
 
 #include <stdlib.h>

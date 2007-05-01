@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
     MA 02110-1301 USA
 
-    $Id: caf_evt.h 200 2007-02-17 23:15:30Z dmw $
+    $Id$
  */
 #ifndef CAF_EVT_H
 #define CAF_EVT_H 1

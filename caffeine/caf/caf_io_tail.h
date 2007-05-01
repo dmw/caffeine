@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
     MA 02110-1301 USA
 
-    $Id: caf_io_tail.h 178 2007-01-31 22:17:18Z dmw $
+    $Id$
  */
 #ifndef CAF_IO_TAIL_H
 #define CAF_IO_TAIL_H 1
@@ -31,8 +31,8 @@
  * @{
  *
  * @brief     I/O Tails
- * @date      $Date: 2007-01-31 19:17:18 -0300 (Wed, 31 Jan 2007) $
- * @version   $Revision: 178 $
+ * @date      $Date$
+ * @version   $Revision$
  * @author    Daniel Molina Wegener <dmw@unete.cl>
  *
  * I/O Tails

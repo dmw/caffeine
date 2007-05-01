@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
     MA 02110-1301 USA
 
-    $Id: caf_io_net_svcpool.h 210 2007-03-10 11:02:00Z dmw $
+    $Id$
  */
 #ifndef CAF_IO_NET_SVCPOOL_H
 #define CAF_IO_NET_SVCPOOL_H 1
@@ -31,8 +31,8 @@
  * @{
  *
  * @brief     Network I/O
- * @date      $Date: 2007-03-10 08:02:00 -0300 (Sat, 10 Mar 2007) $
- * @version   $Revision: 210 $
+ * @date      $Date$
+ * @version   $Revision$
  * @author    Daniel Molina Wegener <dmw@unete.cl>
  *
  * Netowork Service Pool

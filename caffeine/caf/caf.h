@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
     MA 02110-1301 USA
 
-    $Id: caf.h 199 2007-02-17 21:03:28Z dmw $
+    $Id$
  */
 #ifndef CAF_H
 #define CAF_H 1
@@ -30,8 +30,8 @@
  * @{
  *
  * @brief     Caffeine - C Application Framework
- * @date      $Date: 2007-02-17 18:03:28 -0300 (Sat, 17 Feb 2007) $
- * @version   $Revision: 199 $
+ * @date      $Date$
+ * @version   $Revision$
  * @author    Daniel Molina Wegener <dmw@unete.cl>
  *
  * Caffeine - C Application Framework

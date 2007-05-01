@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
     MA 02110-1301 USA
 
-    $Id: caf_thread_mutex.h 200 2007-02-17 23:15:30Z dmw $
+    $Id$
  */
 #ifndef CAF_THREAD_MUTEX_H
 #define CAF_THREAD_MUTEX_H 1
@@ -34,8 +34,8 @@
  * @{
  *
  * @brief     Thread Mutexes.
- * @date      $Date: 2007-02-17 20:15:30 -0300 (Sat, 17 Feb 2007) $
- * @version   $Revision: 200 $
+ * @date      $Date$
+ * @version   $Revision$
  * @author    Daniel Molina Wegener <dmw@unete.cl>
  *
  * This module manage specific mutexes and his attributes. The idea is to

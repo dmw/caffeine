@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
     MA 02110-1301 USA
 
-    $Id: caf_io_net.h 211 2007-03-10 12:19:57Z dmw $
+    $Id$
  */
 #ifndef CAF_IO_NET_H
 #define CAF_IO_NET_H 1
@@ -31,8 +31,8 @@
  * @{
  *
  * @brief     Network I/O
- * @date      $Date: 2007-03-10 09:19:57 -0300 (Sat, 10 Mar 2007) $
- * @version   $Revision: 211 $
+ * @date      $Date$
+ * @version   $Revision$
  * @author    Daniel Molina Wegener <dmw@unete.cl>
  *
  * Network I/O

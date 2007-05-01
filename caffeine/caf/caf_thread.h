@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
     MA 02110-1301 USA
 
-    $Id: caf_thread.h 178 2007-01-31 22:17:18Z dmw $
+    $Id$
  */
 #ifndef CAF_THREAD_H
 #define CAF_THREAD_H 1

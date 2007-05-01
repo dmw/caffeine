@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
     MA 02110-1301 USA
 
-    $Id: caf_io_net_conpool.h 212 2007-03-11 21:47:41Z dmw $
+    $Id$
  */
 #ifndef CAF_IO_NET_CONPOOL_H
 #define CAF_IO_NET_CONPOOL_H 1
@@ -31,8 +31,8 @@
  * @{
  *
  * @brief     Netowork Connection Pool
- * @date      $Date: 2007-03-11 17:47:41 -0400 (Sun, 11 Mar 2007) $
- * @version   $Revision: 212 $
+ * @date      $Date$
+ * @version   $Revision$
  * @author    Daniel Molina Wegener <dmw@unete.cl>
  *
  * Netowork Connection Pool

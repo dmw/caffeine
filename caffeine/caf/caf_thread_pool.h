@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
     MA 02110-1301 USA
 
-    $Id: caf_thread_pool.h 198 2007-02-15 10:13:36Z dmw $
+    $Id$
  */
 #ifndef CAF_THREAD_POOL_H
 #define CAF_THREAD_POOL_H 1
@@ -35,8 +35,8 @@
  * @{
  *
  * @brief     Thread Pool Manager.
- * @date      $Date: 2007-02-15 07:13:36 -0300 (Thu, 15 Feb 2007) $
- * @version   $Revision: 198 $
+ * @date      $Date$
+ * @version   $Revision$
  * @author    Daniel Molina Wegener <dmw@unete.cl>
  *
  * Thread Pool Manager is the set of functions to manage a thread pool.

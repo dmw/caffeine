@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
     MA 02110-1301 USA
 
-    $Id: caf_sem.h 184 2007-02-02 19:23:33Z dmw $
+    $Id$
  */
 #ifndef CAF_SEM_H
 #define CAF_SEM_H 1
@@ -31,8 +31,8 @@
  * @{
  *
  * @brief     Semaphores Management
- * @date      $Date: 2007-02-02 16:23:33 -0300 (Fri, 02 Feb 2007) $
- * @version   $Revision: 184 $
+ * @date      $Date$
+ * @version   $Revision$
  * @author    Daniel Molina Wegener <dmw@unete.cl>
  *
  * Semaphores Management

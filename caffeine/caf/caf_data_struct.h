@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
     MA 02110-1301 USA
 
-    $Id: caf_data_struct.h 178 2007-01-31 22:17:18Z dmw $
+    $Id$
  */
 #ifndef CAF_DATA_STRUCT_H
 #define CAF_DATA_STRUCT_H 1

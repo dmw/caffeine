@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
     MA 02110-1301 USA
 
-    $Id: caf_thread_cond.h 198 2007-02-15 10:13:36Z dmw $
+    $Id$
  */
 #ifndef CAF_THREAD_COND_H
 #define CAF_THREAD_COND_H 1
@@ -37,8 +37,8 @@
  * @{
  *
  * @brief     Thread Condition Variables
- * @date      $Date: 2007-02-15 07:13:36 -0300 (Thu, 15 Feb 2007) $
- * @version   $Revision: 198 $
+ * @date      $Date$
+ * @version   $Revision$
  * @author    Daniel Molina Wegener <dmw@unete.cl>
  *
  * Manage Thread Condition Variables.
