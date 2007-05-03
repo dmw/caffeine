@@ -241,6 +241,24 @@ lstc_walk (lstcn_t *lst, CAF_LSTCNODE_CBWALK(step))
     if (lst != (lstcn_t *)NULL) {
         n = lst;
         do {
+            step(n->data);
+            n = n->next;
+            c++;
+        } while (n != lst);
+        return c;
+    }
+    return c;
+}
+
+
+int
+lstc_walk_checked (lstcn_t *lst, CAF_LSTCNODE_CBWALK(step))
+{
+    int c = 0;
+    lstcn_t *n;
+    if (lst != (lstcn_t *)NULL) {
+        n = lst;
+        do {
             if ((step(n->data)) == 0) {
                 n = n->next;
                 c++;
@@ -251,6 +269,22 @@ lstc_walk (lstcn_t *lst, CAF_LSTCNODE_CBWALK(step))
         return c;
     }
     return c;
+}
+
+
+void *
+lstc_search (lstcn_t *lst, void *data, CAF_LSTCNODE_CBSRCH(srch))
+{
+    lstcn_t *n;
+    if (lst != (lstcn_t *)NULL) {
+        n = lst;
+        do {
+            if ((srch(n->data, data)) == 0) {
+                return n->data;
+            }
+        } while (n != lst);
+    }
+    return (void *)NULL;
 }
 
 

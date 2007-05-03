@@ -57,7 +57,9 @@ extern "C" {
 /** Declares a dump callback to use with list nodes */
 #define CAF_LSTDLNODE_CBDUMP(dmp)      int (*dmp)(FILE *out, void *ptr)
 /** Declares a walk callback to use with list nodes */
-#define CAF_LSTDLNODE_CBWALK(walk)     void (*walk)(void *ptr)
+#define CAF_LSTDLNODE_CBWALK(walk)     int (*walk)(void *ptr)
+/** Declares a search callback to use with list nodes */
+#define CAF_LSTDLNODE_CBSRCH(srch)     int (*srch)(void *ndata, void *data)
 
 /**
  *
@@ -327,6 +329,7 @@ int lstdl_set (lstdl_t *lst, int pos, void *data);
  * This function crosses the list and apply the parameter function step
  * as callback over every data node in the list. The function does not
  * verify if the data node pointer is NULL.
+ * nodes processed.
  *
  * @param[in]    lst        the list to walk.
  * @param[in]    step       the function to apply.
@@ -336,6 +339,43 @@ int lstdl_set (lstdl_t *lst, int pos, void *data);
  * @see      lstdln_t
  */
 int lstdl_walk (lstdl_t *lst, CAF_LSTDLNODE_CBWALK(step));
+
+/**
+ *
+ * @brief    Apply a function to the list data nodes.
+ *
+ * This function crosses the list and apply the parameter function step
+ * as callback over every data node in the list. The function does not
+ * verify if the data node pointer is NULL. Also, the function checks every
+ * "step" in the process, and on the first failure returns the number of
+ * nodes processed.
+ *
+ * @param[in]    lst        the list to walk.
+ * @param[in]    step       the function to apply.
+ * @return       int        the number of afected nodes.
+ *
+ * @see      lstdl_t
+ * @see      lstdln_t
+ */
+int lstdl_walk_checked (lstdl_t *lst, CAF_LSTDLNODE_CBWALK(step));
+
+/**
+ *
+ * @brief    Searches for a node using a callback function.
+ *
+ * Runs over the list comparing the input field *data against
+ * the data nodes in the list using the callback function srch.
+ * The comparision callback must return zero on success.
+ *
+ * @param[in]    lst        the list to search.
+ * @param[in]    data       the data to search.
+ * @param[in]    srch       the comparision callback.
+ * @return       void *     the data pointed by the result and NULL on error.
+ *
+ * @see      lstdl_t
+ * @see      lstdln_t
+ */
+void *lstdl_search (lstdl_t *lst, void *data, CAF_LSTDLNODE_CBSRCH(srch));
 
 /**
  *

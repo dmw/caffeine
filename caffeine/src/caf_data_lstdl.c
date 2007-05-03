@@ -367,6 +367,46 @@ lstdl_walk (lstdl_t *lst, CAF_LSTDLNODE_CBWALK(step))
 }
 
 
+int
+lstdl_walk_checked (lstdl_t *lst, CAF_LSTDLNODE_CBWALK(step))
+{
+    int c = 0;
+    lstdln_t *n;
+    if (lst != (lstdl_t *)NULL) {
+        n = lst->frst;
+        while (n != (lstdln_t *)NULL) {
+            if ((step (n->data)) == 0) {
+                n = n->next;
+                c++;
+            } else {
+                return c;
+            }
+        }
+        return c;
+    }
+    return c;
+}
+
+
+void *
+lstdl_search (lstdl_t *lst, void *data, CAF_LSTDLNODE_CBSRCH(srch))
+{
+    int c = 0;
+    lstdln_t *n;
+    if (lst != (lstdl_t *)NULL) {
+        n = lst->frst;
+        while (n != (lstdln_t *)NULL) {
+            if ((srch (n->data, data)) == 0) {
+                return n->data;
+            }
+            n = n->next;
+            c++;
+        }
+    }
+    return (void *)NULL;
+}
+
+
 lstdln_t *
 lstdl_search_node (lstdl_t *lst, void *data)
 {

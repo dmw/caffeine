@@ -52,6 +52,8 @@ extern "C" {
 #define CAF_LSTCNODE_CBDUMP(dmp)      int (*dmp)(FILE *out, void *ptr)
 /** Declares a walk callback to use with list nodes */
 #define CAF_LSTCNODE_CBWALK(walk)     int (*walk)(void *ptr)
+/** Declares a search callback to use with list nodes */
+#define CAF_LSTCNODE_CBSRCH(srch)     int (*srch)(void *ndata, void *data)
 
 /**
  *
@@ -253,6 +255,43 @@ void *lstc_get (lstcn_t *lst, int pos);
  * @see      lstcn_t
  */
 int lstc_walk (lstcn_t *lst, CAF_LSTCNODE_CBWALK(step));
+
+/**
+ *
+ * @brief    Apply a function to the list data nodes.
+ *
+ * This function crosses the list and apply the parameter function step
+ * as callback over every data node in the list. The function does not
+ * verify if the data node pointer is NULL. The walk callback must return
+ * zero on success, or the operation halts and the count of processed nodes
+ * is returned. Also, the function checks every "step" in the process,
+ * and on the first failure returns the number of nodes processed.
+ *
+ * @param[in]    lst        the list to walk.
+ * @param[in]    step       the function to apply.
+ * @return       int        the number of afected nodes.
+ *
+ * @see      lstc_t
+ * @see      lstcn_t
+ */
+int lstc_walk_checked (lstcn_t *lst, CAF_LSTCNODE_CBWALK(step));
+
+/**
+ *
+ * @brief    Searches for a node using a callback function.
+ *
+ * Runs over the list comparing the input field *data against
+ * the data nodes in the list using the callback function srch.
+ * The comparision callback must return zero on success.
+ *
+ * @param[in]    lst        the list to search.
+ * @param[in]    data       the data to search.
+ * @param[in]    srch       the comparision callback.
+ * @return       void *     the data pointed by the result and NULL on error.
+ *
+ * @see      lstcn_t
+ */
+void *lstc_search (lstcn_t *lst, void *data, CAF_LSTCNODE_CBSRCH(srch));
 
 /**
  *
