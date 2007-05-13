@@ -179,4 +179,17 @@ io_fcntl (caf_io_file_t *r, int cmd, int *arg)
     return CAF_ERROR_SUB;
 }
 
+
+int
+io_flseek (caf_io_file_t *r, off_t o, int w)
+{
+    if (r != (caf_io_file_t *)NULL) {
+        if ((lseek (r->fd, o, w)) == o) {
+            return CAF_OK;
+        }
+    }
+    return CAF_ERROR;
+}
+
+
 /* caf_io_core.c ends here */

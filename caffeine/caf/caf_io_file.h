@@ -70,6 +70,7 @@ int io_restat (caf_io_file_t *r);
 int io_fchanged (caf_io_file_t *r, struct timespec *lmt, struct timespec *lct);
 int io_pipe (caf_io_file_t *r);
 int io_fcntl (caf_io_file_t *r, int cmd, int *arg);
+int io_flseek (caf_io_file_t *r, off_t o, int w);
 
 ssize_t io_read (caf_io_file_t *r, cbuffer_t *b);
 ssize_t io_write (caf_io_file_t *r, cbuffer_t *b);

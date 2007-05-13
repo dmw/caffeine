@@ -39,7 +39,26 @@
  *
  */
 
+#include <caf/caf_data_buffer.h>
 
+#include <caf/caf_io_file.h>
+#include <caf/caf_evt_fio.h>
+
+#define CAF_TAIL_STREAM_SZ          (sizeof (caf_tail_stream_t))
+
+typedef struct caf_tail_stream_s caf_tail_stream_t;
+struct caf_tail_stream_s {
+    int status;
+    int complete;
+    int reset;
+    off_t offset;
+    caf_io_file_t *file;
+    fio_evt_t *events;
+};
+
+caf_tail_stream_t *caf_tail_open (const char *path);
+int caf_tail_close (caf_tail_stream_t *s);
+int caf_tail_read (caf_tail_stream_t *stream, cbuffer_t *buffer);
 
 /** }@ */
 #endif /* !CAF_IO_TAIL_H */

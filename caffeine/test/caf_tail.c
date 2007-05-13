@@ -32,6 +32,16 @@
 #include "caf/caf.h"
 #include "caf/caf_data_mem.h"
 #include "caf/caf_data_buffer.h"
+
+#ifdef BSD_SYSTEM
+#define IO_EVENT_USE_KEVENT 1
+#endif /* !BSD_SYSTEM */
+
+#ifdef LINUX_SYSTEM
+#define IO_EVENT_USE_INOTIFY 1
+#endif /* !LINUX_SYSTEM */
+
+#include "caf/caf_evt_fio.h"
 #include "caf/caf_io_tail.h"
 
 void sigrtn (int sig);
@@ -45,7 +55,6 @@ main (int argc, char **argv)
     if (argc > 1) {
         printf ("opening %s\n", argv[1]);
         signal (SIGHUP, sigrtn);
-        // caf_io_tail (argv[1], 1024, 10000, tailrtn);
         return 1;
     }
     return 0;
@@ -56,22 +65,6 @@ sigrtn (int sig)
 {
     ctrl = CAF_ERROR;
     printf ("signal: %d\n", sig);
-}
-
-int
-tailrtn (cbuffer_t *b, int *ops)
-{
-    char *str;
-    if (b != (cbuffer_t *)NULL && ops != (int *)NULL) {
-        str = (char *)xmalloc (b->sz + 1);
-        memset (str, (int)NULL, b->sz + 1);
-        memcpy (str, b->data, b->sz);
-        printf ("data: %s\n", str);
-        cbuf_delete (b);
-        xfree (str);
-        return ctrl;
-    }
-    return CAF_ERROR;
 }
 
 /** }@ */
