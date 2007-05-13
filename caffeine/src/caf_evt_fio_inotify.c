@@ -29,6 +29,8 @@ static char Id[] = "$Id$";
 #include <string.h>
 #include <errno.h>
 
+#include <unistd.h>
+
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
@@ -39,13 +41,35 @@ static char Id[] = "$Id$";
 #define IO_EVENT_USE_INOTIFY
 #include "caf/caf_evt_fio.h"
 
-static int caf_inotify_init = 0;
+static int local_caf_inotify_fd = -1;
 
 
 fio_evt_t *
-caf_fio_evt_new  (int fd, int type, int to)
+caf_fio_evt_new  (caf_io_file_t *f, int type, int to)
 {
     fio_evt_t *r = (fio_evt_t *)NULL;
+    if (type > 0 && f != (caf_io_file_t *)NULL) {
+        r = (fio_evt_t *)xmalloc (IO_EVT_SZ);
+        if (r != (fio_evt_t *)NULL) {
+            if (local_caf_inotify_fd == -1) {
+                local_caf_inotify_fd = inotify_init();
+                if (local_caf_inotify_fd > -1) {
+                    r->ev_mf = f;
+                    r->ev_type = type;
+                    r->ev_sz = IO_EVENT_DATA_INOTIFY_SZ;
+                    r->ev_use = IO_EVENTS_INOTIFY;
+                    r->ev_info = (io_evt_inotify_t *)NULL;
+                    r->ev_store = (io_evt_inotify_t *)xmalloc (r->ev_sz);
+                    r->ev_timeout = to;
+                    if (r->ev_info == (io_evt_inotify_t *)NULL ||
+                        (caf_fio_evt_init (r)) != CAF_OK) {
+                        xfree (r);
+                        r = (fio_evt_t *)NULL;
+                    }
+                }
+            }
+        }
+    }
     return r;
 }
 
@@ -69,6 +93,17 @@ caf_fio_evt_delete (fio_evt_t *e)
 int
 caf_fio_evt_init (fio_evt_t *e)
 {
+    io_evt_inotify_t *s;
+    if (e != (fio_evt_t *)NULL) {
+        s = (io_evt_inotify_t *)e->ev_info;
+        if (s != (io_evt_inotify_t *)NULL) {
+            e->ev_src = inotify_add_watch (local_caf_inotify_fd,
+                                           e->ev_mf->path, fio_evt_events (e));
+            if (e->ev_src > -1) {
+                return CAF_OK;
+            }
+        }
+    }
     return CAF_ERROR;
 }
 
@@ -76,20 +111,45 @@ caf_fio_evt_init (fio_evt_t *e)
 int
 caf_fio_evt_reinit (fio_evt_t *e)
 {
+    io_evt_inotify_t *s;
+    if (e != (fio_evt_t *)NULL) {
+        s = (io_evt_inotify_t *)e->ev_info;
+        if (s != (io_evt_inotify_t *)NULL) {
+            if ((inotify_rm_watch (local_caf_inotify_fd, e->ev_src)) == 0) {
+                e->ev_src = inotify_add_watch (local_caf_inotify_fd,
+                                               e->ev_mf->path,
+                                               fio_evt_events (e));
+                if (e->ev_src > -1) {
+                    return CAF_OK;
+                }
+            }
+        }
+    }
     return CAF_ERROR;
 }
 
 
+#ifndef LINUX_SYSTEM
 int
-caf_fio_evt_add (fio_evt_t *e, int ev)
+caf_fio_evt_add (fio_evt_t *e, int ev, int flg)
 {
+    /* invalid call on inotify use */
     return CAF_ERROR;
 }
+#endif /* !LINUX_SYSTEM */
 
 
 int
 caf_fio_evt_destroy (fio_evt_t *e)
 {
+    io_evt_inotify_t *s;
+    if (e != (fio_evt_t *)NULL) {
+        s = (io_evt_inotify_t *)e->ev_info;
+        if (s != (io_evt_inotify_t *)NULL) {
+            close (e->ev_src);
+            return CAF_OK;
+        }
+    }
     return CAF_ERROR;
 }
 
@@ -97,6 +157,15 @@ caf_fio_evt_destroy (fio_evt_t *e)
 int
 caf_fio_evt_handle (fio_evt_t *e)
 {
+    int r = CAF_ERROR;
+    if (e != (fio_evt_t *)NULL) {
+        if (e->ev_src > -1) {
+            memset (e->ev_store, 0, e->ev_sz);
+            if ((read (e->ev_src, e->ev_store, e->ev_sz)) > 0) {
+                return (int)e->ev_sz;
+            }
+        }
+    }
     return r;
 }
 
@@ -104,6 +173,14 @@ caf_fio_evt_handle (fio_evt_t *e)
 int
 caf_fio_evt_isread (fio_evt_t *e)
 {
+    int r = CAF_ERROR;
+    io_evt_inotify_t *s;
+    if (e != (fio_evt_t *)NULL) {
+        s = (io_evt_inotify_t *)e->ev_store;
+        if (s != (io_evt_inotify_t *)NULL) {
+            r = s->mask & fio_evt_events_use(e, EVT_IO_READ);
+        }
+    }
     return r;
 }
 
@@ -111,13 +188,28 @@ caf_fio_evt_isread (fio_evt_t *e)
 int
 caf_fio_evt_iswrite (fio_evt_t *e)
 {
+    int r = CAF_ERROR;
+    io_evt_inotify_t *s;
+    if (e != (fio_evt_t *)NULL) {
+        s = (io_evt_inotify_t *)e->ev_store;
+        if (s != (io_evt_inotify_t *)NULL) {
+            r = s->mask & fio_evt_events_use(e, EVT_IO_WRITE);
+        }
+    }
     return r;
 }
-
 
 int
 caf_fio_evt_isvnode (fio_evt_t *e)
 {
+    int r = CAF_ERROR;
+    io_evt_inotify_t *s;
+    if (e != (fio_evt_t *)NULL) {
+        s = (io_evt_inotify_t *)e->ev_store;
+        if (s != (io_evt_inotify_t *)NULL) {
+            r = s->mask & fio_evt_events_use(e, EVT_IO_VNODE);
+        }
+    }
     return r;
 }
 

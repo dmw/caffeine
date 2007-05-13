@@ -49,6 +49,8 @@
 #include <sys/inotify.h>
 #endif /* !IO_EVENT_USE_KEVENT */
 
+#include <caf/caf_io_file.h>
+
 /**
  *
  * @brief    Defines which I/O Events can be handled
@@ -67,8 +69,8 @@ typedef enum {
 #if defined(BSD_SYSTEM) && !defined(IO_EVENT_DATA_KEVENT_SZ)
 #define IO_EVENT_DATA_KEVENT_SZ     (sizeof (io_evt_kevent_t))
 #endif /* !BSD_SYSTEM */
-#if defined(LINUX_SYSTEM) && !defined(IO_EVENT_DATA_EPOLL_SZ)
-#define IO_EVENT_DATA_EPOLL_SZ      (sizeof (io_evt_epoll_t))
+#if defined(LINUX_SYSTEM) && !defined(IO_EVENT_DATA_INOTIFY_SZ)
+#define IO_EVENT_DATA_INOTIFY_SZ      (sizeof (io_evt_inotify_t))
 #endif /* !LINUX_SYSTEM */
 
 #if defined(BSD_SYSTEM) && !defined(IO_EVT_KEVENT_T_DEFINED)
@@ -133,11 +135,9 @@ fio_evt_t *CALL_EVT_F(fio_evt_new) (caf_io_file_t *f, int type, int to);
 int CALL_EVT_F(fio_evt_delete) (fio_evt_t *e);
 int CALL_EVT_F(fio_evt_init) (fio_evt_t *e);
 int CALL_EVT_F(fio_evt_reinit) (fio_evt_t *e);
-#if defined(IO_EVENT_USE_KEVENT)
+#ifndef LINUX_SYSTEM
 int CALL_EVT_F(fio_evt_add) (fio_evt_t *e, int ev, int flg);
-#else
-int CALL_EVT_F(fio_evt_add) (fio_evt_t *e, int ev);
-#endif /* !IO_EVENT_USE_KEVENT */
+#endif /* !LINUX_SYSTEM */
 int CALL_EVT_F(fio_evt_destroy) (fio_evt_t *e);
 int CALL_EVT_F(fio_evt_handle) (fio_evt_t *e);
 int CALL_EVT_F(fio_evt_isread) (fio_evt_t *e);

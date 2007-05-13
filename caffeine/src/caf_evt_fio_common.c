@@ -71,7 +71,7 @@ static caf_evt_fio_event_mapping_t fio_evt_mapping[] = {
 #else
         0
 #endif /* !ILINUX_SYSTEM */
-    }
+    },
     /* vnode events */
     {
         EVT_IO_VNODE_IDX,
@@ -91,34 +91,34 @@ static caf_evt_fio_event_mapping_t fio_evt_mapping[] = {
 
 
 int
-io_evt_events (io_evt_t *e)
+fio_evt_events (fio_evt_t *e)
 {
     int evt = 0;
-    if (e != (io_evt_t *)NULL) {
+    if (e != (fio_evt_t *)NULL) {
         switch (e->ev_use) {
 #ifdef BSD_SYSTEM
         case IO_EVENTS_KEVENT:
             if (e->ev_type & EVT_IO_READ) {
-                evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_kevent;
+                evt |= fio_evt_mapping[EVT_IO_READ_IDX].evt_kevent;
             }
             if (e->ev_type & EVT_IO_WRITE) {
-                evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_kevent;
+                evt |= fio_evt_mapping[EVT_IO_WRITE_IDX].evt_kevent;
             }
             if (e->ev_type & EVT_IO_VNODE) {
-                evt |= io_evt_mapping[EVT_IO_VNODE_IDX].evt_kevent;
+                evt |= fio_evt_mapping[EVT_IO_VNODE_IDX].evt_kevent;
             }
             return evt;
 #endif /* !BSD_SYSTEM */
 #ifdef LINUX_SYSTEM
         case IO_EVENTS_INOTIFY:
             if (e->ev_type & EVT_IO_READ) {
-                evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_inotify;
+                evt |= fio_evt_mapping[EVT_IO_READ_IDX].evt_inotify;
             }
             if (e->ev_type & EVT_IO_WRITE) {
-                evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_inotify;
+                evt |= fio_evt_mapping[EVT_IO_WRITE_IDX].evt_inotify;
             }
             if (e->ev_type & EVT_IO_VNODE) {
-                evt |= io_evt_mapping[EVT_IO_VNODE_IDX].evt_inotify;
+                evt |= fio_evt_mapping[EVT_IO_VNODE_IDX].evt_inotify;
             }
             return evt;
 #endif /* !LINUX_SYSTEM */
@@ -131,34 +131,34 @@ io_evt_events (io_evt_t *e)
 
 
 int
-io_evt_events_use (io_evt_t *e, io_evt_use_t use)
+fio_evt_events_use (fio_evt_t *e, fio_evt_use_t use)
 {
     int evt = 0;
-    if (e != (io_evt_t *)NULL) {
+    if (e != (fio_evt_t *)NULL) {
         switch (e->ev_use) {
 #ifdef BSD_SYSTEM
         case IO_EVENTS_KEVENT:
             if (use & EVT_IO_READ) {
-                evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_kevent;
+                evt |= fio_evt_mapping[EVT_IO_READ_IDX].evt_kevent;
             }
             if (use & EVT_IO_WRITE) {
-                evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_kevent;
+                evt |= fio_evt_mapping[EVT_IO_WRITE_IDX].evt_kevent;
             }
             if (use & EVT_IO_VNODE) {
-                evt |= io_evt_mapping[EVT_IO_VNODE_IDX].evt_kevent;
+                evt |= fio_evt_mapping[EVT_IO_VNODE_IDX].evt_kevent;
             }
             return evt;
 #endif /* !BSD_SYSTEM */
 #ifdef LINUX_SYSTEM
         case IO_EVENTS_INOTIFY:
             if (use & EVT_IO_READ) {
-                evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_inotify;
+                evt |= fio_evt_mapping[EVT_IO_READ_IDX].evt_inotify;
             }
             if (use & EVT_IO_WRITE) {
-                evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_inotify;
+                evt |= fio_evt_mapping[EVT_IO_WRITE_IDX].evt_inotify;
             }
             if (use & EVT_IO_VNODE) {
-                evt |= io_evt_mapping[EVT_IO_VNODE_IDX].evt_inotify;
+                evt |= fio_evt_mapping[EVT_IO_VNODE_IDX].evt_inotify;
             }
             return evt;
 #endif /* !LINUX_SYSTEM */

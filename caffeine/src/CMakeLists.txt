@@ -43,6 +43,7 @@ set (CAFFEINE_SRCS
     caf_io_net.c
     caf_io_net_conpool.c
     caf_io_net_svcpool.c
+    caf_evt_fio_common.c
     caf_evt_nio_poll.c
     caf_evt_nio_select.c
     caf_evt_nio_pool_poll.c
