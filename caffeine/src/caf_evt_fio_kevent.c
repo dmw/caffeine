@@ -34,7 +34,7 @@ static char Id[] = "$Id$";
 
 #include "caf/caf.h"
 #include "caf/caf_data_mem.h"
-#include "caf/caf_io_core.h"
+#include "caf/caf_io_file.h"
 
 #define IO_EVENT_USE_KEVENT
 #include "caf/caf_evt_fio.h"

@@ -38,7 +38,7 @@ set (CAFFEINE_SRCS
     caf_data_lstdl.c
     caf_data_mem.c
     caf_data_pidfile.c
-    caf_io_core.c
+    caf_io_file.c
     caf_io_tail.c
     caf_io_net.c
     caf_io_net_conpool.c
