@@ -43,6 +43,8 @@
  *
  */
 
+#include <caf/caf_data_buffer.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* !__cplusplus */

@@ -100,7 +100,7 @@ typedef enum {
 typedef struct fio_evt_s fio_evt_t;
 struct fio_evt_s {
     int ev_src;
-    int ev_mfd;
+    caf_io_file_t *ev_mf;
     int ev_timeout;
     int ev_type;
     fio_evt_use_t ev_use;
@@ -129,7 +129,7 @@ int fio_evt_events_use (fio_evt_t *e, fio_evt_use_t type);
 #define CALL_EVT_F(p)             p##_inotify
 #endif /* !IO_EVENT_USE_* */
 
-fio_evt_t *CALL_EVT_F(fio_evt_new) (int fd, int type, int to);
+fio_evt_t *CALL_EVT_F(fio_evt_new) (caf_io_file_t *f, int type, int to);
 int CALL_EVT_F(fio_evt_delete) (fio_evt_t *e);
 int CALL_EVT_F(fio_evt_init) (fio_evt_t *e);
 int CALL_EVT_F(fio_evt_reinit) (fio_evt_t *e);

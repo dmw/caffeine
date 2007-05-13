@@ -38,7 +38,7 @@ void test_new (void);
 void test_pop (void);
 void test_get (void);
 void test_walk (void);
-void test_walk_cb (void *data);
+int test_walk_cb (void *data);
 
 
 int
@@ -202,10 +202,11 @@ test_walk (void)
 }
 
 
-void
+int
 test_walk_cb (void *data)
 {
     printf ("item %p = '%s'\n", data, (char *)data);
+    return 0;
 }
 
 /** }@ */
