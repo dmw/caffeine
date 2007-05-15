@@ -59,6 +59,7 @@ struct caf_tail_stream_s {
 caf_tail_stream_t *caf_tail_open (const char *path);
 int caf_tail_close (caf_tail_stream_t *s);
 int caf_tail_read (caf_tail_stream_t *stream, cbuffer_t *buffer);
+off_t caf_tail_getoffset (caf_tail_stream_t *stream, cbuffer_t *buffer);
 
 /** }@ */
 #endif /* !CAF_IO_TAIL_H */

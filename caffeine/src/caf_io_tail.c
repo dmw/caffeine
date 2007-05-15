@@ -111,34 +111,68 @@ caf_tail_close (caf_tail_stream_t *s)
 int
 caf_tail_read (caf_tail_stream_t *s, cbuffer_t *b)
 {
+    off_t offs;
     if (s != (caf_tail_stream_t *)NULL && b != (cbuffer_t *)NULL) {
-        if ((caf_fio_evt_handle (s->events)) == CAF_OK) {
-            if ((caf_fio_evt_isvnode (s->events)) == CAF_OK) {
-                s->reset = CAF_OK;
-                s->status = CAF_ERROR;
-                return CAF_ERROR;
-            }
-            if ((caf_fio_evt_iswrite (s->events)) == CAF_OK) {
-                if ((s->file = io_reopen (s->file)) != (caf_io_file_t *)NULL) {
-                    if ((io_flseek (s->file, s->offset, SEEK_SET)) == CAF_OK) {
-                        b->iosz = io_read (s->file, b);
-                        if ((off_t)s->file->sd.st_size > s->offset) {
-                            s->complete = CAF_ERROR;
-                        } else {
-                            s->complete = CAF_OK;
-                        }
-                        s->status = CAF_OK;
-                    }
-                } else {
+        if (s->complete == CAF_OK) {
+            if ((caf_fio_evt_handle (s->events)) == CAF_OK) {
+                if ((caf_fio_evt_isvnode (s->events)) == CAF_OK) {
                     s->reset = CAF_OK;
                     s->status = CAF_ERROR;
                     return CAF_ERROR;
                 }
+                if ((caf_fio_evt_iswrite (s->events)) == CAF_OK) {
+                    offs = caf_tail_getoffset(s, b);
+                    if ((s->file = io_reopen (s->file)) !=
+                        (caf_io_file_t *)NULL) {
+                        if ((io_flseek (s->file, offs, SEEK_SET)) == CAF_OK) {
+                            b->iosz = io_read (s->file, b);
+                            s->offset = offs;
+                            s->complete = (offs != (off_t)s->file->sd.st_size)
+                                          ? CAF_ERROR : CAF_OK;
+                            s->status = CAF_OK;
+                        }
+                    } else {
+                        s->reset = CAF_OK;
+                        s->status = CAF_ERROR;
+                        return CAF_ERROR;
+                    }
+                }
+            }
+        } else {
+            if ((s->file = io_reopen (s->file)) != (caf_io_file_t *)NULL) {
+                offs = caf_tail_getoffset(s, b);
+                if ((io_flseek (s->file, offs, SEEK_SET)) == CAF_OK) {
+                    b->iosz = io_read (s->file, b);
+                    s->offset = offs;
+                    s->complete = (offs != (off_t)s->file->sd.st_size)
+                                    ? CAF_ERROR : CAF_OK;
+                    s->status = CAF_OK;
+                }
+            } else {
+                s->reset = CAF_OK;
+                s->status = CAF_ERROR;
+                return CAF_ERROR;
             }
         }
     }
     return CAF_ERROR;
 }
 
+
+off_t
+caf_tail_getoffset (caf_tail_stream_t *stream, cbuffer_t *buffer)
+{
+    ssize_t base;
+    if (stream != (caf_tail_stream_t *)NULL && buffer != (cbuffer_t *)NULL) {
+        if (stream->complete == CAF_OK) {
+            base = (ssize_t)stream->file->sd.st_size - (ssize_t)buffer->sz;
+            return ((base < 0) ? (off_t)stream->file->sd.st_size
+                    : (off_t)base);
+        } else {
+            return (off_t)stream->offset + (off_t)buffer->iosz;
+        }
+    }
+    return 0;
+}
 
 /* caf_io_tail.c ends here */

@@ -47,14 +47,46 @@
 void sigrtn (int sig);
 int tailrtn (cbuffer_t *b, int *ops);
 int ctrl = CAF_OK;
+caf_tail_stream_t *stream;
+cbuffer_t *buf;
 
 int
 main (int argc, char **argv)
 {
     ctrl = CAF_OK;
+    int c;
+    char msg[] =
+        "status:    %d\n"
+        "complete:  %d\n"
+        "reset:     %d\n"
+        "offset:    %d\n";
     if (argc > 1) {
         printf ("opening %s\n", argv[1]);
         signal (SIGHUP, sigrtn);
+
+        stream = caf_tail_open (argv[1]);
+
+        if (stream != (caf_tail_stream_t *)NULL) {
+            printf ("stream for %s opened\n", argv[1]);
+            buf = cbuf_create (512);
+            if (buf != (cbuffer_t *)NULL) {
+                for (c = 0; c < 30; c++) {
+                    if ((caf_tail_read (stream, buf)) == CAF_OK) {
+                        printf (msg, stream->status, stream->complete,
+                                stream->reset, stream->offset);
+                    }
+                    sleep (2);
+                }
+                cbuf_delete (buf);
+            }
+        }
+
+        if ((caf_tail_close (stream)) == CAF_OK) {
+            printf ("stream for %s closed\n", argv[1]);
+        } else {
+            printf ("stream for %s not closed\n", argv[1]);
+        }
+
         return 1;
     }
     return 0;
