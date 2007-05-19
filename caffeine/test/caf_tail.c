@@ -99,5 +99,4 @@ sigrtn (int sig)
     printf ("signal: %d\n", sig);
 }
 
-/** }@ */
-/* caf_pidfile.c ends here */
+/* caf_tail.c ends here */

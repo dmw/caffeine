@@ -77,5 +77,4 @@ test_signal_handler (int sig)
     printf ("received signal: %d\n", sig);
 }
 
-/** }@ */
 /* caf_ppm.c ends here */

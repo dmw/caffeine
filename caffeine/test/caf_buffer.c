@@ -287,5 +287,4 @@ test_tail_head (void)
     cbuf_delete (buf1);
 }
 
-/** }@ */
 /* caf_buffer.c ends here */

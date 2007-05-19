@@ -67,5 +67,4 @@ test_kill_handler (int sig)
     printf ("signal: %d\n", sig);
 }
 
-/** }@ */
 /* caf_pidfile.c ends here */

@@ -209,5 +209,4 @@ test_walk_cb (void *data)
     return 0;
 }
 
-/** }@ */
 /* caf_lstdl.c ends here */

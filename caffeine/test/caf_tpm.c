@@ -81,5 +81,4 @@ pth_rtn (void *p)
     pthread_exit (NULL);
 }
 
-/** }@ */
 /* caf_tpm.c ends here */

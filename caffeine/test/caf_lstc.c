@@ -205,6 +205,4 @@ test_walk_cb (void *data)
     return CAF_OK;
 }
 
-
-/** }@ */
 /* caf_lstc.c ends here */

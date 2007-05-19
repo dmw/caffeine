@@ -143,5 +143,4 @@ mutex_unlock (void)
     return pth_mtx_unlock (common_mutex);
 }
 
-/** }@ */
 /* caf_mutex.c ends here */

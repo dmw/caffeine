@@ -280,5 +280,4 @@ free_ptr (void *p)
     xfree (p);
 }
 
-/** }@ */
 /* caf_pth_key.c ends here */

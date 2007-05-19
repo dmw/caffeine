@@ -119,5 +119,4 @@ test_signal_handler (int sig)
     printf ("received signal: %d\n", sig);
 }
 
-/** }@ */
 /* caf_both_ptm.c ends here */
