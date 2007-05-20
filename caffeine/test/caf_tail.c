@@ -56,10 +56,13 @@ main (int argc, char **argv)
     ctrl = CAF_OK;
     int c;
     char msg[] =
+        "-------------\n"
         "status:    %d\n"
         "complete:  %d\n"
         "reset:     %d\n"
-        "offset:    %d\n";
+        "offset:    %ld\n"
+        "read:      '%s'\n"
+        "-------------\n";
     if (argc > 1) {
         printf ("opening %s\n", argv[1]);
         signal (SIGHUP, sigrtn);
@@ -75,7 +78,8 @@ main (int argc, char **argv)
                 for (c = 0; c < 30; c++) {
                     if ((caf_tail_read (stream, buf)) == CAF_OK) {
                         printf (msg, stream->status, stream->complete,
-                                stream->reset, stream->offset);
+                                stream->reset, stream->offset,
+                                (char *)buf->data);
                     }
                     sleep (1);
                 }

@@ -156,6 +156,7 @@ io_write (caf_io_file_t *r, cbuffer_t *b)
     ssize_t sz = 0;
     if (r != (caf_io_file_t *)NULL && b != (cbuffer_t *)NULL && sz > 0) {
         sz = write (r->fd, b->data, b->iosz);
+        b->iosz = sz;
     }
     return sz;
 }
@@ -189,7 +190,7 @@ int
 io_flseek (caf_io_file_t *r, off_t o, int w)
 {
     if (r != (caf_io_file_t *)NULL) {
-        if ((lseek (r->fd, o, w)) == o) {
+        if ((lseek (r->fd, o, w)) > -1) {
             return CAF_OK;
         }
     }

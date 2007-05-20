@@ -39,7 +39,8 @@ static char Id[] = "$Id$";
 #define IO_EVENT_USE_KEVENT
 #include "caf/caf_evt_fio.h"
 
-#define KEVENT_FILTER               (EV_ADD|EV_ENABLE)
+#define KEVENT_FILTER               (EV_ADD|EV_ENABLE|EV_ONESHOT)
+#define KEVENT_WRITE_FLAGS          (NOTE_EXTEND|NOTE_WRITE)
 #define KEVENT_FILTER_COUNT         1
 
 fio_evt_t *
@@ -54,7 +55,9 @@ caf_fio_evt_new  (caf_io_file_t *f, int type, int to)
             r->ev_sz = IO_EVENT_DATA_KEVENT_SZ;
             r->ev_use = IO_EVENTS_KEVENT;
             r->ev_info = (io_evt_kevent_t *)xmalloc (r->ev_sz);
+            xempty (r->ev_info, r->ev_sz);
             r->ev_store = (io_evt_kevent_t *)xmalloc (r->ev_sz);
+            xempty (r->ev_store, r->ev_sz);
             r->ev_timeout = to;
             if (r->ev_info == (io_evt_kevent_t *)NULL ||
                 (caf_fio_evt_init (r)) != CAF_OK) {
@@ -94,11 +97,11 @@ caf_fio_evt_init (fio_evt_t *e)
             if (e->ev_src > -1) {
                 if (e->ev_type & EVT_IO_READ) {
                     EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
-                           NOTE_WRITE, 0, 0);
+                           KEVENT_FILTER_FLAGS, 0, 0);
                 }
                 if (e->ev_type & EVT_IO_WRITE) {
                     EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
-                           NOTE_WRITE, 0, 0);
+                           KEVENT_FILTER_FLAGS, 0, 0);
                 }
                 if ((kevent (e->ev_src, s, KEVENT_FILTER_COUNT, NULL, 0, NULL))
                     >= 0) {
@@ -175,14 +178,16 @@ caf_fio_evt_handle (fio_evt_t *e)
 {
     int r = CAF_ERROR;
     io_evt_kevent_t *s;
+    io_evt_kevent_t *m;
     struct timespec ts;
     if (e != (fio_evt_t *)NULL) {
         s = (io_evt_kevent_t *)e->ev_store;
+        m = (io_evt_kevent_t *)e->ev_info;
         if (s != (io_evt_kevent_t *)NULL) {
             ts.tv_sec = e->ev_timeout;
             ts.tv_nsec = 0;
-            if ((kevent (e->ev_src, NULL, 0, s, KEVENT_FILTER_COUNT, &ts))
-                >= 0) {
+            if ((kevent (e->ev_src, m, KEVENT_FILTER_COUNT, s,
+                         KEVENT_FILTER_COUNT, &ts)) > 0) {
                 r = CAF_OK;
             }
         }
@@ -214,7 +219,8 @@ caf_fio_evt_iswrite (fio_evt_t *e)
     if (e != (fio_evt_t *)NULL) {
         s = (io_evt_kevent_t *)e->ev_store;
         if (s != (io_evt_kevent_t *)NULL) {
-            r = (s->fflags & NOTE_WRITE ? CAF_OK : CAF_ERROR);
+            r = (s->fflags & (NOTE_WRITE | NOTE_EXTEND));
+            r = (r != 0 ? CAF_OK : CAF_ERROR);
         }
     }
     return r;

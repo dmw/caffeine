@@ -118,9 +118,11 @@ caf_tail_read (caf_tail_stream_t *s, cbuffer_t *b)
             if ((caf_fio_evt_handle (s->events)) == CAF_OK) {
                 if ((caf_fio_evt_iswrite (s->events)) == CAF_OK) {
                     offs = caf_tail_getoffset(s, b);
+                    cbuf_clean (b);
                     if ((s->file = io_reopen (s->file)) !=
                         (caf_io_file_t *)NULL) {
                         if ((io_flseek (s->file, offs, SEEK_SET)) == CAF_OK) {
+                            cbuf_clean (b);
                             b->iosz = io_read (s->file, b);
                             s->offset = offs;
                             s->complete = (offs < (off_t)s->file->sd.st_size)
@@ -138,11 +140,13 @@ caf_tail_read (caf_tail_stream_t *s, cbuffer_t *b)
         } else {
             if ((s->file = io_reopen (s->file)) != (caf_io_file_t *)NULL) {
                 offs = caf_tail_getoffset(s, b);
+                cbuf_clean (b);
                 if ((io_flseek (s->file, offs, SEEK_SET)) == CAF_OK) {
+                    cbuf_clean (b);
                     b->iosz = io_read (s->file, b);
                     s->offset = offs;
                     s->complete = (offs != (off_t)s->file->sd.st_size)
-                                    ? CAF_ERROR : CAF_OK;
+                                  ? CAF_ERROR : CAF_OK;
                     s->status = CAF_OK;
                     return CAF_OK;
                 }
@@ -160,17 +164,12 @@ caf_tail_read (caf_tail_stream_t *s, cbuffer_t *b)
 off_t
 caf_tail_getoffset (caf_tail_stream_t *stream, cbuffer_t *buffer)
 {
-    off_t base, r = 0;
+    off_t r = 0;
     if (stream != (caf_tail_stream_t *)NULL && buffer != (cbuffer_t *)NULL) {
-        if (stream->complete == CAF_ERROR) {
-            r = stream->offset + (off_t)buffer->iosz;
-        } else {
-            base = buffer->iosz == 0 ? buffer->sz : buffer->iosz;
-            r = (off_t)stream->file->sd.st_size - base;
+        r = stream->offset + (off_t)buffer->iosz;
+        if (r > (off_t)stream->file->sd.st_size) {
+            r = (off_t)stream->file->sd.st_size;
         }
-    }
-    if (r > (off_t)stream->file->sd.st_size) {
-        r = 0;
     }
     return r;
 }
