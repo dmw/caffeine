@@ -93,10 +93,12 @@ caf_fio_evt_init (fio_evt_t *e)
             e->ev_src = kqueue ();
             if (e->ev_src > -1) {
                 if (e->ev_type & EVT_IO_READ) {
-                    EV_SET(s, e->ev_mf->fd, EVFILT_READ, KEVENT_FILTER, 0, 0, 0);
+                    EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
+                           NOTE_WRITE, 0, 0);
                 }
                 if (e->ev_type & EVT_IO_WRITE) {
-                    EV_SET(s, e->ev_mf->fd, EVFILT_WRITE, KEVENT_FILTER, 0, 0, 0);
+                    EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
+                           NOTE_WRITE, 0, 0);
                 }
                 if ((kevent (e->ev_src, s, KEVENT_FILTER_COUNT, NULL, 0, NULL))
                     >= 0) {
@@ -118,10 +120,12 @@ caf_fio_evt_reinit (fio_evt_t *e)
         if (s != (io_evt_kevent_t *)NULL) {
             if (e->ev_src > -1) {
                 if (e->ev_type & EVT_IO_READ) {
-                    EV_SET(s, e->ev_mf->fd, EVFILT_READ, KEVENT_FILTER, 0, 0, 0);
+                    EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
+                           NOTE_WRITE, 0, 0);
                 }
                 if (e->ev_type & EVT_IO_WRITE) {
-                    EV_SET(s, e->ev_mf->fd, EVFILT_WRITE, KEVENT_FILTER, 0, 0, 0);
+                    EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
+                           NOTE_WRITE, 0, 0);
                 }
                 if ((kevent (e->ev_src, s, KEVENT_FILTER_COUNT, NULL, 0, NULL))
                     >= 0) {
@@ -173,12 +177,12 @@ caf_fio_evt_handle (fio_evt_t *e)
     io_evt_kevent_t *s;
     struct timespec ts;
     if (e != (fio_evt_t *)NULL) {
-        s = (io_evt_kevent_t *)e->ev_info;
+        s = (io_evt_kevent_t *)e->ev_store;
         if (s != (io_evt_kevent_t *)NULL) {
             ts.tv_sec = e->ev_timeout;
             ts.tv_nsec = 0;
             if ((kevent (e->ev_src, NULL, 0, s, KEVENT_FILTER_COUNT, &ts))
-                == 1) {
+                >= 0) {
                 r = CAF_OK;
             }
         }
@@ -195,7 +199,7 @@ caf_fio_evt_isread (fio_evt_t *e)
     if (e != (fio_evt_t *)NULL) {
         s = (io_evt_kevent_t *)e->ev_store;
         if (s != (io_evt_kevent_t *)NULL) {
-            r = s->filter & EVFILT_READ ? CAF_OK : CAF_ERROR;
+            r = s->fflags & NOTE_WRITE ? CAF_OK : CAF_ERROR;
         }
     }
     return r;
@@ -210,7 +214,7 @@ caf_fio_evt_iswrite (fio_evt_t *e)
     if (e != (fio_evt_t *)NULL) {
         s = (io_evt_kevent_t *)e->ev_store;
         if (s != (io_evt_kevent_t *)NULL) {
-            r = s->filter & EVFILT_WRITE ? CAF_OK : CAF_ERROR;
+            r = (s->fflags & NOTE_WRITE ? CAF_OK : CAF_ERROR);
         }
     }
     return r;
@@ -224,7 +228,7 @@ caf_fio_evt_isvnode (fio_evt_t *e)
     if (e != (fio_evt_t *)NULL) {
         s = (io_evt_kevent_t *)e->ev_store;
         if (s != (io_evt_kevent_t *)NULL) {
-            r = s->filter & EVFILT_VNODE ? CAF_OK : CAF_ERROR;
+            r = s->fflags & NOTE_WRITE ? CAF_OK : CAF_ERROR;
         }
     }
     return r;

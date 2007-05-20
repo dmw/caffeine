@@ -63,8 +63,10 @@ main (int argc, char **argv)
     if (argc > 1) {
         printf ("opening %s\n", argv[1]);
         signal (SIGHUP, sigrtn);
+        signal (SIGINT, sigrtn);
+        signal (SIGKILL, sigrtn);
 
-        stream = caf_tail_open (argv[1]);
+        stream = caf_tail_open (argv[1], 1);
 
         if (stream != (caf_tail_stream_t *)NULL) {
             printf ("stream for %s opened\n", argv[1]);
@@ -75,7 +77,7 @@ main (int argc, char **argv)
                         printf (msg, stream->status, stream->complete,
                                 stream->reset, stream->offset);
                     }
-                    sleep (2);
+                    sleep (1);
                 }
                 cbuf_delete (buf);
             }
@@ -96,6 +98,8 @@ void
 sigrtn (int sig)
 {
     ctrl = CAF_ERROR;
+    caf_tail_close (stream);
+    cbuf_delete (buf);
     printf ("signal: %d\n", sig);
 }
 

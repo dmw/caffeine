@@ -44,7 +44,7 @@ caf_io_file_t *
 io_fopen (const char *path, const int flg, const mode_t md, int fs)
 {
     caf_io_file_t *r = (caf_io_file_t *)NULL;
-    if (path != (char *)NULL && flg > 0) {
+    if (path != (char *)NULL) {
         r = (caf_io_file_t *)xmalloc (CAF_IO_FILE_SZ);
         if (r != (caf_io_file_t *)NULL) {
             if (md != 0) {
@@ -52,21 +52,26 @@ io_fopen (const char *path, const int flg, const mode_t md, int fs)
             } else {
                 r->fd = open (path, flg);
             }
-            if (r->ustat >= 0) {
-                r->flags = flg;
-                r->mode = md;
-                r->path = strdup (path);
-                r->ustat = fs;
-                if (fs == CAF_OK) {
-                    if ((fstat (r->fd, &(r->sd))) == 0) {
-                        return r;
-                    } else {
-                        close (r->fd);
-                        xfree (r->path);
-                        xfree (r);
-                        r = (caf_io_file_t *)NULL;
+            if (r->fd >= 0) {
+                if (r->ustat >= 0) {
+                    r->flags = flg;
+                    r->mode = md;
+                    r->path = strdup (path);
+                    r->ustat = fs;
+                    if (fs == CAF_OK) {
+                        if ((fstat (r->fd, &(r->sd))) == 0) {
+                            return r;
+                        } else {
+                            close (r->fd);
+                            xfree (r->path);
+                            xfree (r);
+                            r = (caf_io_file_t *)NULL;
+                        }
                     }
                 }
+            } else {
+                xfree (r);
+                r = (caf_io_file_t *)NULL;
             }
         }
     }

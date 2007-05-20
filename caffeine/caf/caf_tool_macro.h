@@ -26,8 +26,10 @@
 #ifndef CAF_TOOL_MACRO_H
 #define CAF_TOOL_MACRO_H 1
 
-#define MAX(x,y)            (x > y ? x : y)
-#define FMAX(t,x,y)         ((t)x > (t)y ? (t)x : (t)y)
+#define CAF_MAX(x,y)         (x > y ? x : y)
+#define CAF_FMAX(t,x,y)      ((t)x > (t)y ? (t)x : (t)y)
+#define CAF_DEBUG(s)         \
+    fprintf (stdout, "%s:%d: %s\n", __FILE__, __LINE__, s);
 
 #endif /* !CAF_TOOL_MACRO_H */
 /* caf_macro.h ends here */

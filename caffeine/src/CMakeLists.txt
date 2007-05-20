@@ -97,7 +97,7 @@ set (CAFFEINE_HEADERS
 
 ### compile flags
 set (CFLAGS_DEFAULT
-        "-Wall -Wextra -Wshadow -pedantic -std=c99 -march=athlon-xp -O2")
+        "-Wall -Wextra -Wshadow -pedantic -std=c99 -march=prescott -O2")
 
 set (CFLAGS_DEBUG
         "-DCAFFEINE_DEBUG -g3")
