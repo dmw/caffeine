@@ -29,7 +29,9 @@
  * @ingroup       caf
  */
 
-#include <caf/caf_evt_io.h>
+#include <caf/caf_evt_fio.h>
+#include <caf/caf_evt_nio.h>
+#include <caf/caf_evt_nio_pool.h>
 
 #endif /* !CAF_EVT_H */
 /* caf_evt.h ends here */

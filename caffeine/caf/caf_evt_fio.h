@@ -51,6 +51,10 @@
 
 #include <caf/caf_io_file.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* !__cplusplus */
+
 /**
  *
  * @brief    Defines which I/O Events can be handled
@@ -155,6 +159,10 @@ int CALL_EVT_F(fio_evt_isvnode) (fio_evt_t *e);
 #define caf_fio_evt_isread           CALL_EVT_F(fio_evt_isread)
 #define caf_fio_evt_iswrite          CALL_EVT_F(fio_evt_iswrite)
 #define caf_fio_evt_isvnode          CALL_EVT_F(fio_evt_isvnode)
+
+#ifdef __cplusplus
+};
+#endif /* !__cplusplus */
 
 /** }@ */
 #endif /* !CAF_EVT_FIO_H */

@@ -46,6 +46,10 @@
 
 #define CAF_TAIL_STREAM_SZ          (sizeof (caf_tail_stream_t))
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* !__cplusplus */
+
 typedef struct caf_tail_stream_s caf_tail_stream_t;
 struct caf_tail_stream_s {
     int status;
@@ -60,6 +64,10 @@ caf_tail_stream_t *caf_tail_open (const char *path, int to);
 int caf_tail_close (caf_tail_stream_t *s);
 int caf_tail_read (caf_tail_stream_t *stream, cbuffer_t *buffer);
 off_t caf_tail_getoffset (caf_tail_stream_t *stream, cbuffer_t *buffer);
+
+#ifdef __cplusplus
+};
+#endif /* !__cplusplus */
 
 /** }@ */
 #endif /* !CAF_IO_TAIL_H */

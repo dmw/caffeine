@@ -71,6 +71,10 @@
 
 #include <caf/caf_evt_nio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* !__cplusplus */
+
 typedef struct io_evt_pool_poll_s io_evt_pool_poll_t;
 struct io_evt_pool_poll_s {
     int poll_count;
@@ -169,6 +173,10 @@ int CALL_EVT_FP(io_evt_pool,handle) (EVT_FP_T *e);
 #define caf_io_evt_pool_getevent         CALL_EVT_FP(io_evt_pool,getevent)
 #define caf_io_evt_pool_etype            CALL_EVT_FP(io_evt_pool,etype)
 #define caf_io_evt_pool_handle           CALL_EVT_FP(io_evt_pool,handle)
+
+#ifdef __cplusplus
+};
+#endif /* !__cplusplus */
 
 /** }@ */
 #endif /* !CAF_EVT_NIO_POOL_H */

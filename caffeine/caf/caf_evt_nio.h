@@ -57,6 +57,10 @@
 #include <sys/epoll.h>
 #endif /* !IO_EVENT_USE_KEVENT */
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* !__cplusplus */
+
 /**
  *
  * @brief    Defines which I/O Events can be handled
@@ -188,6 +192,10 @@ int CALL_EVT_F(io_evt_iswrite) (io_evt_t *e);
 #define caf_io_evt_handle           CALL_EVT_F(io_evt_handle)
 #define caf_io_evt_isread           CALL_EVT_F(io_evt_isread)
 #define caf_io_evt_iswrite          CALL_EVT_F(io_evt_iswrite)
+
+#ifdef __cplusplus
+};
+#endif /* !__cplusplus */
 
 /** }@ */
 #endif /* !CAF_EVT_IO_H */
