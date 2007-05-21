@@ -64,8 +64,7 @@ main (int argc, char **argv)
         "-------------\n"
         "buf->sz:           %lx\n"
         "buf->iosz:         %lx\n"
-        "buf->data:        '%p'\n"
-        "=============\n";
+        "------------- read data:\n";
     if (argc > 1) {
         printf ("opening %s\n", argv[1]);
         signal (SIGHUP, sigrtn);
@@ -82,7 +81,9 @@ main (int argc, char **argv)
                     if ((caf_tail_read (stream, buf)) == CAF_OK) {
                         printf (msg, stream->status, stream->complete,
                                 stream->reset, stream->offset, buf->sz,
-                                buf->iosz, buf->data);
+                                buf->iosz);
+                        write (fileno (stdout), buf->data, buf->iosz);
+                        printf ("\n");
                     }
                     sleep (1);
                 }
