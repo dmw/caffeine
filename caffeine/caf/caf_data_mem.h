@@ -156,16 +156,16 @@ void *xmemcpy (void *dst, void *src, size_t sz);
 #define xmalloc(mem) \
         malloc (mem)
 #define xempty(ptr,sz) \
-        memset (ptr, (int)NULL, sz)
+        memset (ptr, 0, sz)
 #define xfree(ptr) \
         free (ptr)
 #define xdestroy(ptr,sz) \
-        memset (ptr, (int)NULL, sz); \
+        memset (ptr, 0, sz); \
         free (ptr)
 #define xrealloc(ptr,sz) \
         realloc (ptr, sz)
 #define xstrdestroy(ptr) \
-        memset (ptr, (int)NULL, strlen (ptr)); \
+        memset (ptr, 0, strlen (ptr)); \
         free (ptr)
 #define xmemcpy(dst,src,sz) \
         memcpy (dst, src, sz)

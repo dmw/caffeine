@@ -166,7 +166,7 @@ int cbuf_delete_callback (void *cbuf);
  * @param[in]        buf            the buffer to clean.
  *
  */
-void cbuf_clean (const cbuffer_t *buf);
+void cbuf_clean (cbuffer_t *buf);
 
 /**
  *

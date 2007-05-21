@@ -110,10 +110,11 @@ cbuf_delete_callback (void *cbuf)
 
 
 void
-cbuf_clean (const cbuffer_t *buf)
+cbuf_clean (cbuffer_t *buf)
 {
     if (buf != (cbuffer_t *)NULL) {
         xempty(buf->data, buf->sz);
+        buf->iosz = 0;
     }
 }
 

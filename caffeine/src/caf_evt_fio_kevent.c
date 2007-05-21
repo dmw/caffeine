@@ -39,8 +39,10 @@ static char Id[] = "$Id$";
 #define IO_EVENT_USE_KEVENT
 #include "caf/caf_evt_fio.h"
 
-#define KEVENT_FILTER               (EV_ADD|EV_ENABLE|EV_ONESHOT)
+#define KEVENT_FILTER               (EV_ADD|EV_ENABLE)
 #define KEVENT_WRITE_FLAGS          (NOTE_EXTEND|NOTE_WRITE)
+#define KEVENT_VNODE_FLAGS          \
+        (NOTE_DELETE|NOTE_ATTRIB|NOTE_LINK|NOTE_RENAME|NOTE_REVOKE)
 #define KEVENT_FILTER_COUNT         1
 
 fio_evt_t *
@@ -96,12 +98,13 @@ caf_fio_evt_init (fio_evt_t *e)
             e->ev_src = kqueue ();
             if (e->ev_src > -1) {
                 if (e->ev_type & EVT_IO_READ) {
+                    /* XXX: we can't handle read events yet
                     EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
-                           KEVENT_FILTER_FLAGS, 0, 0);
+                           KEVENT_FILTER_FLAGS, 0, 0); */
                 }
                 if (e->ev_type & EVT_IO_WRITE) {
                     EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
-                           KEVENT_FILTER_FLAGS, 0, 0);
+                           KEVENT_WRITE_FLAGS, 0, 0);
                 }
                 if ((kevent (e->ev_src, s, KEVENT_FILTER_COUNT, NULL, 0, NULL))
                     >= 0) {
@@ -123,8 +126,9 @@ caf_fio_evt_reinit (fio_evt_t *e)
         if (s != (io_evt_kevent_t *)NULL) {
             if (e->ev_src > -1) {
                 if (e->ev_type & EVT_IO_READ) {
+                    /* XXX: we can't handle read events yet
                     EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
-                           NOTE_WRITE, 0, 0);
+                           NOTE_WRITE, 0, 0); */
                 }
                 if (e->ev_type & EVT_IO_WRITE) {
                     EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
@@ -149,7 +153,8 @@ caf_fio_evt_add (fio_evt_t *e, int ev, int flg)
         s = (io_evt_kevent_t *)e->ev_info;
         if (s != (io_evt_kevent_t *)NULL) {
             if (e->ev_src > -1) {
-                EV_SET(s, e->ev_mf->fd, ev, KEVENT_FILTER, flg, 0, 0);
+                EV_SET(s, e->ev_mf->fd, ev, KEVENT_FILTER,
+                       s->fflags | flg, 0, 0);
                 return CAF_OK;
             }
         }
@@ -204,7 +209,8 @@ caf_fio_evt_isread (fio_evt_t *e)
     if (e != (fio_evt_t *)NULL) {
         s = (io_evt_kevent_t *)e->ev_store;
         if (s != (io_evt_kevent_t *)NULL) {
-            r = s->fflags & NOTE_WRITE ? CAF_OK : CAF_ERROR;
+            /* XXX: we can't handle read events yet
+            r = s->fflags & NOTE_WRITE ? CAF_OK : CAF_ERROR; */
         }
     }
     return r;
@@ -234,7 +240,7 @@ caf_fio_evt_isvnode (fio_evt_t *e)
     if (e != (fio_evt_t *)NULL) {
         s = (io_evt_kevent_t *)e->ev_store;
         if (s != (io_evt_kevent_t *)NULL) {
-            r = s->fflags & NOTE_WRITE ? CAF_OK : CAF_ERROR;
+            r = s->fflags & KEVENT_VNODE_FLAGS ? CAF_OK : CAF_ERROR;
         }
     }
     return r;
