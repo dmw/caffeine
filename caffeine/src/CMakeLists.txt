@@ -36,6 +36,7 @@ set (CAFFEINE_SRCS
     caf_data_conv.c
     caf_data_lstc.c
     caf_data_lstdl.c
+    caf_data_lstdlc.c
     caf_data_mem.c
     caf_data_pidfile.c
     caf_io_file.c
@@ -71,6 +72,7 @@ set (CAFFEINE_HEADERS
     caf_data_conv.h
     caf_data_lstc.h
     caf_data_lstdl.h
+    caf_data_lstdlc.h
     caf_data_mem.h
     caf_data_pidfile.h
     caf_io_core.h
