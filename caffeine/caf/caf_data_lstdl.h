@@ -67,7 +67,7 @@ extern "C" {
  * The type of a double linked list node.
  * @see      caf_lst_node
  */
-typedef struct caf_lst_node_s lstdln_t;
+typedef struct caf_lstdl_node_s lstdln_t;
 
 /**
  *
@@ -76,7 +76,7 @@ typedef struct caf_lst_node_s lstdln_t;
  * a pointer to de previous node and a pointer to the next node.
  * @see      lstdln_t
  */
-struct caf_lst_node_s {
+struct caf_lstdl_node_s {
     /** Pointer to the previous node in the list */
     lstdln_t *prev;
     /** Pointer to the next node in the list */
@@ -93,7 +93,7 @@ struct caf_lst_node_s {
  *
  * @see      caf_lst
  */
-typedef struct caf_lst_s lstdl_t;
+typedef struct caf_lstdl_s lstdl_t;
 /**
  *
  * @brief    Caffeine double linked list structure.
@@ -105,7 +105,7 @@ typedef struct caf_lst_s lstdl_t;
  * @see      lstdln_t
  * @see      lstdl_t
  */
-struct caf_lst_s {
+struct caf_lstdl_s {
     lstdln_t *frst;
     lstdln_t *last;
     int size;
