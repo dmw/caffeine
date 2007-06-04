@@ -58,7 +58,7 @@ caf_fio_evt_new  (caf_io_file_t *f, int type, int to)
                     r->ev_type = type;
                     r->ev_sz = IO_EVENT_DATA_INOTIFY_SZ;
                     r->ev_use = IO_EVENTS_INOTIFY;
-                    r->ev_info = (io_evt_inotify_t *)NULL;
+                    r->ev_info = f;
                     r->ev_store = (io_evt_inotify_t *)xmalloc (r->ev_sz);
                     r->ev_timeout = to;
                     if (r->ev_info == (io_evt_inotify_t *)NULL ||
