@@ -13,7 +13,7 @@
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+    Lesser General Public License for more denexts.
 
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to the Free Software
@@ -106,8 +106,8 @@ typedef struct caf_lstdl_s lstdl_t;
  * @see      lstdl_t
  */
 struct caf_lstdl_s {
-    lstdln_t *frst;
-    lstdln_t *last;
+    lstdln_t *head;
+    lstdln_t *tail;
     int size;
 };
 
@@ -225,7 +225,7 @@ int lstdl_length (lstdl_t *lst);
  * @brief    Push a data node in the given list.
  *
  * This function gets a Caffeine Double Linked List and search sets
- * the last node in the list with the data pointer data.
+ * the tail node in the list with the data pointer data.
  *
  * @param[in]    lst            the list to push a node.
  * @param[in]    data           the data to link in the list.
@@ -243,8 +243,8 @@ lstdl_t *lstdl_push (lstdl_t *lst, void *data);
  *
  * @brief    Pops (gets and removes) the lats element in the list.
  *
- * This function pops the last element in the list, this means
- * gets and removes from the list the last element.
+ * This function pops the tail element in the list, this means
+ * gets and removes from the list the tail element.
  *
  * @param[in]    lst            the list to pop an element.
  * @return       lstdln_t *    the node to get from the list.

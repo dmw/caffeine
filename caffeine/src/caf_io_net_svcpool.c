@@ -185,7 +185,7 @@ caf_svcpool_reopen (caf_svcpool_t *svc)
     if (svc != (caf_svcpool_t *)NULL) {
         if (svc->svc_fds != (int *)NULL && svc->svc_lst != (lstdl_t *)NULL &&
             svc->svc_seed != (caf_conn_t *)NULL) {
-            n = svc->svc_lst->frst;
+            n = svc->svc_lst->head;
             c = 0;
             while (n != (lstdln_t *)NULL) {
                 cc = (caf_conn_t *)n->data;

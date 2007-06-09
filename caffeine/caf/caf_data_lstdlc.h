@@ -106,8 +106,8 @@ typedef struct caf_lstdlc_s lstdlc_t;
  * @see      lstdlc_t
  */
 struct caf_lstdlc_s {
-    lstdlcn_t *frst;
-    lstdlcn_t *last;
+    lstdlcn_t *head;
+    lstdlcn_t *tail;
     int size;
 };
 
@@ -225,7 +225,7 @@ int lstdlc_length (lstdlc_t *lst);
  * @brief    Push a data node in the given list.
  *
  * This function gets a Caffeine Double Linked List and search sets
- * the last node in the list with the data pointer data.
+ * the tail node in the list with the data pointer data.
  *
  * @param[in]    lst            the list to push a node.
  * @param[in]    data           the data to link in the list.
@@ -243,8 +243,8 @@ lstdlc_t *lstdlc_push (lstdlc_t *lst, void *data);
  *
  * @brief    Pops (gets and removes) the lats element in the list.
  *
- * This function pops the last element in the list, this means
- * gets and removes from the list the last element.
+ * This function pops the tail element in the list, this means
+ * gets and removes from the list the tail element.
  *
  * @param[in]    lst            the list to pop an element.
  * @return       lstdlcn_t *    the node to get from the list.

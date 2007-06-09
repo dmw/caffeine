@@ -37,7 +37,11 @@ link_libraries (
 set (CAF_LSTDL_SRCS
         caf_lstdl.c)
 
-### lstdl test sources
+### lstdlc test sources
+set (CAF_LSTDLC_SRCS
+        caf_lstdlc.c)
+
+### lstc test sources
 set (CAF_LSTC_SRCS
         caf_lstc.c)
 
@@ -112,6 +116,11 @@ set_source_files_properties (
         COMPILE_FLAGS "${CFLAGS_PROJECT}")
 
 set_source_files_properties (
+        ${CAF_LSTDLC_SRCS}
+        PROPERTIES
+        COMPILE_FLAGS "${CFLAGS_PROJECT}")
+
+set_source_files_properties (
         ${CAF_LSTC_SRCS}
         PROPERTIES
         COMPILE_FLAGS "${CFLAGS_PROJECT}")
@@ -167,6 +176,7 @@ endif (CMAKE_USE_PTHREADS_INIT)
 
 ### build the executables
 add_executable (caf_lstdl ${CAF_LSTDL_SRCS})
+add_executable (caf_lstdlc ${CAF_LSTDLC_SRCS})
 add_executable (caf_lstc ${CAF_LSTC_SRCS})
 add_executable (caf_buffer ${CAF_BUFFER_SRCS})
 add_executable (caf_pidfile ${CAF_PIDFILE_SRCS})
@@ -177,5 +187,4 @@ add_executable (caf_pth_key ${CAF_PTH_KEY_SRCS})
 add_executable (caf_mutex ${CAF_PTH_MUTEX_SRCS})
 add_executable (caf_rwlock ${CAF_PTH_RWLOCK_SRCS})
 add_executable (caf_tail ${CAF_IO_TAIL_SRCS})
-
 

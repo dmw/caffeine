@@ -133,7 +133,7 @@ caf_conpool_connect (caf_conpool_t *con)
             con->con_lst = lstdl_create ();
             if (con->con_fds != (int *)NULL &&
                 con->con_lst != (lstdl_t *)NULL) {
-                n = con->con_lst->frst;
+                n = con->con_lst->head;
                 while (n != (lstdln_t *)NULL) {
                     i = (caf_conn_t *)n->data;
                     r += caf_conn_options_clone (i, con->con_seed);
@@ -213,7 +213,7 @@ caf_conpool_reopen (caf_conpool_t *con)
         if (con->con_fds != (int *)NULL && con->con_lst != (lstdl_t *)NULL &&
             con->con_seed != (caf_conn_t *)NULL) {
             seed = con->con_seed;
-            n = con->con_lst->frst;
+            n = con->con_lst->head;
             c = 0;
             while (n != (lstdln_t *)NULL) {
                 cc = (caf_conn_t *)n->data;

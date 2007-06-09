@@ -281,26 +281,26 @@ cbuf_split (cbuffer_t *src, const void *pattern, size_t patsz)
 {
     cbuffer_t *current = (cbuffer_t *)NULL;
     lstdl_t *lst = (lstdl_t *)NULL;
-    size_t idx = 0, idx_current = 0, idx_over = 0, idx_last = 0;
+    size_t idx = 0, idx_current = 0, idx_over = 0, idx_tail = 0;
     size_t btop = 0;
     if (src != (cbuffer_t *)NULL && pattern != (void *)NULL) {
         lst = lstdl_create ();
         btop = ((size_t)src->data) + src->sz;
         idx_current = ((size_t)src->data);
         idx_over = ((size_t)src->data) + (idx + patsz);
-        idx_last = 0;
+        idx_tail = 0;
         while (idx_current < btop) {
             if (idx_over < btop) {
                 if (memcmp ((void *)idx_current, pattern, patsz) == 0) {
-                    current = cbuf_extract (src, idx_last, idx);
+                    current = cbuf_extract (src, idx_tail, idx);
                     if (current != (cbuffer_t *)NULL) {
                         lstdl_push (lst, current);
                     }
                     idx += patsz;
-                    idx_last = idx;
+                    idx_tail = idx;
                 }
             } else {
-                current = cbuf_extract (src, idx_last, src->sz);
+                current = cbuf_extract (src, idx_tail, src->sz);
                 if (current != (cbuffer_t *)NULL) {
                     lstdl_push (lst, current);
                 }
@@ -323,15 +323,15 @@ cbuf_join (lstdl_t *lst)
     lstdln_t *c;
     size_t btotal = 0, idx = 0;
     if (lst != (lstdl_t *)NULL) {
-        c = lst->frst;
-        while (c != lst->last && c != (lstdln_t *)NULL) {
+        c = lst->head;
+        while (c != lst->tail && c != (lstdln_t *)NULL) {
             current = (cbuffer_t *)c->data;
             if (current != (cbuffer_t *)NULL) {
                 btotal += current->sz;
             }
             c = c->next;
         }
-        current = (cbuffer_t *)lst->last->data;
+        current = (cbuffer_t *)lst->tail->data;
         if (current != (cbuffer_t *)NULL) {
             btotal += current->sz;
         }
@@ -339,8 +339,8 @@ cbuf_join (lstdl_t *lst)
     buffer = cbuf_create (btotal);
     if (buffer != (cbuffer_t *)NULL) {
         if (lst != (lstdl_t *)NULL) {
-            c = lst->frst;
-            while (c != lst->last && c != (lstdln_t *)NULL) {
+            c = lst->head;
+            while (c != lst->tail && c != (lstdln_t *)NULL) {
                 current = (cbuffer_t *)c->data;
                 if (current != (cbuffer_t *)NULL) {
                     buffer = cbuf_paste (buffer, current, idx, 0, current->sz);
@@ -348,7 +348,7 @@ cbuf_join (lstdl_t *lst)
                 }
                 c = c->next;
             }
-            current = (cbuffer_t *)lst->last->data;
+            current = (cbuffer_t *)lst->tail->data;
             if (current != (cbuffer_t *)NULL) {
                 buffer = cbuf_paste (buffer, current, idx, 0, current->sz);
                 idx += current->sz;
@@ -366,7 +366,7 @@ cbuf_replace (cbuffer_t *src, void *srch, void *repl, size_t srchsz,
     cbuffer_t *buffer, *current;
     lstdl_t *lst;
     lstdln_t *n;
-    size_t idx = 0, idx_current = 0, idx_over = 0, idx_last = 0;
+    size_t idx = 0, idx_current = 0, idx_over = 0, idx_tail = 0;
     size_t btop = 0, btotal = 0, count = 0;
     if (src != (cbuffer_t *)NULL && srch != (void *)NULL) {
         btotal = src->sz;
@@ -377,14 +377,14 @@ cbuf_replace (cbuffer_t *src, void *srch, void *repl, size_t srchsz,
         while (idx_current < btop) {
             if (idx_over <= btop) {
                 if (memcmp ((void *)idx_current, srch, srchsz) == 0) {
-                    current = cbuf_extract (src, idx_last, idx_last + srchsz);
+                    current = cbuf_extract (src, idx_tail, idx_tail + srchsz);
                     if (current != (cbuffer_t *)NULL) {
                         lstdl_push (lst, (void *)idx_current);
                         cbuf_delete (current);
                         count++;
                     }
                     idx += srchsz;
-                    idx_last = idx;
+                    idx_tail = idx;
                 }
             } else {
                 idx = btop;
@@ -402,7 +402,7 @@ cbuf_replace (cbuffer_t *src, void *srch, void *repl, size_t srchsz,
         btop = (size_t)src->data + (size_t)src->sz;
         idx = (size_t)src->data;
         idx_current = (size_t)buffer->data;
-        n = lst->frst;
+        n = lst->head;
         while (n != (lstdln_t *)NULL) {
             btotal = ((size_t)n->data - idx); /* idx is src */
             btop = idx_current + btotal; /* btop is dst */
@@ -426,7 +426,7 @@ lstdl_t *
 cbuf_search (cbuffer_t *src, void *srch, size_t srchsz)
 {
     lstdl_t *lst;
-    size_t idx = 0, idx_current = 0, idx_over = 0, idx_last = 0;
+    size_t idx = 0, idx_current = 0, idx_over = 0, idx_tail = 0;
     size_t btop = 0;
     if (src != (cbuffer_t *)NULL && srch != (void *)NULL) {
         btop = (size_t)src->data + (size_t)src->sz;
@@ -437,7 +437,7 @@ cbuf_search (cbuffer_t *src, void *srch, size_t srchsz)
             if (idx_over <= btop) {
                 if (memcmp ((void *)idx_current, srch, srchsz) == 0) {
                     lstdl_push (lst, (void *)idx_current);
-                    idx_last = idx_current;
+                    idx_tail = idx_current;
                     idx_current += srchsz;
                 } else {
                     idx_current++;

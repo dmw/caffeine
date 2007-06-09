@@ -348,7 +348,7 @@ caf_packet_parse (caf_packet_t *r, cbuffer_t *buf)
                 return CAF_ERROR;
             }
             if (r->pack->units != (lstdl_t *)NULL) {
-                n = r->pack->units->frst;
+                n = r->pack->units->head;
                 while (n != (lstdln_t *)NULL) {
                     u = (caf_unit_t *)n->data;
                     switch (u->type) {
@@ -388,14 +388,14 @@ caf_packet_translate (caf_packet_t *r)
     if (r != (caf_packet_t *)NULL && buf != (cbuffer_t *)NULL) {
         if (r->pack != (caf_pack_t *)NULL && r->packets != (lstdl_t *)NULL) {
             if (r->pack->units != (lstdl_t *)NULL) {
-                un = r->pack->units->frst;
+                un = r->pack->units->head;
                 while (un != (lstdln_t *)NULL) {
                     bsz += ((caf_unit_t *)un->data)->length;
                     un = un->next;
                 }
                 if (bsz > 0) {
                     buf = cbuf_create (bsz);
-                    un = r->packets->frst;
+                    un = r->packets->head;
                     pos = (size_t)buf->data;
                     while (un != (lstdln_t *)NULL) {
                         u = (caf_unit_value_t *)un->data;

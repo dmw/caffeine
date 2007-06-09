@@ -141,7 +141,7 @@ pth_kpool_get_key (pth_kpool_t *pool, int id)
     lstdln_t *n;
     if (pool != (pth_kpool_t *)NULL) {
         if (pool->keys != (lstdl_t *)NULL) {
-            n = pool->keys->frst;
+            n = pool->keys->head;
             if (n != (lstdln_t *)NULL) {
                 while (n != (lstdln_t *)NULL) {
                     k = (pth_key_t *)n->data;
@@ -164,7 +164,7 @@ pth_kpool_get (pth_kpool_t *pool, int id)
     lstdln_t *n;
     if (pool != (pth_kpool_t *)NULL) {
         if (pool->keys != (lstdl_t *)NULL) {
-            n = pool->keys->frst;
+            n = pool->keys->head;
             if (n != (lstdln_t *)NULL) {
                 while (n != (lstdln_t *)NULL) {
                     k = (pth_key_t *)n->data;
@@ -187,7 +187,7 @@ pth_kpool_remove_by_id (pth_kpool_t *pool, int id)
     lstdln_t *n;
     if (pool != (pth_kpool_t *)NULL) {
         if (pool->keys != (lstdl_t *)NULL) {
-            n = pool->keys->frst;
+            n = pool->keys->head;
             if (n != (lstdln_t *)NULL) {
                 while (n != (lstdln_t *)NULL) {
                     k = (pth_key_t *)n->data;

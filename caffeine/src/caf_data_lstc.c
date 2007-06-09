@@ -57,7 +57,7 @@ lstc_delete (lstcn_t *lst, CAF_LSTCNODE_CBDEL(del))
     lstcn_t *xtodel = (lstcn_t *)NULL;
     if (lst != (lstcn_t *)NULL) {
         do {
-            if ((del (current->data)) == 0) {
+            if ((del (current->data)) == CAF_OK) {
                 xtodel = current;
                 current = current->next;
                 xfree(xtodel);
@@ -85,7 +85,7 @@ lstc_node_delete (lstcn_t *lst, lstcn_t *n, CAF_LSTCNODE_CBDEL(del))
             prev = nr->prev;
             next->prev = prev;
             prev->next = next;
-            if ((del (nr->data)) == 0) {
+            if ((del (nr->data)) == CAF_OK) {
                 xfree (nr);
                 return CAF_OK;
             } else {
@@ -116,7 +116,7 @@ lstc_node_delete_by_data (lstcn_t *lst, void *data, CAF_LSTCNODE_CBDEL(del))
                 prev = nr->prev;
                 next->prev = prev;
                 prev->next = next;
-                if ((del (nr->data) == 0)) {
+                if ((del (nr->data) == CAF_OK)) {
                     xfree (nr);
                     return CAF_OK;
                 } else {
@@ -259,7 +259,7 @@ lstc_walk_checked (lstcn_t *lst, CAF_LSTCNODE_CBWALK(step))
     if (lst != (lstcn_t *)NULL) {
         n = lst;
         do {
-            if ((step(n->data)) == 0) {
+            if ((step(n->data)) == CAF_OK) {
                 n = n->next;
                 c++;
             } else {
@@ -279,7 +279,7 @@ lstc_search (lstcn_t *lst, void *data, CAF_LSTCNODE_CBSRCH(srch))
     if (lst != (lstcn_t *)NULL) {
         n = lst;
         do {
-            if ((srch(n->data, data)) == 0) {
+            if ((srch(n->data, data)) == CAF_OK) {
                 return n->data;
             }
         } while (n != lst);

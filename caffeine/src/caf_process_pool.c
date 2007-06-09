@@ -140,7 +140,7 @@ ppm_kill_pool (lstdl_t *lst, int sig)
     lstdln_t *n;
     proc_info_t *nfo;
     if (lst != (lstdl_t *)NULL && sig > 0) {
-        n = lst->frst;
+        n = lst->head;
         while (n != (lstdln_t *)NULL) {
             nfo = (proc_info_t *)n->data;
             ppm_kill (nfo, sig);

@@ -105,7 +105,7 @@ pth_pool_create (pth_attri_t *attrs, CAF_PT_PROTOTYPE(rtn), int cnt, void *arg)
         pool = pth_pool_new (attrs, rtn, cnt);
         if (pool != (pth_pool_t *)NULL) {
             if (pool->threads != (lstdl_t *)NULL) {
-                n = pool->threads->frst;
+                n = pool->threads->head;
                 if (n != (lstdln_t *)NULL) {
                     while (n != (lstdln_t *)NULL) {
                         thr = (pthread_t *)n->data;
@@ -165,7 +165,7 @@ pth_pool_join (pth_pool_t *pool)
             if (attri->at & PTH_ATTR_JOINABLE) {
                 jn = pth_attri_set(attri, PTH_ATTR_JOINABLE, (void *)&ds);
                 if (jn == 0) {
-                    n = pool->threads->frst;
+                    n = pool->threads->head;
                     if (n != (lstdln_t *)NULL) {
                         while (n != (lstdln_t *)NULL) {
                             thr = (pthread_t *)n->data;
@@ -198,7 +198,7 @@ pth_pool_detach (pth_pool_t *pool)
             if (attri->at & PTH_ATTR_JOINABLE) {
                 jn = pth_attri_set(attri, PTH_ATTR_JOINABLE, (void *)&ds);
                 if (jn != 0) {
-                    n = pool->threads->frst;
+                    n = pool->threads->head;
                     if (n != (lstdln_t *)NULL) {
                         while (n != (lstdln_t *)NULL) {
                             thr = (pthread_t *)n->data;
@@ -223,7 +223,7 @@ pth_pool_cancel (pth_pool_t *pool)
     pthread_t *thr;
     if (pool != (pth_pool_t *)NULL) {
         if (pool->threads != (lstdl_t *)NULL) {
-            n = pool->threads->frst;
+            n = pool->threads->head;
             if (n != (lstdln_t *)NULL) {
                 while (n != (lstdln_t *)NULL) {
                     thr = (pthread_t *)n->data;
