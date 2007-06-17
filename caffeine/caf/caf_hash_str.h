@@ -41,6 +41,8 @@
 
 #include <sys/types.h>
 
+typedef u_int32_t (*caf_hash_function_t) (const char *str, u_int32_t len);
+
 u_int32_t caf_shash_rs (const char *str, u_int32_t len);
 u_int32_t caf_shash_js (const char *str, u_int32_t len);
 u_int32_t caf_shash_pjw (const char *str, u_int32_t len);

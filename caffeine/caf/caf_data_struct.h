@@ -31,6 +31,8 @@
 
 #include <caf/caf_data_lstc.h>
 #include <caf/caf_data_lstdl.h>
+#include <caf/caf_data_lstdlc.h>
+#include <caf/caf_hash_table.h>
 
 #endif /* !CAF_DATA_STRUCT_H */
 /* caf_data_struct.h ends here */
