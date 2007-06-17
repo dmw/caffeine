@@ -48,9 +48,12 @@
 extern "C" {
 #endif /* !__cplusplus */
 
+/** Size of regex_pcre_t structure */
 #define REGEX_PCRE_T_SZ             (sizeof (regex_pcre_t))
+/** Size of regex_pcre_pool_t structure */
 #define REGEX_PCRE_POOL_SZ          (sizeof (regex_pcre_pool_t))
-#define REGEX_PCRE_OV_SZ            128
+/** Size of the default output vector */
+#define REGEX_PCRE_OV_SZ            256
 
 typedef struct regex_pcre_s regex_pcre_t;
 struct regex_pcre_s {

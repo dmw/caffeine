@@ -238,8 +238,8 @@ caf_packet_addunit (caf_packet_t *r, int id, caf_unit_type_t type,
 
 
 int
-caf_packet_addstr (caf_packet_t *r, int id, size_t length, void *u_start,
-                   void *u_end, size_t su_sz, size_t eu_sz)
+caf_packet_addunitstr (caf_packet_t *r, int id, size_t length, void *u_start,
+                       void *u_end, size_t su_sz, size_t eu_sz)
 {
     caf_unit_t *u = (caf_unit_t *)NULL;
     if (r != (caf_packet_t *)NULL) {
@@ -259,7 +259,7 @@ caf_packet_addstr (caf_packet_t *r, int id, size_t length, void *u_start,
 
 
 int
-caf_packet_addpstr (caf_packet_t *r, int id, size_t length, void *u_start)
+caf_packet_addunitpstr (caf_packet_t *r, int id, size_t length, void *u_start)
 {
     caf_unit_t *u = (caf_unit_t *)NULL;
     if (r != (caf_packet_t *)NULL) {

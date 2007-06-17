@@ -28,8 +28,12 @@
 
 #define CAF_MAX(x,y)         (x > y ? x : y)
 #define CAF_FMAX(t,x,y)      ((t)x > (t)y ? (t)x : (t)y)
+
 #define CAF_DEBUG(s)         \
-    fprintf (stdout, "%s:%d: %s\n", __FILE__, __LINE__, s);
+    fprintf (stderr, "%s:%d: %s\n", __FILE__, __LINE__, s);
+
+#define CAF_NULL_T(t)        ((t)NULL)
+#define CAF_ISNULL(t,x)      (CAF_NULL_T(t) == x)
 
 #endif /* !CAF_TOOL_MACRO_H */
 /* caf_macro.h ends here */

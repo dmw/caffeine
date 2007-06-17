@@ -48,7 +48,7 @@ static const u_int64_t u64b8 = 0xff00000000000000;
 
 
 inline u_int16_t
-caf_word_oswap (u_int16_t w)
+caf_word_endian_swap (u_int16_t w)
 {
     u_int16_t c1, c2;
     c1 = (w & u16b1) << 8;
@@ -58,7 +58,7 @@ caf_word_oswap (u_int16_t w)
 
 
 inline u_int32_t
-caf_dword_oswap (u_int32_t w)
+caf_dword_endian_swap (u_int32_t w)
 {
     u_int32_t c1, c2, c3, c4;
     c1 = (w & u32b1) << 24;
@@ -70,7 +70,7 @@ caf_dword_oswap (u_int32_t w)
 
 
 inline u_int64_t
-caf_qword_oswap (u_int64_t w)
+caf_qword_endian_swap (u_int64_t w)
 {
     u_int32_t c1, c2, c3, c4, c5, c6, c7, c8;
     c1 = (w & u32b1) << 56;

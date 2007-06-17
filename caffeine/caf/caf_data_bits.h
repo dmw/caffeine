@@ -45,9 +45,9 @@
 extern "C" {
 #endif /* !__cplusplus */
 
-u_int16_t caf_word_oswap (u_int16_t w);
-u_int32_t caf_dword_oswap (u_int32_t w);
-u_int64_t caf_qword_oswap (u_int64_t w);
+u_int16_t caf_word_endian_swap (u_int16_t w);
+u_int32_t caf_dword_endian_swap (u_int32_t w);
+u_int64_t caf_qword_endian_swap (u_int64_t w);
 
 #ifdef __cplusplus
 };
