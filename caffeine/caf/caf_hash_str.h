@@ -51,7 +51,6 @@ u_int32_t caf_shash_djb (const char *str, u_int32_t len);
 u_int32_t caf_shash_dek (const char *str, u_int32_t len);
 u_int32_t caf_shash_bp (const char *str, u_int32_t len);
 u_int32_t caf_shash_fnv (const char *str, u_int32_t len);
-u_int32_t caf_shash_ap (const char *str, u_int32_t len);
 
 /** }@ */
 #endif /* !CAF_HASH_STR_H */

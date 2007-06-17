@@ -36,7 +36,7 @@ static char Id[] = "$Id$";
 u_int32_t
 caf_shash_rs (const char *str, const u_int len)
 {
-    /* Robert Sedgwicks String Hash Algorithm */
+    /* Modified Robert Sedgwicks String Hash Algorithm */
     u_int32_t b = 378551;
     u_int32_t a = 63689;
     u_int32_t hash = 0;
@@ -75,6 +75,7 @@ caf_shash_rs (const char *str, const u_int len)
 u_int
 caf_shash_js (const char* str, const u_int len)
 {
+    /* Modified Justin Sobel String Hash Algorithm */
     u_int32_t hash = 1315423911;
     u_int32_t i = 0;
     u_int32_t i32b = 0;
@@ -108,6 +109,7 @@ caf_shash_js (const char* str, const u_int len)
 u_int
 caf_shash_pjw (const char* str, const u_int len)
 {
+    /* Modified Peter J. Weinberger String Hash Algorithm */
     const u_int32_t i32_bits = (u_int32_t)(sizeof(u_int32_t) * 8);
     const u_int32_t i32_34 = (u_int32_t)((i32_bits  * 3) / 4);
     const u_int32_t i32_8 = (u_int32_t)(i32_bits / 8);
@@ -155,6 +157,7 @@ caf_shash_pjw (const char* str, const u_int len)
 u_int
 caf_shash_elf (const char* str, const u_int len)
 {
+    /* Modified ELF String Hash Algorithm */
     u_int32_t hash = 0;
     u_int32_t x    = 0;
     u_int32_t i    = 0;
@@ -201,6 +204,7 @@ caf_shash_elf (const char* str, const u_int len)
 u_int
 caf_shash_bkdr (const char* str, const u_int len)
 {
+    /* Modified Brian Kernighan and Dennis Ritchie String Hash Algorithm */
     u_int32_t seed = 131;
     u_int32_t hash = 0;
     u_int32_t i    = 0;
@@ -235,6 +239,7 @@ caf_shash_bkdr (const char* str, const u_int len)
 u_int
 caf_shash_sdbm (const char* str, const u_int len)
 {
+    /* Modified SDBM String Hash Algorithm */
     u_int32_t hash = 0;
     u_int32_t i    = 0;
     u_int32_t i32b = 0;
@@ -270,6 +275,7 @@ caf_shash_sdbm (const char* str, const u_int len)
 u_int
 caf_shash_djb (const char* str, const u_int len)
 {
+    /* Modified Daniel J. Bernstein String Hash Algorithm */
     u_int32_t hash = 5381;
     u_int32_t i    = 0;
     u_int32_t i32b = 0;
@@ -303,6 +309,7 @@ caf_shash_djb (const char* str, const u_int len)
 u_int
 caf_shash_dek (const char* str, const u_int len)
 {
+    /* Modified Donald E. Knuth String Hash Algorithm */
     u_int32_t hash = len;
     u_int32_t i    = 0;
     u_int32_t i32b = 0;
@@ -401,45 +408,5 @@ caf_shash_fnv (const char* str, const u_int len)
     }
     return 0;
 }
-
-
-u_int
-caf_shash_ap (const char* str, const u_int len)
-{
-    u_int32_t hash = 0xaaaaaaa;
-    u_int32_t i    = 0;
-    u_int32_t i32b = 0;
-    u_int32_t *i32p = (u_int32_t *)NULL;
-    char *ptr = (char *)str;
-    if (ptr != (const char *)NULL && len > 0) {
-        i32b = len / 4;
-        if (i32b > 0) {
-            i32p = (u_int32_t *)ptr;
-            for (i = 0; i < i32b; i32p++, i++) {
-                hash ^= ((i & 1) == 0) ?
-                        ((hash <<  6) ^ (u_int32_t)(*i32p) ^ (hash >> 4)) :
-                        (~((hash << 8) ^ (u_int32_t)(*i32p) ^ (hash >> 7)));
-            }
-            if ((len % 4) > 0) {
-                i32b *= 4;
-                ptr = (char *)((size_t)i32b + (size_t)ptr);
-                for (i = (len - (len % 4)); i < len; ptr++, i++) {
-                    hash ^= ((i & 1) == 0) ?
-                            ((hash <<  6) ^ (u_int32_t)(*ptr) ^ (hash >> 4)) :
-                            (~((hash << 8) ^ (u_int32_t)(*ptr) ^ (hash >> 7)));
-                }
-            }
-        } else {
-            for (i = 0; i < len; ptr++, i++) {
-                hash ^= ((i & 1) == 0) ?
-                        ((hash <<  6) ^ (u_int32_t)(*ptr) ^ (hash >> 4)) :
-                        (~((hash << 8) ^ (u_int32_t)(*ptr) ^ (hash >> 7)));
-            }
-        }
-        return hash;
-    }
-    return 0;
-}
-
 
 /* caf_hash_str.c ends here */
