@@ -50,6 +50,10 @@ set (CAF_BUFFER_SRCS
         caf_buffer.c)
 
 ### pidfile test sources
+set (CAF_HASH_STR_SRCS
+        caf_hash_str.c)
+
+### pidfile test sources
 set (CAF_PIDFILE_SRCS
         caf_pidfile.c)
 
@@ -136,6 +140,11 @@ set_source_files_properties (
         COMPILE_FLAGS "${CFLAGS_PROJECT}")
 
 set_source_files_properties (
+        ${CAF_HASH_STR_SRCS}
+        PROPERTIES
+        COMPILE_FLAGS "${CFLAGS_PROJECT}")
+
+set_source_files_properties (
         ${CAF_PPM_SRCS}
         PROPERTIES
         COMPILE_FLAGS "${CFLAGS_PROJECT}")
@@ -179,7 +188,8 @@ add_executable (caf_lstdl ${CAF_LSTDL_SRCS})
 add_executable (caf_lstdlc ${CAF_LSTDLC_SRCS})
 add_executable (caf_lstc ${CAF_LSTC_SRCS})
 add_executable (caf_buffer ${CAF_BUFFER_SRCS})
-add_executable (caf_pidfile ${CAF_PIDFILE_SRCS})
+add_executable (caf_hash_str ${CAF_HASH_STR_SRCS})
+add_executable (caf_tail ${CAF_IO_TAIL_SRCS})
 add_executable (caf_ppm ${CAF_PPM_SRCS})
 add_executable (caf_tpm ${CAF_TPM_SRCS})
 add_executable (caf_both_ptm ${CAF_BOTH_PTM_SRCS})
@@ -187,4 +197,3 @@ add_executable (caf_pth_key ${CAF_PTH_KEY_SRCS})
 add_executable (caf_mutex ${CAF_PTH_MUTEX_SRCS})
 add_executable (caf_rwlock ${CAF_PTH_RWLOCK_SRCS})
 add_executable (caf_tail ${CAF_IO_TAIL_SRCS})
-
