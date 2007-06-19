@@ -48,7 +48,8 @@
 
 typedef struct caf_hash_s caf_hash_t;
 struct caf_hash_s {
-    u_int32_t hash;
+    u_int32_t hash1;
+    u_int32_t hash2;
     size_t key_sz;
     void *key;
     void *data;
@@ -57,26 +58,30 @@ struct caf_hash_s {
 typedef struct caf_hash_table_s caf_hash_table_t;
 struct caf_hash_table_s {
     int id;
-    caf_hash_function_t *function;
+    CAF_HASH_STR_FUNCTION(f1);
+    CAF_HASH_STR_FUNCTION(f2);
     lstdlc_t *hashes;
 };
 
 caf_hash_t *caf_hash_new (const void *key, const size_t ksz, const void *data,
-                          caf_hash_function_t *function);
+                          CAF_HASH_STR_FUNCTION(f1),
+                          CAF_HASH_STR_FUNCTION(f2));
+caf_hash_t *caf_hash_new_nodata (const void *key, const size_t ksz,
+                                 CAF_HASH_STR_FUNCTION(f1),
+                                 CAF_HASH_STR_FUNCTION(f2));
 int caf_hash_delete (caf_hash_t *hash);
-
 caf_hash_table_t *caf_hash_table_new (const int id,
-                                      caf_hash_function_t *function);
+                                      CAF_HASH_STR_FUNCTION(f1),
+                                      CAF_HASH_STR_FUNCTION(f2));
 int caf_hash_table_delete (caf_hash_table_t *table);
-
 int caf_hash_table_add (caf_hash_table_t *table, const void *key,
                         const size_t ksz, const void *data);
 int caf_hash_table_remove (caf_hash_table_t *table, const void *key,
-                           const size_t *ksz);
+                           const size_t ksz);
 void *caf_hash_table_get (caf_hash_table_t *table, const void *key,
-                          const size_t *ksz);
-void *caf_hash_table_set (caf_hash_table_t *table, const void *key,
-                          const size_t *ksz, void *data);
+                          const size_t ksz);
+int caf_hash_table_set (caf_hash_table_t *table, const void *key,
+                          const size_t ksz, void *data);
 
 /** }@ */
 #endif /* !CAF_HASH_TABLE_H */

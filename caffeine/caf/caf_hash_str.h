@@ -41,18 +41,19 @@
 
 #include <sys/types.h>
 
-typedef u_int32_t (*caf_hash_function_t) (const char *str, u_int32_t len);
+#define CAF_HASH_STR_FUNCTION(f)    \
+    u_int32_t (*f) (const char *str, const u_int32_t len)
 
-u_int32_t caf_shash_rs (const char *str, u_int32_t len);
-u_int32_t caf_shash_js (const char *str, u_int32_t len);
-u_int32_t caf_shash_pjw (const char *str, u_int32_t len);
-u_int32_t caf_shash_elf (const char *str, u_int32_t len);
-u_int32_t caf_shash_bkdr (const char *str, u_int32_t len);
-u_int32_t caf_shash_sdbm (const char *str, u_int32_t len);
-u_int32_t caf_shash_djb (const char *str, u_int32_t len);
-u_int32_t caf_shash_dek (const char *str, u_int32_t len);
-u_int32_t caf_shash_bp (const char *str, u_int32_t len);
-u_int32_t caf_shash_fnv (const char *str, u_int32_t len);
+u_int32_t caf_shash_rs (const char *str, const u_int32_t len);
+u_int32_t caf_shash_js (const char *str, const u_int32_t len);
+u_int32_t caf_shash_pjw (const char *str, const u_int32_t len);
+u_int32_t caf_shash_elf (const char *str, const u_int32_t len);
+u_int32_t caf_shash_bkdr (const char *str, const u_int32_t len);
+u_int32_t caf_shash_sdbm (const char *str, const u_int32_t len);
+u_int32_t caf_shash_djb (const char *str, const u_int32_t len);
+u_int32_t caf_shash_dek (const char *str, const u_int32_t len);
+u_int32_t caf_shash_bp (const char *str, const u_int32_t len);
+u_int32_t caf_shash_fnv (const char *str, const u_int32_t len);
 
 /** }@ */
 #endif /* !CAF_HASH_STR_H */

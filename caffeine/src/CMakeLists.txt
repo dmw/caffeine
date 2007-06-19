@@ -40,6 +40,7 @@ set (CAFFEINE_SRCS
     caf_data_mem.c
     caf_data_pidfile.c
     caf_hash_str.c
+    caf_hash_table.c
     caf_io_file.c
     caf_io_tail.c
     caf_io_net.c
@@ -77,6 +78,7 @@ set (CAFFEINE_HEADERS
     caf_data_mem.h
     caf_data_pidfile.h
     caf_hash_str.h
+    caf_hash_table.h
     caf_io_core.h
     caf_io_tail.h
     caf_io_net.h
