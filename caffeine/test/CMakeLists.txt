@@ -54,6 +54,10 @@ set (CAF_HASH_STR_SRCS
         caf_hash_str.c)
 
 ### pidfile test sources
+set (CAF_HASH_TABLE_SRCS
+        caf_hash_table.c)
+
+### pidfile test sources
 set (CAF_PIDFILE_SRCS
         caf_pidfile.c)
 
@@ -145,6 +149,11 @@ set_source_files_properties (
         COMPILE_FLAGS "${CFLAGS_PROJECT}")
 
 set_source_files_properties (
+        ${CAF_HASH_TABLE_SRCS}
+        PROPERTIES
+        COMPILE_FLAGS "${CFLAGS_PROJECT}")
+
+set_source_files_properties (
         ${CAF_PPM_SRCS}
         PROPERTIES
         COMPILE_FLAGS "${CFLAGS_PROJECT}")
@@ -189,6 +198,7 @@ add_executable (caf_lstdlc ${CAF_LSTDLC_SRCS})
 add_executable (caf_lstc ${CAF_LSTC_SRCS})
 add_executable (caf_buffer ${CAF_BUFFER_SRCS})
 add_executable (caf_hash_str ${CAF_HASH_STR_SRCS})
+add_executable (caf_hash_table ${CAF_HASH_TABLE_SRCS})
 add_executable (caf_tail ${CAF_IO_TAIL_SRCS})
 add_executable (caf_ppm ${CAF_PPM_SRCS})
 add_executable (caf_tpm ${CAF_TPM_SRCS})

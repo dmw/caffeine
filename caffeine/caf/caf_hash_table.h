@@ -82,6 +82,7 @@ void *caf_hash_table_get (caf_hash_table_t *table, const void *key,
                           const size_t ksz);
 int caf_hash_table_set (caf_hash_table_t *table, const void *key,
                           const size_t ksz, void *data);
+void caf_hash_table_dump (FILE *out, caf_hash_table_t *table);
 
 /** }@ */
 #endif /* !CAF_HASH_TABLE_H */

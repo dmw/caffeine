@@ -355,11 +355,13 @@ lstdlc_search (lstdlc_t *lst, void *data, CAF_LSTDLCNODE_CBSRCH(srch))
     if (lst != (lstdlc_t *)NULL) {
         n = lst->head;
         do {
-            if ((srch (n->data, data)) == CAF_OK) {
-                return n->data;
+            if (n != (lstdlcn_t *)NULL) {
+                if ((srch (n->data, data)) == CAF_OK) {
+                    return n->data;
+                }
+                n = n->next;
+                c++;
             }
-            n = n->next;
-            c++;
         } while (n != lst->tail);
     }
     return (void *)NULL;
