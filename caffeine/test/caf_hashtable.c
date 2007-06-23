@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <string.h>
+
 #include <caf/caf_hash_str.h>
 #include <caf/caf_hash_table.h>
 

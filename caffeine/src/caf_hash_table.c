@@ -52,7 +52,6 @@ caf_hash_new (const void *key, const size_t ksz, const void *data,
         && f1 != NULL && f2 != NULL) {
         r = (caf_hash_t *)xmalloc (CAF_HASH_SZ);
         if (r != (caf_hash_t *)NULL) {
-            printf ("D: f1: %p\tf2: %p\n", (void *)f1, (void *)f2);
             r->hash1 = f1 ((const char *)key, ksz);
             r->hash2 = f2 ((const char *)key, ksz);
             r->key_sz = ksz;
@@ -72,7 +71,6 @@ caf_hash_t *caf_hash_new_nodata (const void *key, const size_t ksz,
     if (key != (const void *)NULL && ksz > 0 && f1 != NULL && f2 != NULL) {
         r = (caf_hash_t *)xmalloc (CAF_HASH_SZ);
         if (r != (caf_hash_t *)NULL) {
-            printf ("ND: f1: %p\tf2: %p\n", (void *)f1, (void *)f2);
             r->hash1 = f1 ((const char *)key, ksz);
             r->hash2 = f2 ((const char *)key, ksz);
             r->key_sz = ksz;

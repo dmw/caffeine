@@ -95,6 +95,18 @@ lstcn_t *lstc_new (void *data);
 
 /**
  *
+ * @brief    Creates a new empty Caffeine Circular List.
+ *
+ * Creates a new Caffeine Circular List completly empty.
+ *
+ * @return       lstcn_t *     the allocated list.
+ *
+ * @see      lstcn_t
+ */
+lstcn_t *lstc_create (void);
+
+/**
+ *
  * @brief    Deletes a Caffeine Circular List.
  *
  * Try to free the memory allocated for the circular list.
