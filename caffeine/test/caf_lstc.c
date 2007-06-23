@@ -34,6 +34,7 @@
 #define strdup(s)           strndup (s, 1024)
 #endif /* !_GNU_SOURCE */
 
+void test_create (void);
 void test_new (void);
 void test_pop (void);
 void test_get (void);
@@ -49,6 +50,23 @@ main (void)
     test_get ();
     test_walk ();
     return 0;
+}
+
+
+void
+test_create (void)
+{
+    lstcn_t *lst = lstc_create ();
+    printf ("lstc_t *: zero elements list\n");
+    printf ("list length: %d\n", lstc_length (lst));
+    lstc_push (lst, strdup("2"));
+    lstc_push (lst, strdup("3"));
+    lstc_push (lst, strdup("4"));
+    lstc_push (lst, strdup("5"));
+    lstc_push (lst, strdup("6"));
+    lstc_dump (stdout, lst, lstc_dump_str_cb);
+    printf ("list length: %d\n", lstc_length (lst));
+    lstc_delete (lst, lstc_str_delete_cb);
 }
 
 

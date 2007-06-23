@@ -59,7 +59,14 @@ test_create (void)
     lstdlc_t *lst = lstdlc_create ();
     printf ("lstdlc_t *: zero elements list\n");
     printf ("list length: %d\n", lstdlc_length (lst));
-    lstdlc_delete_nocb (lst);
+    lstdlc_push (lst, strdup("2"));
+    lstdlc_push (lst, strdup("3"));
+    lstdlc_push (lst, strdup("4"));
+    lstdlc_push (lst, strdup("5"));
+    lstdlc_push (lst, strdup("6"));
+    lstdlc_dump (stdout, lst, lstdlc_dump_str_cb);
+    printf ("list length: %d\n", lstdlc_length (lst));
+    lstdlc_delete (lst, lstdlc_str_delete_cb);
 }
 
 

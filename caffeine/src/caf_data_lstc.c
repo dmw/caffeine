@@ -50,6 +50,19 @@ lstc_new (void *data)
 }
 
 
+lstcn_t *
+lstc_create ()
+{
+    lstcn_t *node = (lstcn_t *)xmalloc (CAF_LSTC_SZ);
+    if (node != (lstcn_t *)NULL) {
+        node->data = (void *)NULL;
+        node->next = (lstcn_t *)NULL;
+        node->prev = (lstcn_t *)NULL;
+    }
+    return node;
+}
+
+
 int
 lstc_delete (lstcn_t *lst, CAF_LSTCNODE_CBDEL(del))
 {
@@ -135,6 +148,28 @@ lstc_node_delete_by_data (lstcn_t *lst, void *data, CAF_LSTCNODE_CBDEL(del))
 
 
 int
+lstc_empty_list (lstcn_t *lst)
+{
+    if (lst != (lstcn_t *)NULL) {
+        return ((lst->next == lst->prev && lst->prev == (lstcn_t *)NULL)
+                ? CAF_OK : CAF_ERROR);
+    }
+    return CAF_ERROR;
+}
+
+
+int
+lstc_oneitem_list (lstcn_t *lst)
+{
+    if (lst != (lstcn_t *)NULL) {
+        return ((lst->next == lst->prev && lst->prev != (lstcn_t *)NULL)
+                ? CAF_OK : CAF_ERROR);
+    }
+    return CAF_ERROR;
+}
+
+
+int
 lstc_length (lstcn_t *lst)
 {
     int c;
@@ -157,15 +192,21 @@ lstc_push (lstcn_t *lst, void *data)
 {
     lstcn_t *last, *xnew;
     if (lst != (lstcn_t *)NULL) {
-        xnew = (lstcn_t *)xmalloc (CAF_LSTC_SZ);
-        if (xnew != (lstcn_t *)NULL) {
-            last = lst->prev;
-            last->next = xnew;
-            xnew->prev = last;
-            xnew->next = lst;
-            xnew->data = data;
-            lst->prev = xnew;
-            return lst;
+        if (lstc_empty_list (lst) == CAF_OK) {
+            lst->next = lst;
+            lst->prev = lst;
+            lst->data = data;
+        } else {
+            xnew = (lstcn_t *)xmalloc (CAF_LSTC_SZ);
+            if (xnew != (lstcn_t *)NULL) {
+                last = lst->prev;
+                last->next = xnew;
+                xnew->prev = last;
+                xnew->next = lst;
+                xnew->data = data;
+                lst->prev = xnew;
+                return lst;
+            }
         }
     }
     return (lstcn_t *)NULL;

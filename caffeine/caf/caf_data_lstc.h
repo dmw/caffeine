@@ -148,6 +148,35 @@ int lstc_node_delete (lstcn_t *lst, lstcn_t *n, CAF_LSTCNODE_CBDEL(del));
  */
 int lstc_node_delete_by_data (lstcn_t *lst, void *data, CAF_LSTCNODE_CBDEL(del));
 
+
+/**
+ *
+ * @brief    Verifies if the list is empty or not
+ *
+ * Verifies if the list is empty or not.
+ *
+ * @param[in]    lst    The list to get length
+ * @return       CAF_OK if is empty, CAF_ERROR if not.
+ *
+ * @see    lstc_t
+ */
+int lstc_empty_list (lstcn_t *lst);
+
+
+/**
+ *
+ * @brief    Verifies if the list have only one item
+ *
+ * Verifies if the list have only one item.
+ *
+ * @param[in]    lst    The list to get length
+ * @return       CAF_OK if does have one item, CAF_ERROR if not.
+ *
+ * @see    lstc_t
+ */
+int lstc_oneitem_list (lstcn_t *lst);
+
+
 /**
  *
  * @brief    Returns the len of the given list.

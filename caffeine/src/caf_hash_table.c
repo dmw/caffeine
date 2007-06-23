@@ -52,6 +52,7 @@ caf_hash_new (const void *key, const size_t ksz, const void *data,
         && f1 != NULL && f2 != NULL) {
         r = (caf_hash_t *)xmalloc (CAF_HASH_SZ);
         if (r != (caf_hash_t *)NULL) {
+            printf ("D: f1: %p\tf2: %p\n", (void *)f1, (void *)f2);
             r->hash1 = f1 ((const char *)key, ksz);
             r->hash2 = f2 ((const char *)key, ksz);
             r->key_sz = ksz;
@@ -64,13 +65,14 @@ caf_hash_new (const void *key, const size_t ksz, const void *data,
 
 
 caf_hash_t *caf_hash_new_nodata (const void *key, const size_t ksz,
-                                        CAF_HASH_STR_FUNCTION(f1),
-                                        CAF_HASH_STR_FUNCTION(f2))
+                                 CAF_HASH_STR_FUNCTION(f1),
+                                 CAF_HASH_STR_FUNCTION(f2))
 {
     caf_hash_t *r = (caf_hash_t *)NULL;
     if (key != (const void *)NULL && ksz > 0 && f1 != NULL && f2 != NULL) {
         r = (caf_hash_t *)xmalloc (CAF_HASH_SZ);
         if (r != (caf_hash_t *)NULL) {
+            printf ("ND: f1: %p\tf2: %p\n", (void *)f1, (void *)f2);
             r->hash1 = f1 ((const char *)key, ksz);
             r->hash2 = f2 ((const char *)key, ksz);
             r->key_sz = ksz;
@@ -135,7 +137,7 @@ caf_hash_table_add (caf_hash_table_t *table, const void *key,
     caf_hash_t *hash_new;
     if (table != (caf_hash_table_t *)NULL && key != (const void *)NULL &&
         ksz > 0 && data != (const void *)NULL) {
-        hash_new = caf_hash_new (key, ksz, data, table->f1, table->f2);
+        hash_new = caf_hash_new_nodata (key, ksz, table->f1, table->f2);
         if ((hash = (caf_hash_t *)lstdlc_search (table->hashes,
                                                  (void *)hash_new,
                                                  caf_hash_search_callback))
@@ -243,11 +245,15 @@ caf_hash_table_dump (FILE *out, caf_hash_table_t *table)
 static int
 caf_hash_search_callback (void *lptr, void *data)
 {
-    caf_hash_t *hash1 = (caf_hash_t *)lptr;
-    caf_hash_t *hash2 = (caf_hash_t *)data;
-    return (hash1->hash1 == hash2->hash1
-            && hash1->hash2 == hash2->hash2)
-            ? CAF_OK : CAF_ERROR;
+    caf_hash_t *hash1;
+    caf_hash_t *hash2;
+    if (lptr != (void *)NULL && data != (void *)NULL) {
+        hash1 = (caf_hash_t *)lptr;
+        hash2 = (caf_hash_t *)data;
+        return ((hash1->hash1 == hash2->hash1 && hash1->hash2 == hash2->hash2)
+                ? CAF_OK : CAF_ERROR);
+    }
+    return CAF_ERROR;
 }
 
 
@@ -261,6 +267,7 @@ caf_hash_delete_callback (void *data)
     return CAF_ERROR;
 }
 
+
 static int
 caf_hash_dump (FILE *out, void *data)
 {
@@ -270,7 +277,7 @@ caf_hash_dump (FILE *out, void *data)
     if (data != (void *)NULL) {
         hash = (caf_hash_t *)data;
         fprintf (out, msg, hash, hash->hash1, hash->hash2, (char *)hash->key,
-                 (char *)data);
+                 (char *)hash->data);
         return CAF_OK;
     }
     return CAF_ERROR;
