@@ -82,7 +82,6 @@ int
 lstdlc_delete (lstdlc_t *lst, CAF_LSTDLCNODE_CBDEL(del))
 {
     lstdlcn_t *cur, *destroy;
-    int cnt = 0;
     if (lst != (lstdlc_t *)NULL) {
         if (lst->head != (lstdlcn_t *)NULL && lst->tail != (lstdlcn_t *)NULL) {
             cur = lst->head;
@@ -91,7 +90,6 @@ lstdlc_delete (lstdlc_t *lst, CAF_LSTDLCNODE_CBDEL(del))
                     destroy = cur;
                     cur = cur->next;
                     xfree(destroy);
-                    cnt++;
                 } else {
                     lst->head = cur;
                     return CAF_ERROR;
@@ -112,12 +110,10 @@ int
 lstdlc_delete_nocb (lstdlc_t *lst)
 {
     lstdlcn_t *cur, *destroy;
-    int cnt = 0;
     if (lst != (lstdlc_t *)NULL) {
         if (lst->head != (lstdlcn_t *)NULL && lst->tail != (lstdlcn_t *)NULL) {
             cur = lst->head;
             do {
-                cnt++;
                 destroy = cur;
                 cur = cur->next;
                 xfree(destroy);
