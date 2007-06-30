@@ -57,13 +57,17 @@ void
 test_create (void)
 {
     lstdlc_t *lst = lstdlc_create ();
+    char *str3 = strdup("3");
+    char *str4 = strdup("4");
     printf ("lstdlc_t *: zero elements list\n");
     printf ("list length: %d\n", lstdlc_length (lst));
     lstdlc_push (lst, strdup("2"));
-    lstdlc_push (lst, strdup("3"));
-    lstdlc_push (lst, strdup("4"));
+    lstdlc_push (lst, str3);
+    lstdlc_push (lst, str4);
     lstdlc_push (lst, strdup("5"));
     lstdlc_push (lst, strdup("6"));
+    lstdlc_node_delete_by_data (lst, str3, lstdlc_str_delete_cb);
+    lstdlc_node_delete_by_data (lst, str4, lstdlc_str_delete_cb);
     lstdlc_dump (stdout, lst, lstdlc_dump_str_cb);
     printf ("list length: %d\n", lstdlc_length (lst));
     lstdlc_delete (lst, lstdlc_str_delete_cb);
@@ -74,19 +78,19 @@ void
 test_new (void)
 {
     lstdlc_t *lst = lstdlc_new (strdup("1"));
-    printf ("lstdlc_t *: one element list\n");
+    printf ("lstdlc_t *: 1 element list\n");
     lstdlc_dump (stdout, lst, lstdlc_dump_str_cb);
     printf ("list length: %d\n", lstdlc_length (lst));
     lstdlc_delete (lst, lstdlc_str_delete_cb);
 
-    printf ("lstdlc_t *: two elements list\n");
+    printf ("lstdlc_t *: 2 elements list\n");
     lst = lstdlc_new (strdup("1"));
     lstdlc_push (lst, strdup("2"));
     lstdlc_dump (stdout, lst, lstdlc_dump_str_cb);
     printf ("list length: %d\n", lstdlc_length (lst));
     lstdlc_delete (lst, lstdlc_str_delete_cb);
 
-    printf ("lstdlc_t *: three elements list\n");
+    printf ("lstdlc_t *: 3 elements list\n");
     lst = lstdlc_new (strdup("1"));
     lstdlc_push (lst, strdup("2"));
     lstdlc_push (lst, strdup("3"));
@@ -94,7 +98,7 @@ test_new (void)
     printf ("list length: %d\n", lstdlc_length (lst));
     lstdlc_delete (lst, lstdlc_str_delete_cb);
 
-    printf ("lstdlc_t *: many elements list\n");
+    printf ("lstdlc_t *: 6 elements list\n");
     lst = lstdlc_new (strdup("1"));
     lstdlc_push (lst, strdup("2"));
     lstdlc_push (lst, strdup("3"));
