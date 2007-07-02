@@ -67,7 +67,8 @@ test_create (void)
     lstdlc_push (lst, strdup("5"));
     lstdlc_push (lst, strdup("6"));
     lstdlc_node_delete_by_data (lst, str3, lstdlc_str_delete_cb);
-    lstdlc_node_delete_by_data (lst, str4, lstdlc_str_delete_cb);
+    lstdlc_node_delete (lst, lstdlc_search_node (lst, str4),
+                        lstdlc_str_delete_cb);
     lstdlc_dump (stdout, lst, lstdlc_dump_str_cb);
     printf ("list length: %d\n", lstdlc_length (lst));
     lstdlc_delete (lst, lstdlc_str_delete_cb);

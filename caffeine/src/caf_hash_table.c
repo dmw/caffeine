@@ -118,7 +118,8 @@ int
 caf_hash_table_delete (caf_hash_table_t *table)
 {
     if (table != (caf_hash_table_t *)NULL) {
-        if ((lstdlc_delete_nocb (table->hashes)) == CAF_OK) {
+        if ((lstdlc_delete (table->hashes, caf_hash_delete_callback)) ==
+            CAF_OK) {
             xfree (table);
             return CAF_OK;
         }
@@ -136,10 +137,9 @@ caf_hash_table_add (caf_hash_table_t *table, const void *key,
     if (table != (caf_hash_table_t *)NULL && key != (const void *)NULL &&
         ksz > 0 && data != (const void *)NULL) {
         hash_new = caf_hash_new_nodata (key, ksz, table->f1, table->f2);
-        if ((hash = (caf_hash_t *)lstdlc_search (table->hashes,
-                                                 (void *)hash_new,
-                                                 caf_hash_search_callback))
-            == (caf_hash_t *)NULL) {
+        hash = (caf_hash_t *)lstdlc_search (table->hashes, (void *)hash_new,
+                                            caf_hash_search_callback);
+        if (hash == (caf_hash_t *)NULL) {
             hash = caf_hash_new (key, ksz, data, table->f1, table->f2);
             if (hash != (caf_hash_t *)NULL) {
                 caf_hash_delete (hash_new);
@@ -169,10 +169,9 @@ caf_hash_table_remove (caf_hash_table_t *table, const void *key,
     if (table != (caf_hash_table_t *)NULL && key != (const void *)NULL &&
         ksz > 0) {
         hash_new = caf_hash_new_nodata (key, ksz, table->f1, table->f2);
-        if ((hash = (caf_hash_t *)lstdlc_search (table->hashes,
-                                                 (void *)hash_new,
-                                                 caf_hash_search_callback))
-            != (caf_hash_t *)NULL) {
+        hash = (caf_hash_t *)lstdlc_search (table->hashes, (void *)hash_new,
+                                            caf_hash_search_callback);
+        if (hash != (caf_hash_t *)NULL) {
             caf_hash_delete (hash_new);
             return lstdlc_node_delete_by_data (table->hashes, (void *)hash,
                                                caf_hash_delete_callback);

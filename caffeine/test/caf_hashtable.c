@@ -47,8 +47,11 @@ main (int argc, char **argv)
         caf_hash_table_add (table, "hello", strlen("hello") + 1, "hello 2");
         caf_hash_table_add (table, "chao", strlen("chao") + 1, "chao 2");
         caf_hash_table_set (table, "bye", strlen("bye") + 1, "bye 2");
-        caf_hash_table_remove (table, "hello", strlen("hello") + 1);
         caf_hash_table_dump (stdout, table);
+        printf ("remove: %d\n", caf_hash_table_remove (table, "hello",
+                                                       strlen("hello") + 1));
+        caf_hash_table_dump (stdout, table);
+        lstdlc_dump_ptr (stdout, table->hashes);
         caf_hash_table_delete (table);
     }
     return 0;

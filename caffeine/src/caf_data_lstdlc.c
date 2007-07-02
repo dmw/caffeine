@@ -140,7 +140,8 @@ lstdlc_delete_nocb (lstdlc_t *lst)
                     cur = cur->next;
                     xfree(destroy);
                 } while (cur != lst->tail);
-                xfree(lst);
+                xfree (lst->tail);
+                xfree (lst);
                 return CAF_OK;
             }
         } else {
@@ -160,7 +161,16 @@ lstdlc_node_delete (lstdlc_t *lst, lstdlcn_t *n, CAF_LSTDLCNODE_CBDEL(del))
     if (lst != (lstdlc_t *)NULL && n != (void *)NULL && del != NULL) {
         nr = lst->head;
         if (nr != (lstdlcn_t *)NULL) {
-            do {
+            if (lstdlc_empty_list (lst) == CAF_OK) {
+                return CAF_ERROR;
+            } else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+                if ((del (lst->head->data)) == CAF_OK) {
+                    xfree (lst->head);
+                    lst->head = (lstdlcn_t *)NULL;
+                    lst->tail = (lstdlcn_t *)NULL;
+                    return CAF_OK;
+                }
+            } else {
                 if (nr == n) {
                     if ((del (nr->data)) == CAF_OK) {
                         prev = nr->prev;
@@ -169,11 +179,37 @@ lstdlc_node_delete (lstdlc_t *lst, lstdlcn_t *n, CAF_LSTDLCNODE_CBDEL(del))
                         next->prev = prev;
                         xfree (nr);
                         lst->size--;
+                        lst->head = next;
                         return CAF_OK;
                     }
+                } else if (lst->tail = n) {
+                    if ((del (nr->data)) == CAF_OK) {
+                        prev = nr->prev;
+                        next = nr->next;
+                        prev->next = next;
+                        next->prev = prev;
+                        xfree (nr);
+                        lst->size--;
+                        lst->tail = prev;
+                        return CAF_OK;
+                    }
+                } else {
+                    do {
+                        if (nr == n) {
+                            if ((del (nr->data)) == CAF_OK) {
+                                prev = nr->prev;
+                                next = nr->next;
+                                prev->next = next;
+                                next->prev = prev;
+                                xfree (nr);
+                                lst->size--;
+                                return CAF_OK;
+                            }
+                        }
+                        nr = nr->next;
+                    } while (nr != lst->tail);
                 }
-                nr = nr->next;
-            } while (nr != lst->tail);
+            }
         }
     }
     return CAF_ERROR;
@@ -189,7 +225,16 @@ lstdlc_node_delete_by_data (lstdlc_t *lst, void *n, CAF_LSTDLCNODE_CBDEL(del))
     if (lst != (lstdlc_t *)NULL && n != (void *)NULL && del != NULL) {
         nr = lst->head;
         if (nr != (lstdlcn_t *)NULL) {
-            do {
+            if (lstdlc_empty_list (lst) == CAF_OK) {
+                return CAF_ERROR;
+            } else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+                if ((del (lst->head->data)) == CAF_OK) {
+                    xfree (lst->head);
+                    lst->head = (lstdlcn_t *)NULL;
+                    lst->tail = (lstdlcn_t *)NULL;
+                    return CAF_OK;
+                }
+            } else {
                 if (nr->data == n) {
                     if ((del (nr->data)) == CAF_OK) {
                         prev = nr->prev;
@@ -198,11 +243,37 @@ lstdlc_node_delete_by_data (lstdlc_t *lst, void *n, CAF_LSTDLCNODE_CBDEL(del))
                         next->prev = prev;
                         xfree (nr);
                         lst->size--;
+                        lst->head = next;
                         return CAF_OK;
                     }
+                } else if (lst->tail->data = n) {
+                    if ((del (nr->data)) == CAF_OK) {
+                        prev = nr->prev;
+                        next = nr->next;
+                        prev->next = next;
+                        next->prev = prev;
+                        xfree (nr);
+                        lst->size--;
+                        lst->tail = prev;
+                        return CAF_OK;
+                    }
+                } else {
+                    do {
+                        if (nr->data == n) {
+                            if ((del (nr->data)) == CAF_OK) {
+                                prev = nr->prev;
+                                next = nr->next;
+                                prev->next = next;
+                                next->prev = prev;
+                                xfree (nr);
+                                lst->size--;
+                                return CAF_OK;
+                            }
+                        }
+                        nr = nr->next;
+                    } while (nr != lst->tail);
                 }
-                nr = nr->next;
-            } while (nr != lst->tail);
+            }
         }
     }
     return CAF_ERROR;
@@ -254,7 +325,8 @@ lstdlc_length (lstdlc_t *lst)
 lstdlc_t *
 lstdlc_push (lstdlc_t *lst, void *data)
 {
-    lstdlcn_t *tail = (lstdlcn_t *)NULL, *xnew;
+    lstdlcn_t *tail = (lstdlcn_t *)NULL, *head = (lstdlcn_t *)NULL;
+    lstdlcn_t *xnew = (lstdlcn_t *)NULL;
     if (lst != (lstdlc_t *)NULL) {
         xnew = (lstdlcn_t *)xmalloc (CAF_LSTDLCNODE_SZ);
         if (xnew != (lstdlcn_t *)NULL) {
@@ -267,10 +339,12 @@ lstdlc_push (lstdlc_t *lst, void *data)
                 lst->size++;
             } else {
                 tail = lst->tail;
+                head = lst->head;
                 tail->next = xnew;
                 xnew->prev = tail;
-                xnew->next = lst->tail;
+                xnew->next = head;
                 xnew->data = data;
+                head->prev = xnew;
                 lst->tail = xnew;
                 lst->size++;
                 return lst;
@@ -364,7 +438,7 @@ lstdlc_set (lstdlc_t *lst, int pos, void *data)
                 pn = pn->next;
                 c++;
             } while (pn != lst->tail);
-            if (pos = c) {
+            if (pos == c) {
                 lst->tail->data = data;
             }
         }
@@ -377,7 +451,7 @@ void *
 lstdlc_get (lstdlc_t *lst, int pos)
 {
     lstdlcn_t *pn;
-    int c;
+    int c = 0;
     if (lst != (lstdlc_t *)NULL) {
         if ((lstdlc_empty_list (lst) == CAF_OK)) {
             return (void *)NULL;
@@ -561,13 +635,14 @@ lstdlc_dump_ptr (FILE *out, lstdlc_t *lst)
     lstdlcn_t *cur;
     if (lst != (lstdlc_t *)NULL && out != (FILE *)NULL) {
         cur = lst->head;
-        a += fprintf (out, "%d: %p < %p > %p : %p\n", c, (void *)cur->prev,
-                      (void *)cur, (void *)cur->next, cur->data);
         do {
             c++;
             a += fprintf (out, "%d: %p < %p > %p : %p\n", c, (void *)cur->prev,
                           (void *)cur, (void *)cur->next, cur->data);
         } while ((cur = cur->next) != lst->tail);
+        cur = lst->tail;
+        a += fprintf (out, "%d: %p < %p > %p : %p\n", c, (void *)cur->prev,
+                      (void *)cur, (void *)cur->next, cur->data);
     }
     return a;
 }
