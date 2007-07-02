@@ -57,14 +57,20 @@ void
 test_create (void)
 {
     lstcn_t *lst = lstc_create ();
+    char *str2 = strdup("2");
+    char *str3 = strdup("3");
+    char *str4 = strdup("4");
     printf ("lstc_t *: zero elements list\n");
-    printf ("list length: %d\n", lstc_length (lst));
-    lstc_push (lst, strdup("2"));
-    lstc_push (lst, strdup("3"));
-    lstc_push (lst, strdup("4"));
+    lstc_push (lst, str2);
+    lstc_push (lst, str3);
+    lstc_push (lst, str4);
     lstc_push (lst, strdup("5"));
     lstc_push (lst, strdup("6"));
+    printf ("list length: %d\n", lstc_length (lst));
     lstc_dump (stdout, lst, lstc_dump_str_cb);
+    lstc_node_delete_by_data (lst, str2, lstc_str_delete_cb);
+    lstc_node_delete_by_data (lst, str3, lstc_str_delete_cb);
+    lstc_node_delete (lst, lstc_search_node (lst, str4), lstc_str_delete_cb);
     printf ("list length: %d\n", lstc_length (lst));
     lstc_delete (lst, lstc_str_delete_cb);
 }
