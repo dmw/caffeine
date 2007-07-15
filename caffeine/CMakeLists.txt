@@ -1,6 +1,7 @@
 ### proyecto
 PROJECT(caffeine C)
 SUBDIRS(
+    caf
     src
     test)
 
@@ -17,3 +18,4 @@ set (ADDITIONAL_MAKE_CLEAN_FILES
         cmake_install.cmake
         CMakeFiles
         CMakeCache.txt)
+

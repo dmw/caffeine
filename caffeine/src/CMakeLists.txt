@@ -68,37 +68,50 @@ set (CAFFEINE_SRCS
 
 ### sources
 set (CAFFEINE_HEADERS
-    caf_data_bits.h
-    caf_data_buffer.h
-    caf_data_packer.h
-    caf_data_conv.h
-    caf_data_lstc.h
-    caf_data_lstdl.h
-    caf_data_lstdlc.h
-    caf_data_mem.h
-    caf_data_pidfile.h
-    caf_hash_str.h
-    caf_hash_table.h
-    caf_io_core.h
-    caf_io_tail.h
-    caf_io_net.h
-    caf_io_net_conpool.h
-    caf_io_net_svcpool.h
-    caf_evt_fio.h
-    caf_evt_nio.h
-    caf_evt_nio_pool.h
-    caf_process_pool.h
-    caf_thread_attr.h
-    caf_thread_key.h
-    caf_thread_mutex.h
-    caf_thread_cond.h
-    caf_thread_once.h
-    caf_thread_pool.h
-    caf_thread_rwlock.h
-    caf_sem_svr4.h
-    caf_sem_posix.h
-    caf_ipc_msg.h
-    caf_ipc_shm.h
+    ../caf/caf.h
+    ../caf/caf_data_bits.h
+    ../caf/caf_data_buffer.h
+    ../caf/caf_data_conv.h
+    ../caf/caf_data_lstc.h
+    ../caf/caf_data_lstdl.h
+    ../caf/caf_data_lstdlc.h
+    ../caf/caf_data_mem.h
+    ../caf/caf_data_packer.h
+    ../caf/caf_data_pidfile.h
+    ../caf/caf_data_string.h
+    ../caf/caf_data_struct.h
+    ../caf/caf_data_var.h
+    ../caf/caf_evt.h
+    ../caf/caf_evt_fio.h
+    ../caf/caf_evt_nio.h
+    ../caf/caf_evt_nio_pool.h
+    ../caf/caf_hash_str.h
+    ../caf/caf_hash_table.h
+    ../caf/caf_io.h
+    ../caf/caf_io_file.h
+    ../caf/caf_io_net.h
+    ../caf/caf_io_net_conpool.h
+    ../caf/caf_io_net_svcpool.h
+    ../caf/caf_io_tail.h
+    ../caf/caf_io_tool.h
+    ../caf/caf_ipc_msg.h
+    ../caf/caf_ipc_shm.h
+    ../caf/caf_mem.h
+    ../caf/caf_process.h
+    ../caf/caf_process_pool.h
+    ../caf/caf_regex_pcre.h
+    ../caf/caf_sem.h
+    ../caf/caf_sem_posix.h
+    ../caf/caf_sem_svr4.h
+    ../caf/caf_thread.h
+    ../caf/caf_thread_attr.h
+    ../caf/caf_thread_cond.h
+    ../caf/caf_thread_key.h
+    ../caf/caf_thread_mutex.h
+    ../caf/caf_thread_once.h
+    ../caf/caf_thread_pool.h
+    ../caf/caf_thread_rwlock.h
+    ../caf/caf_tool_macro.h
 )
 
 ### compile flags
@@ -127,7 +140,13 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|NetBSD|OpenBSD")
          caf_evt_fio_kevent.c)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|NetBSD|OpenBSD")
 
-### opciones
+set (
+    SOURCE_FILES
+    ${CAFFEINE_HEADERS}
+    ${CAFFEINE_SRCS}
+)
+
+### options
 option (CAFFEINE_DEBUG
         "Build Caffeine Using Debug"
         ON)
@@ -258,11 +277,17 @@ set_source_files_properties (
         PROPERTIES
         COMPILE_FLAGS "${CFLAGS_PROJECT}")
 
+### source headers
+set_source_files_properties (
+        ${CAFFEINE_HEADERS}
+        PROPERTIES
+        HEADER_FILE_ONLY 1)
+
 # link against libraries
 link_libraries ("${LINK_AGAINST_LIBRARIES}")
 
 ### build the library
-add_library (caffeine SHARED ${CAFFEINE_SRCS})
+add_library (caffeine SHARED ${SOURCE_FILES})
 
 ### link
 target_link_libraries (caffeine)

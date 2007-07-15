@@ -182,7 +182,7 @@ lstdlc_node_delete (lstdlc_t *lst, lstdlcn_t *n, CAF_LSTDLCNODE_CBDEL(del))
                         lst->head = next;
                         return CAF_OK;
                     }
-                } else if (lst->tail = n) {
+                } else if (lst->tail == n) {
                     if ((del (nr->data)) == CAF_OK) {
                         prev = nr->prev;
                         next = nr->next;
@@ -246,7 +246,7 @@ lstdlc_node_delete_by_data (lstdlc_t *lst, void *n, CAF_LSTDLCNODE_CBDEL(del))
                         lst->head = next;
                         return CAF_OK;
                     }
-                } else if (lst->tail->data = n) {
+                } else if (lst->tail->data == n) {
                     if ((del (nr->data)) == CAF_OK) {
                         prev = nr->prev;
                         next = nr->next;
