@@ -207,7 +207,7 @@ int lstdl_node_delete (lstdl_t *lst, lstdln_t *n, CAF_LSTDLNODE_CBDEL(del));
  * @see      lstdln_t
  */
 int lstdl_node_delete_by_data (lstdl_t *lst, void *n,
-                                CAF_LSTDLNODE_CBDEL(del));
+                               CAF_LSTDLNODE_CBDEL(del));
 /**
  *
  * @brief    Returns the len of the given list.
