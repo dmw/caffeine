@@ -157,16 +157,15 @@ caf_fio_evt_destroy (fio_evt_t *e)
 int
 caf_fio_evt_handle (fio_evt_t *e)
 {
-    int r = CAF_ERROR;
     if (e != (fio_evt_t *)NULL) {
         if (e->ev_src > -1) {
             memset (e->ev_store, 0, e->ev_sz);
             if ((read (e->ev_src, e->ev_store, e->ev_sz)) > 0) {
-                return (int)e->ev_sz;
+                return CAF_OK;
             }
         }
     }
-    return r;
+    return CAF_ERROR;
 }
 
 

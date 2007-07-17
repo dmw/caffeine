@@ -33,7 +33,7 @@
 #define TABLE_ID            1000
 
 int
-main (int argc, char **argv)
+main ()
 {
     caf_hash_table_t *table = (caf_hash_table_t *)NULL;
     table = caf_hash_table_new (TABLE_ID, caf_shash_dek, caf_shash_fnv);

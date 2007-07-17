@@ -3,6 +3,7 @@ project(caffeine C)
 
 ### macro inclusions
 include(CheckSymbolExists)
+include(CheckFunctionExists)
 include(CheckIncludeFiles)
 include(CheckTypeSize)
 include(FindThreads)

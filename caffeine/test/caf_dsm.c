@@ -62,7 +62,7 @@ static void delete_runner ();
 
 
 int
-main (int argc, char **argv)
+main ()
 {
     init_states ();
     init_dsm ();
@@ -166,7 +166,7 @@ call_1 (void *s_data, caf_dsm_return_t *s_return)
         r->r_control = CAF_DSM_CONTROL_FORWARD;
         printf ("call_1 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
         printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
-                &(r->r_control), r->r_data, r->r_return);
+                (void *)&(r->r_control), r->r_data, r->r_return);
     }
     return r;
 }
@@ -185,7 +185,7 @@ call_2 (void *s_data, caf_dsm_return_t *s_return)
         r->r_control = CAF_DSM_CONTROL_FORWARD;
         printf ("call_2 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
         printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
-                &(r->r_control), r->r_data, r->r_return);
+                (void *)&(r->r_control), r->r_data, r->r_return);
     }
     return r;
 }
@@ -209,7 +209,7 @@ call_3 (void *s_data, caf_dsm_return_t *s_return)
         r->r_return = (void *)ld1;
         printf ("call_3 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
         printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
-                &(r->r_control), r->r_data, r->r_return);
+                (void *)&(r->r_control), r->r_data, r->r_return);
     }
     return r;
 }
@@ -233,7 +233,7 @@ call_4 (void *s_data, caf_dsm_return_t *s_return)
         r->r_return = (void *)ld1;
         printf ("call_4 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
         printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
-                &(r->r_control), r->r_data, r->r_return);
+                (void *)&(r->r_control), r->r_data, r->r_return);
     }
     return r;
 }
@@ -252,7 +252,7 @@ call_5 (void *s_data, caf_dsm_return_t *s_return)
         r->r_control = CAF_DSM_CONTROL_FORWARD;
         printf ("call_5 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
         printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
-                &(r->r_control), r->r_data, r->r_return);
+                (void *)&(r->r_control), r->r_data, r->r_return);
     }
     return r;
 }
