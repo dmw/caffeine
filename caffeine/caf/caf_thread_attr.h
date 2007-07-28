@@ -50,177 +50,177 @@
 extern "C" {
 #endif /* !__cplusplus */
 
-/** Defines the pth_attri_t structure size */
+	/** Defines the pth_attri_t structure size */
 #define CAF_PT_ATTRI_SZ            sizeof(pth_attri_t)
-/** Defines the pth_pool_t structure size */
+	/** Defines the pth_pool_t structure size */
 #define CAF_PT_POOL_SZ             sizeof(pth_pool_t)
 
-/**
- *
- * @brief    Defines the pth_attri_t property types
- * Defines the types that can be used with pth_attri_t structures.
- */
-typedef enum {
-    /** pthread_attr_(set|get)detachstate */
-    PTH_ATTR_DETACHED = 0000001,
-    /** pthread_attr_(set|get)detachstate */
-    PTH_ATTR_JOINABLE = 0000002,
-    /** pthread_attr_(set|get)stacksize */
-    PTH_ATTR_STACKSZ = 0000004,
-    /** pthread_attr_(set|get)guardsize */
-    PTH_ATTR_GUARDSZ = 0000010,
-    /** pthread_attr_(set|get)schedparam */
-    PTH_ATTR_SCHEDPARAM = 0000020,
-    /** pthread_attr_(set|get)inheritsched */
-    PTH_ATTR_INSCHEDPARAM = 0000040,
-    /** pthread_attr_(set|get)schedpolicy */
-    PTH_ATTR_SCHEDPOLICY = 0000100,
-    /** pthread_attr_(set|get)scope */
-    PTH_ATTR_SCOPE = 0000200
-} pth_attr_types_t;
+	/**
+	 *
+	 * @brief    Defines the pth_attri_t property types
+	 * Defines the types that can be used with pth_attri_t structures.
+	 */
+	typedef enum {
+	    /** pthread_attr_(set|get)detachstate */
+	    PTH_ATTR_DETACHED = 0000001,
+	    /** pthread_attr_(set|get)detachstate */
+	    PTH_ATTR_JOINABLE = 0000002,
+	    /** pthread_attr_(set|get)stacksize */
+	    PTH_ATTR_STACKSZ = 0000004,
+	    /** pthread_attr_(set|get)guardsize */
+	    PTH_ATTR_GUARDSZ = 0000010,
+	    /** pthread_attr_(set|get)schedparam */
+	    PTH_ATTR_SCHEDPARAM = 0000020,
+	    /** pthread_attr_(set|get)inheritsched */
+	    PTH_ATTR_INSCHEDPARAM = 0000040,
+	    /** pthread_attr_(set|get)schedpolicy */
+	    PTH_ATTR_SCHEDPOLICY = 0000100,
+	    /** pthread_attr_(set|get)scope */
+	    PTH_ATTR_SCOPE = 0000200
+	} pth_attr_types_t;
 
-/**
- *
- * @brief    Caffeine Thread Attribute Type.
- * The type of a thread attibute.
- * @see      pth_attri
- */
-typedef struct pth_attri_s pth_attri_t;
-/**
- *
- * @brief    Caffeine Thread Attribute Structure.
- * The thread attribute structure stores a thread attribute structure and
- * an integer that have the flags of the attributes that has been set in
- * the attr structure member.
- */
-struct pth_attri_s {
-    /** Flags of Attributes Set */
-    int at;
-    /** Thread Attributes */
-    pthread_attr_t attr;
-};
+	/**
+	 *
+	 * @brief    Caffeine Thread Attribute Type.
+	 * The type of a thread attibute.
+	 * @see      pth_attri
+	 */
+	typedef struct pth_attri_s pth_attri_t;
+	/**
+	 *
+	 * @brief    Caffeine Thread Attribute Structure.
+	 * The thread attribute structure stores a thread attribute structure and
+	 * an integer that have the flags of the attributes that has been set in
+	 * the attr structure member.
+	 */
+	struct pth_attri_s {
+		/** Flags of Attributes Set */
+		int at;
+		/** Thread Attributes */
+		pthread_attr_t attr;
+	};
 
-/**
- *
- * @brief    Creates a new Caffeine Attribute Instance.
- *
- * Allocates memory for a pth_attri_t structure, leaving the at memeber to
- * zero, this means that the pthread_attr_t has no attibutes set.
- *
- * @return       pth_attri_t *   the allocated pth_attri_t structure.
- *
- * @see      pth_attri_delete
- * @see      pth_attr_init
- * @see      pth_attr_delete
- */
-pth_attri_t *pth_attri_new ();
+	/**
+	 *
+	 * @brief    Creates a new Caffeine Attribute Instance.
+	 *
+	 * Allocates memory for a pth_attri_t structure, leaving the at memeber to
+	 * zero, this means that the pthread_attr_t has no attibutes set.
+	 *
+	 * @return       pth_attri_t *   the allocated pth_attri_t structure.
+	 *
+	 * @see      pth_attri_delete
+	 * @see      pth_attr_init
+	 * @see      pth_attr_delete
+	 */
+	pth_attri_t *pth_attri_new ();
 
-/**
- *
- * @brief    Free am Attribute Instance.
- *
- * Deallocates memory for a pth_attri_t structure. Do not use before
- * pth_attr_destroy, or the pthread_attr_t in the structure will not
- * be destroyed.
- *
- * @param[in]    attri           pth_attri_t pointer.
- *
- * @see      pth_attri_new
- * @see      pth_attr_init
- * @see      pth_attr_destroy
- */
-void pth_attri_delete (pth_attri_t *attri);
+	/**
+	 *
+	 * @brief    Free am Attribute Instance.
+	 *
+	 * Deallocates memory for a pth_attri_t structure. Do not use before
+	 * pth_attr_destroy, or the pthread_attr_t in the structure will not
+	 * be destroyed.
+	 *
+	 * @param[in]    attri           pth_attri_t pointer.
+	 *
+	 * @see      pth_attri_new
+	 * @see      pth_attr_init
+	 * @see      pth_attr_destroy
+	 */
+	void pth_attri_delete (pth_attri_t *attri);
 
-/**
- *
- * @brief    Inits the Attribute Instance.
- *
- * Calls the attibute initiation routine with the given pth_attri_t pointer.
- * Call this function after calling pth_attri_new.
- *
- * @param[in]    attri           pth_attri_t pointer.
- *
- * @see      pth_attri_new
- * @see      pth_attri_delete
- * @see      pth_attr_destroy
- */
-int pth_attr_init (pth_attri_t *attri);
+	/**
+	 *
+	 * @brief    Inits the Attribute Instance.
+	 *
+	 * Calls the attibute initiation routine with the given pth_attri_t pointer.
+	 * Call this function after calling pth_attri_new.
+	 *
+	 * @param[in]    attri           pth_attri_t pointer.
+	 *
+	 * @see      pth_attri_new
+	 * @see      pth_attri_delete
+	 * @see      pth_attr_destroy
+	 */
+	int pth_attr_init (pth_attri_t *attri);
 
-/**
- *
- * @brief    Inits the Attribute Instance.
- *
- * Calls the attibute destruction routine with the given pth_attri_t pointer.
- * Call this function before calling pth_attri_delete.
- *
- * @param[in]    attri           pth_attri_t pointer.
- *
- * @see      pth_attri_new
- * @see      pth_attri_delete
- * @see      pth_attr_init
- */
-int pth_attr_destroy (pth_attri_t *attri);
+	/**
+	 *
+	 * @brief    Inits the Attribute Instance.
+	 *
+	 * Calls the attibute destruction routine with the given pth_attri_t pointer.
+	 * Call this function before calling pth_attri_delete.
+	 *
+	 * @param[in]    attri           pth_attri_t pointer.
+	 *
+	 * @see      pth_attri_new
+	 * @see      pth_attri_delete
+	 * @see      pth_attr_init
+	 */
+	int pth_attr_destroy (pth_attri_t *attri);
 
-/**
- *
- * @brief    Creates a new intitiated pth_attri_t pointer.
- *
- * Creates a new pth_attri_t initiated by pth_attr_init.
- *
- * @param[in]    attri           pth_attri_t pointer.
- *
- * @see      pth_attri_new
- * @see      pth_attri_delete
- * @see      pth_attr_init
- * @see      pth_attr_destroy
- * @see      pth_attri_destroy
- */
-pth_attri_t *pth_attri_init ();
+	/**
+	 *
+	 * @brief    Creates a new intitiated pth_attri_t pointer.
+	 *
+	 * Creates a new pth_attri_t initiated by pth_attr_init.
+	 *
+	 * @param[in]    attri           pth_attri_t pointer.
+	 *
+	 * @see      pth_attri_new
+	 * @see      pth_attri_delete
+	 * @see      pth_attr_init
+	 * @see      pth_attr_destroy
+	 * @see      pth_attri_destroy
+	 */
+	pth_attri_t *pth_attri_init ();
 
-/**
- *
- * @brief    Destroy and deallocates the given pth_attri_t pointer.
- *
- * Calls pth_attr_destroy and then pth_attri_delete with the given
- * pth_attri_t pointer.
- *
- * @param[in]    attri           pth_attri_t pointer.
- *
- * @see      pth_attri_new
- * @see      pth_attri_delete
- * @see      pth_attr_init
- * @see      pth_attr_destroy
- * @see      pth_attri_init
- */
-int pth_attri_destroy (pth_attri_t *attri);
+	/**
+	 *
+	 * @brief    Destroy and deallocates the given pth_attri_t pointer.
+	 *
+	 * Calls pth_attr_destroy and then pth_attri_delete with the given
+	 * pth_attri_t pointer.
+	 *
+	 * @param[in]    attri           pth_attri_t pointer.
+	 *
+	 * @see      pth_attri_new
+	 * @see      pth_attri_delete
+	 * @see      pth_attr_init
+	 * @see      pth_attr_destroy
+	 * @see      pth_attri_init
+	 */
+	int pth_attri_destroy (pth_attri_t *attri);
 
-/**
- *
- * @brief    Sets pth_attri_t instance properties.
- *
- * Sets the properties of the given pth_attri_t pointer (instance).
- *
- * @param[in]    attri           pth_attri_t pointer.
- * @param[in]    t               property type.
- * @param[in]    data            data to assign.
- *
- * @see      pth_attri_get
- */
-int pth_attri_set (pth_attri_t *attri, pth_attr_types_t t, void *data);
+	/**
+	 *
+	 * @brief    Sets pth_attri_t instance properties.
+	 *
+	 * Sets the properties of the given pth_attri_t pointer (instance).
+	 *
+	 * @param[in]    attri           pth_attri_t pointer.
+	 * @param[in]    t               property type.
+	 * @param[in]    data            data to assign.
+	 *
+	 * @see      pth_attri_get
+	 */
+	int pth_attri_set (pth_attri_t *attri, pth_attr_types_t t, void *data);
 
-/**
- *
- * @brief    Gets pth_attri_t instance properties.
- *
- * Gets the properties of the given pth_attri_t pointer (instance).
- *
- * @param[in]    attri           pth_attri_t pointer.
- * @param[in]    t               property type.
- * @param[in]    data            data to assign.
- *
- * @see      pth_attri_set
- */
-int pth_attri_get (pth_attri_t *attri, pth_attr_types_t t, void *data);
+	/**
+	 *
+	 * @brief    Gets pth_attri_t instance properties.
+	 *
+	 * Gets the properties of the given pth_attri_t pointer (instance).
+	 *
+	 * @param[in]    attri           pth_attri_t pointer.
+	 * @param[in]    t               property type.
+	 * @param[in]    data            data to assign.
+	 *
+	 * @see      pth_attri_set
+	 */
+	int pth_attri_get (pth_attri_t *attri, pth_attr_types_t t, void *data);
 
 #ifdef __cplusplus
 };

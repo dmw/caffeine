@@ -57,42 +57,42 @@ extern "C" {
 #define CAF_SEM_BUF_SZ                  (sizeof (struct sembuf))
 #define CAF_SEMBUF_SVR4_SZ              (sizeof (caf_sembuf_svr4_t))
 
-typedef enum {
-    CAF_SEM_SVR4_LOCK = -0x0001,
-    CAF_SEM_SVR4_UNLOCK = 0x0001
-} caf_sem_svr4_lock_t;
+	typedef enum {
+	    CAF_SEM_SVR4_LOCK = -0x0001,
+	    CAF_SEM_SVR4_UNLOCK = 0x0001
+	} caf_sem_svr4_lock_t;
 
-typedef struct caf_sem_svr4_s caf_sem_svr4_t;
-struct caf_sem_svr4_s {
-    key_t key;
-    int id;
-    int nsems;
-    int flag;
-};
+	typedef struct caf_sem_svr4_s caf_sem_svr4_t;
+	struct caf_sem_svr4_s {
+		key_t key;
+		int id;
+		int nsems;
+		int flag;
+	};
 
-typedef struct caf_sembuf_svr4_s caf_sembuf_svr4_t;
-struct caf_sembuf_svr4_s {
-    size_t nopsz;
-    struct sembuf *ops;
-    struct timespec *to;
-};
+	typedef struct caf_sembuf_svr4_s caf_sembuf_svr4_t;
+	struct caf_sembuf_svr4_s {
+		size_t nopsz;
+		struct sembuf *ops;
+		struct timespec *to;
+	};
 
-caf_sem_svr4_t *caf_sem_svr4_new (const key_t key, const int nsems,
-                                  const int flag);
-int caf_sem_svr4_delete (caf_sem_svr4_t *r);
-caf_sem_svr4_t *caf_sem_svr4_get (const key_t k, const int ns, const int f);
+	caf_sem_svr4_t *caf_sem_svr4_new (const key_t key, const int nsems,
+	                                  const int flag);
+	int caf_sem_svr4_delete (caf_sem_svr4_t *r);
+	caf_sem_svr4_t *caf_sem_svr4_get (const key_t k, const int ns, const int f);
 
-int caf_sem_svr4_lock (caf_sem_svr4_t *r);
-int caf_sem_svr4_trylock (caf_sem_svr4_t *r);
-int caf_sem_svr4_unlock (caf_sem_svr4_t *r);
+	int caf_sem_svr4_lock (caf_sem_svr4_t *r);
+	int caf_sem_svr4_trylock (caf_sem_svr4_t *r);
+	int caf_sem_svr4_unlock (caf_sem_svr4_t *r);
 
-int caf_sem_svr4_exists (caf_sem_svr4_t *r);
-int caf_sem_svr4_op (caf_sem_svr4_t *r, caf_sembuf_svr4_t *op);
-int caf_sem_svr4_ctl (caf_sem_svr4_t *r, int n, int cmd, void *a);
-int caf_sem_svr4_down (caf_sem_svr4_t *r);
-caf_sembuf_svr4_t *caf_sembuf_svr4_new (caf_sem_svr4_t *r, const short op,
-                                        const short flg, struct timespec *to);
-int caf_sembuf_svr4_delete (caf_sembuf_svr4_t *b);
+	int caf_sem_svr4_exists (caf_sem_svr4_t *r);
+	int caf_sem_svr4_op (caf_sem_svr4_t *r, caf_sembuf_svr4_t *op);
+	int caf_sem_svr4_ctl (caf_sem_svr4_t *r, int n, int cmd, void *a);
+	int caf_sem_svr4_down (caf_sem_svr4_t *r);
+	caf_sembuf_svr4_t *caf_sembuf_svr4_new (caf_sem_svr4_t *r, const short op,
+	                                        const short flg, struct timespec *to);
+	int caf_sembuf_svr4_delete (caf_sembuf_svr4_t *b);
 
 #ifdef __cplusplus
 };

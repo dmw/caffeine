@@ -26,27 +26,26 @@
 #include <caf/caf_hash_str.h>
 
 int
-main (int argc, char **argv)
-{
-    char *string;
-    if (argc >= 2) {
-        string = argv[1];
-        printf ("Hash Test for: '%s'\n", argv[1]);
-        printf (" 1. RS Hash:   %15.15u\n", caf_shash_rs (string, 36));
-        printf (" 2. JS Hash:   %15.15u\n", caf_shash_js (string, 36));
-        printf (" 3. PJW Hash:  %15.15u\n", caf_shash_pjw (string, 36));
-        printf (" 4. ELF Hash:  %15.15u\n", caf_shash_elf (string, 36));
-        printf (" 5. BKDR Hash: %15.15u\n", caf_shash_bkdr (string, 36));
-        printf (" 6. SDBM Hash: %15.15u\n", caf_shash_sdbm (string, 36));
-        printf (" 7. DJB Hash:  %15.15u\n", caf_shash_djb (string, 36));
-        printf (" 8. DEK Hash:  %15.15u\n", caf_shash_dek (string, 36));
-        printf (" 9. BP Hash:   %15.15u\n", caf_shash_bp (string, 36));
-        printf ("10. FNV Hash:  %15.15u\n", caf_shash_fnv (string, 36));
-    } else {
-        printf ("No input string\n");
-        exit(EXIT_FAILURE);
-    }
-    return 0;
+main (int argc, char **argv) {
+	char *string;
+	if (argc >= 2) {
+		string = argv[1];
+		printf ("Hash Test for: '%s'\n", argv[1]);
+		printf (" 1. RS Hash:   %15.15u\n", caf_shash_rs (string, 36));
+		printf (" 2. JS Hash:   %15.15u\n", caf_shash_js (string, 36));
+		printf (" 3. PJW Hash:  %15.15u\n", caf_shash_pjw (string, 36));
+		printf (" 4. ELF Hash:  %15.15u\n", caf_shash_elf (string, 36));
+		printf (" 5. BKDR Hash: %15.15u\n", caf_shash_bkdr (string, 36));
+		printf (" 6. SDBM Hash: %15.15u\n", caf_shash_sdbm (string, 36));
+		printf (" 7. DJB Hash:  %15.15u\n", caf_shash_djb (string, 36));
+		printf (" 8. DEK Hash:  %15.15u\n", caf_shash_dek (string, 36));
+		printf (" 9. BP Hash:   %15.15u\n", caf_shash_bp (string, 36));
+		printf ("10. FNV Hash:  %15.15u\n", caf_shash_fnv (string, 36));
+	} else {
+		printf ("No input string\n");
+		exit(EXIT_FAILURE);
+	}
+	return 0;
 }
 
 /* caf_hash_str.c ends here */

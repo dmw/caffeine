@@ -38,34 +38,31 @@ static char Id[] = "$Id$";
 
 
 pth_once_t *
-pth_once_new (PTH_ONCE_RTN(rtn))
-{
-    pthread_once_t init = PTHREAD_ONCE_INIT;
-    pth_once_t *onc = (pth_once_t *)NULL;
-    if (rtn != NULL) {
-        onc = (pth_once_t *)xmalloc (PTH_ONCE_SZ);
-        if (onc != (pth_once_t *)NULL) {
-            onc->once = init;
-            onc->rtn = rtn;
-        }
-    }
-    return onc;
+pth_once_new (PTH_ONCE_RTN(rtn)) {
+	pthread_once_t init = PTHREAD_ONCE_INIT;
+	pth_once_t *onc = (pth_once_t *)NULL;
+	if (rtn != NULL) {
+		onc = (pth_once_t *)xmalloc (PTH_ONCE_SZ);
+		if (onc != (pth_once_t *)NULL) {
+			onc->once = init;
+			onc->rtn = rtn;
+		}
+	}
+	return onc;
 }
 
 
 void
-pth_once_delete (pth_once_t *onc)
-{
-    if (onc != (pth_once_t *)NULL) {
-        xfree (onc);
-    }
+pth_once_delete (pth_once_t *onc) {
+	if (onc != (pth_once_t *)NULL) {
+		xfree (onc);
+	}
 }
 
 
 int
-pth_once_call (pth_once_t *call)
-{
-    return pthread_once ((pthread_once_t *)&(call->once), call->rtn);
+pth_once_call (pth_once_t *call) {
+	return pthread_once ((pthread_once_t *)&(call->once), call->rtn);
 }
 
 /* caf_thread_once.c ends here */

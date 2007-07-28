@@ -48,40 +48,37 @@ static const u_int64_t u64b8 = 0xff00000000000000;
 
 
 inline u_int16_t
-caf_word_endian_swap (u_int16_t w)
-{
-    u_int16_t c1, c2;
-    c1 = (w & u16b1) << 8;
-    c2 = (w & u16b2) >> 8;
-    return (c1 + c2);
+caf_word_endian_swap (u_int16_t w) {
+	u_int16_t c1, c2;
+	c1 = (w & u16b1) << 8;
+	c2 = (w & u16b2) >> 8;
+	return (c1 + c2);
 }
 
 
 inline u_int32_t
-caf_dword_endian_swap (u_int32_t w)
-{
-    u_int32_t c1, c2, c3, c4;
-    c1 = (w & u32b1) << 24;
-    c2 = (w & u32b2) << 16;
-    c3 = (w & u32b1) >> 16;
-    c4 = (w & u32b2) >> 24;
-    return (c1 + c2 + c3 + c4);
+caf_dword_endian_swap (u_int32_t w) {
+	u_int32_t c1, c2, c3, c4;
+	c1 = (w & u32b1) << 24;
+	c2 = (w & u32b2) << 16;
+	c3 = (w & u32b1) >> 16;
+	c4 = (w & u32b2) >> 24;
+	return (c1 + c2 + c3 + c4);
 }
 
 
 inline u_int64_t
-caf_qword_endian_swap (u_int64_t w)
-{
-    u_int32_t c1, c2, c3, c4, c5, c6, c7, c8;
-    c1 = (w & u32b1) << 56;
-    c2 = (w & u32b2) << 48;
-    c3 = (w & u32b1) << 40;
-    c4 = (w & u32b2) << 32;
-    c5 = (w & u32b1) >> 32;
-    c6 = (w & u32b2) >> 40;
-    c7 = (w & u32b1) >> 48;
-    c8 = (w & u32b2) >> 56;
-    return (c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8);
+caf_qword_endian_swap (u_int64_t w) {
+	u_int32_t c1, c2, c3, c4, c5, c6, c7, c8;
+	c1 = (w & u32b1) << 56;
+	c2 = (w & u32b2) << 48;
+	c3 = (w & u32b1) << 40;
+	c4 = (w & u32b2) << 32;
+	c5 = (w & u32b1) >> 32;
+	c6 = (w & u32b2) >> 40;
+	c7 = (w & u32b1) >> 48;
+	c8 = (w & u32b2) >> 56;
+	return (c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8);
 }
 
 /* caf_data_bits.c ends here */

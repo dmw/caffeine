@@ -75,67 +75,67 @@
 extern "C" {
 #endif /* !__cplusplus */
 
-typedef struct io_evt_pool_poll_s io_evt_pool_poll_t;
-struct io_evt_pool_poll_s {
-    int poll_count;
-    size_t poll_sz;
-    struct pollfd *poll;
-    struct timespec timeout;
-};
+	typedef struct io_evt_pool_poll_s io_evt_pool_poll_t;
+	struct io_evt_pool_poll_s {
+		int poll_count;
+		size_t poll_sz;
+		struct pollfd *poll;
+		struct timespec timeout;
+	};
 
 
-typedef struct io_evt_pool_select_s io_evt_pool_select_t;
-struct io_evt_pool_select_s {
-    int fd;
-    fd_set rd;
-    fd_set wr;
-    struct timeval timeout;
-};
+	typedef struct io_evt_pool_select_s io_evt_pool_select_t;
+	struct io_evt_pool_select_s {
+		int fd;
+		fd_set rd;
+		fd_set wr;
+		struct timeval timeout;
+	};
 
 
 #ifdef BSD_SYSTEM
-typedef struct io_evt_pool_kevent_s io_evt_pool_kevent_t;
-struct io_evt_pool_kevent_s {
-    int kevent_count;
-    int kfd;
-    size_t kevent_sz;
-    struct kevent *kevent_src;
-    struct kevent *kevent_dst;
-    struct timespec timeout;
-};
+	typedef struct io_evt_pool_kevent_s io_evt_pool_kevent_t;
+	struct io_evt_pool_kevent_s {
+		int kevent_count;
+		int kfd;
+		size_t kevent_sz;
+		struct kevent *kevent_src;
+		struct kevent *kevent_dst;
+		struct timespec timeout;
+	};
 #endif /* !BSD_SYSTEM */
 
 
 #ifdef LINUX_SYSTEM
-typedef struct io_evt_pool_epoll_s io_evt_pool_epoll_t;
-struct io_evt_pool_epoll_s {
-    int epoll_count;
-    int efd;
-    size_t epoll_sz;
-    struct epoll_event *epoll;
-    struct epoll_event *repoll;
-    struct timespec timeout;
-};
+	typedef struct io_evt_pool_epoll_s io_evt_pool_epoll_t;
+	struct io_evt_pool_epoll_s {
+		int epoll_count;
+		int efd;
+		size_t epoll_sz;
+		struct epoll_event *epoll;
+		struct epoll_event *repoll;
+		struct timespec timeout;
+	};
 #endif /* !LINUX_SYSTEM */
 
 
-typedef enum {
-    EVT_POOL_SEED_CONNECTION,
-    EVT_POOL_SEED_SERVICE
-} caf_evt_pool_type_t;
+	typedef enum {
+	    EVT_POOL_SEED_CONNECTION,
+	    EVT_POOL_SEED_SERVICE
+	} caf_evt_pool_type_t;
 
 
 #define IO_EVT_POOL_SZ               (sizeof (io_evt_pool_t))
 
-typedef struct io_evt_pool_s io_evt_pool_t;
-struct io_evt_pool_s {
-    int evp_id;
-    int evp_count;
-    caf_evt_pool_type_t type;
-    size_t evp_src_sz;
-    void *evp_src;
-    void *evp_seed;
-};
+	typedef struct io_evt_pool_s io_evt_pool_t;
+	struct io_evt_pool_s {
+		int evp_id;
+		int evp_count;
+		caf_evt_pool_type_t type;
+		size_t evp_src_sz;
+		void *evp_src;
+		void *evp_seed;
+	};
 
 
 #if defined(IO_EVENT_USE_KEVENT)
@@ -151,19 +151,19 @@ struct io_evt_pool_s {
 #define CALL_EVT_FP(p,s)             p##_select_##s
 #define EVT_FP_T                     io_evt_pool_select_t
 #else
-/* Fallback to poll(2) */
+	/* Fallback to poll(2) */
 #define CALL_EVT_FP(p,s)             p##_poll_##s
 #define EVT_FP_T                     io_evt_pool_poll_t
 #endif /* !IO_EVENT_USE_* */
 
-EVT_FP_T *CALL_EVT_FP(io_evt_pool,new) (int cnt, int tos, int ton);
-int CALL_EVT_FP(io_evt_pool,delete) (EVT_FP_T *r);
-int CALL_EVT_FP(io_evt_pool,reset) (EVT_FP_T *e);
-int CALL_EVT_FP(io_evt_pool,add) (int fd, EVT_FP_T *e, int ef);
-int CALL_EVT_FP(io_evt_pool,hasevent) (int fd, EVT_FP_T *e, int ef);
-int CALL_EVT_FP(io_evt_pool,getevent) (int fd, EVT_FP_T *e);
-int CALL_EVT_FP(io_evt_pool,etype) (int fd, EVT_FP_T *e);
-int CALL_EVT_FP(io_evt_pool,handle) (EVT_FP_T *e);
+	EVT_FP_T *CALL_EVT_FP(io_evt_pool,new) (int cnt, int tos, int ton);
+	int CALL_EVT_FP(io_evt_pool,delete) (EVT_FP_T *r);
+	int CALL_EVT_FP(io_evt_pool,reset) (EVT_FP_T *e);
+	int CALL_EVT_FP(io_evt_pool,add) (int fd, EVT_FP_T *e, int ef);
+	int CALL_EVT_FP(io_evt_pool,hasevent) (int fd, EVT_FP_T *e, int ef);
+	int CALL_EVT_FP(io_evt_pool,getevent) (int fd, EVT_FP_T *e);
+	int CALL_EVT_FP(io_evt_pool,etype) (int fd, EVT_FP_T *e);
+	int CALL_EVT_FP(io_evt_pool,handle) (EVT_FP_T *e);
 
 #define caf_io_evt_pool_new              CALL_EVT_FP(io_evt_pool,new)
 #define caf_io_evt_pool_delete           CALL_EVT_FP(io_evt_pool,delete)

@@ -48,19 +48,19 @@
 
 typedef struct caf_hash_s caf_hash_t;
 struct caf_hash_s {
-    u_int32_t hash1;
-    u_int32_t hash2;
-    size_t key_sz;
-    void *key;
-    void *data;
+	u_int32_t hash1;
+	u_int32_t hash2;
+	size_t key_sz;
+	void *key;
+	void *data;
 };
 
 typedef struct caf_hash_table_s caf_hash_table_t;
 struct caf_hash_table_s {
-    int id;
-    CAF_HASH_STR_FUNCTION(f1);
-    CAF_HASH_STR_FUNCTION(f2);
-    lstdlc_t *hashes;
+	int id;
+	CAF_HASH_STR_FUNCTION(f1);
+	CAF_HASH_STR_FUNCTION(f2);
+	lstdlc_t *hashes;
 };
 
 caf_hash_t *caf_hash_new (const void *key, const size_t ksz, const void *data,
@@ -81,7 +81,7 @@ int caf_hash_table_remove (caf_hash_table_t *table, const void *key,
 void *caf_hash_table_get (caf_hash_table_t *table, const void *key,
                           const size_t ksz);
 int caf_hash_table_set (caf_hash_table_t *table, const void *key,
-                          const size_t ksz, void *data);
+                        const size_t ksz, void *data);
 void caf_hash_table_dump (FILE *out, caf_hash_table_t *table);
 
 /** }@ */

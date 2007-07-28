@@ -41,159 +41,150 @@ static char Id[] = "$Id$";
 
 
 io_evt_t *
-caf_io_evt_new  (int fd, int type, int to)
-{
-    io_evt_t *r = (io_evt_t *)NULL;
-    if (fd > -1 && type > 0) {
-        r = (io_evt_t *)xmalloc (IO_EVT_SZ);
-        if (r != (io_evt_t *)NULL) {
-            r->ev_mfd = fd;
-            r->ev_use = IO_EVENTS_POLL;
-            r->ev_type = type;
-            r->ev_sz = IO_EVENT_DATA_POLL_SZ;
-            r->ev_info = (io_evt_poll_t *)xmalloc (r->ev_sz);
-            r->ev_timeout = to;
-            if (r->ev_info == (io_evt_poll_t *)NULL ||
-                (caf_io_evt_init (r)) != CAF_OK) {
-                xfree (r);
-                r = (io_evt_t *)NULL;
-            }
-        }
-    }
-    return r;
+caf_io_evt_new  (int fd, int type, int to) {
+	io_evt_t *r = (io_evt_t *)NULL;
+	if (fd > -1 && type > 0) {
+		r = (io_evt_t *)xmalloc (IO_EVT_SZ);
+		if (r != (io_evt_t *)NULL) {
+			r->ev_mfd = fd;
+			r->ev_use = IO_EVENTS_POLL;
+			r->ev_type = type;
+			r->ev_sz = IO_EVENT_DATA_POLL_SZ;
+			r->ev_info = (io_evt_poll_t *)xmalloc (r->ev_sz);
+			r->ev_timeout = to;
+			if (r->ev_info == (io_evt_poll_t *)NULL ||
+			        (caf_io_evt_init (r)) != CAF_OK) {
+				xfree (r);
+				r = (io_evt_t *)NULL;
+			}
+		}
+	}
+	return r;
 }
 
 
 int
-caf_io_evt_delete (io_evt_t *e)
-{
-    if (e != (io_evt_t *)NULL) {
-        if ((caf_io_evt_destroy (e)) == CAF_OK) {
-            if (e->ev_info != (void *)NULL) {
-                xfree (e->ev_info);
-            }
-            xfree (e);
-            return CAF_OK;
-        }
-    }
-    return CAF_ERROR;
+caf_io_evt_delete (io_evt_t *e) {
+	if (e != (io_evt_t *)NULL) {
+		if ((caf_io_evt_destroy (e)) == CAF_OK) {
+			if (e->ev_info != (void *)NULL) {
+				xfree (e->ev_info);
+			}
+			xfree (e);
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
 }
 
 
 int
-caf_io_evt_init (io_evt_t *e)
-{
-    io_evt_poll_t *s;
-    if (e != (io_evt_t *)NULL) {
-        s = (io_evt_poll_t *)e->ev_info;
-        if (s != (io_evt_poll_t *)NULL) {
-            s->timeout.tv_sec = e->ev_timeout;
-            s->timeout.tv_nsec = 0;
-            s->poll.revents = 0;
-            s->poll.events = io_evt_events (e);
-            s->poll.fd = e->ev_mfd;
-            return CAF_OK;
-        }
-    }
-    return CAF_ERROR;
+caf_io_evt_init (io_evt_t *e) {
+	io_evt_poll_t *s;
+	if (e != (io_evt_t *)NULL) {
+		s = (io_evt_poll_t *)e->ev_info;
+		if (s != (io_evt_poll_t *)NULL) {
+			s->timeout.tv_sec = e->ev_timeout;
+			s->timeout.tv_nsec = 0;
+			s->poll.revents = 0;
+			s->poll.events = io_evt_events (e);
+			s->poll.fd = e->ev_mfd;
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
 }
 
 
 int
-caf_io_evt_reinit (io_evt_t *e)
-{
-    io_evt_poll_t *s;
-    if (e != (io_evt_t *)NULL) {
-        s = (io_evt_poll_t *)e->ev_info;
-        if (s != (io_evt_poll_t *)NULL) {
-            s->timeout.tv_sec = e->ev_timeout;
-            s->timeout.tv_nsec = 0;
-            s->poll.revents = 0;
-            s->poll.events = io_evt_events (e);
-            s->poll.fd = e->ev_mfd;
-            return CAF_OK;
-        }
-    }
-    return CAF_ERROR;
+caf_io_evt_reinit (io_evt_t *e) {
+	io_evt_poll_t *s;
+	if (e != (io_evt_t *)NULL) {
+		s = (io_evt_poll_t *)e->ev_info;
+		if (s != (io_evt_poll_t *)NULL) {
+			s->timeout.tv_sec = e->ev_timeout;
+			s->timeout.tv_nsec = 0;
+			s->poll.revents = 0;
+			s->poll.events = io_evt_events (e);
+			s->poll.fd = e->ev_mfd;
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
 }
 
 
 int
-caf_io_evt_add (io_evt_t *e, int ev)
-{
-    io_evt_poll_t *s;
-    if (e != (io_evt_t *)NULL && ev > 0) {
-        s = (io_evt_poll_t *)e->ev_info;
-        if (s != (io_evt_poll_t *)NULL) {
-            s->poll.events |= ev;
-        }
-    }
-    return CAF_ERROR;
+caf_io_evt_add (io_evt_t *e, int ev) {
+	io_evt_poll_t *s;
+	if (e != (io_evt_t *)NULL && ev > 0) {
+		s = (io_evt_poll_t *)e->ev_info;
+		if (s != (io_evt_poll_t *)NULL) {
+			s->poll.events |= ev;
+		}
+	}
+	return CAF_ERROR;
 }
 
 
 int
-caf_io_evt_destroy (io_evt_t *e)
-{
-    if (e != (io_evt_t *)NULL) {
-        io_evt_poll_t *s = (io_evt_poll_t *)e->ev_info;
-        if (s != (io_evt_poll_t *)NULL) {
-            s->timeout.tv_sec = e->ev_timeout;
-            s->timeout.tv_nsec = 0;
-            s->poll.revents = 0;
-            s->poll.events = 0;
-            s->poll.fd = 0;
-            return CAF_OK;
-        }
-    }
-    return CAF_ERROR;
+caf_io_evt_destroy (io_evt_t *e) {
+	if (e != (io_evt_t *)NULL) {
+		io_evt_poll_t *s = (io_evt_poll_t *)e->ev_info;
+		if (s != (io_evt_poll_t *)NULL) {
+			s->timeout.tv_sec = e->ev_timeout;
+			s->timeout.tv_nsec = 0;
+			s->poll.revents = 0;
+			s->poll.events = 0;
+			s->poll.fd = 0;
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
 }
 
 
 int
-caf_io_evt_handle (io_evt_t *e)
-{
-    int r = CAF_ERROR;
-    io_evt_poll_t *s;
-    if (e != (io_evt_t *)NULL) {
-        s = (io_evt_poll_t *)e->ev_info;
-        if ((poll (&(s->poll), 1, e->ev_timeout)) > 0) {
-            return CAF_OK;
-        }
-    }
-    return r;
+caf_io_evt_handle (io_evt_t *e) {
+	int r = CAF_ERROR;
+	io_evt_poll_t *s;
+	if (e != (io_evt_t *)NULL) {
+		s = (io_evt_poll_t *)e->ev_info;
+		if ((poll (&(s->poll), 1, e->ev_timeout)) > 0) {
+			return CAF_OK;
+		}
+	}
+	return r;
 }
 
 
 int
-caf_io_evt_isread (io_evt_t *e)
-{
-    int r = CAF_ERROR;
-    io_evt_poll_t *s;
-    if (e != (io_evt_t *)NULL) {
-        s = (io_evt_poll_t *)e->ev_info;
-        if (s != (io_evt_poll_t *)NULL) {
-            r = s->poll.revents & io_evt_events_use (e, EVT_IO_READ) ?
-                CAF_OK : CAF_ERROR;
-        }
-    }
-    return r;
+caf_io_evt_isread (io_evt_t *e) {
+	int r = CAF_ERROR;
+	io_evt_poll_t *s;
+	if (e != (io_evt_t *)NULL) {
+		s = (io_evt_poll_t *)e->ev_info;
+		if (s != (io_evt_poll_t *)NULL) {
+			r = s->poll.revents & io_evt_events_use (e, EVT_IO_READ) ?
+			    CAF_OK : CAF_ERROR;
+		}
+	}
+	return r;
 }
 
 
 int
-caf_io_evt_iswrite (io_evt_t *e)
-{
-    int r = CAF_ERROR;
-    io_evt_poll_t *s;
-    if (e != (io_evt_t *)NULL) {
-        s = (io_evt_poll_t *)e->ev_info;
-        if (s != (io_evt_poll_t *)NULL) {
-            r = s->poll.revents & io_evt_events_use (e, EVT_IO_WRITE) ?
-                CAF_OK : CAF_ERROR;
-        }
-    }
-    return r;
+caf_io_evt_iswrite (io_evt_t *e) {
+	int r = CAF_ERROR;
+	io_evt_poll_t *s;
+	if (e != (io_evt_t *)NULL) {
+		s = (io_evt_poll_t *)e->ev_info;
+		if (s != (io_evt_poll_t *)NULL) {
+			r = s->poll.revents & io_evt_events_use (e, EVT_IO_WRITE) ?
+			    CAF_OK : CAF_ERROR;
+		}
+	}
+	return r;
 }
 
 

@@ -52,28 +52,28 @@ extern "C" {
 #define CAF_IO_FILE_SZ              (sizeof (caf_io_file_t))
 #define CAF_CBUF_IO_EQ(b)           ((ssize_t)b->sz == b->iosz)
 
-typedef struct caf_io_file_s caf_io_file_t;
-struct caf_io_file_s {
-    int fd;
-    int flags;
-    int ustat;
-    mode_t mode;
-    struct stat sd;
-    char *path;
-};
+	typedef struct caf_io_file_s caf_io_file_t;
+	struct caf_io_file_s {
+		int fd;
+		int flags;
+		int ustat;
+		mode_t mode;
+		struct stat sd;
+		char *path;
+	};
 
-caf_io_file_t *io_fopen (const char *path, const int flg, const mode_t md,
-                         int fs);
-int io_fclose (caf_io_file_t *r);
-caf_io_file_t *io_reopen (caf_io_file_t *r);
-int io_restat (caf_io_file_t *r);
-int io_fchanged (caf_io_file_t *r, struct timespec *lmt, struct timespec *lct);
-int io_pipe (caf_io_file_t *r);
-int io_fcntl (caf_io_file_t *r, int cmd, int *arg);
-int io_flseek (caf_io_file_t *r, off_t o, int w);
+	caf_io_file_t *io_fopen (const char *path, const int flg, const mode_t md,
+	                         int fs);
+	int io_fclose (caf_io_file_t *r);
+	caf_io_file_t *io_reopen (caf_io_file_t *r);
+	int io_restat (caf_io_file_t *r);
+	int io_fchanged (caf_io_file_t *r, struct timespec *lmt, struct timespec *lct);
+	int io_pipe (caf_io_file_t *r);
+	int io_fcntl (caf_io_file_t *r, int cmd, int *arg);
+	int io_flseek (caf_io_file_t *r, off_t o, int w);
 
-ssize_t io_read (caf_io_file_t *r, cbuffer_t *b);
-ssize_t io_write (caf_io_file_t *r, cbuffer_t *b);
+	ssize_t io_read (caf_io_file_t *r, cbuffer_t *b);
+	ssize_t io_write (caf_io_file_t *r, cbuffer_t *b);
 
 #ifdef __cplusplus
 };

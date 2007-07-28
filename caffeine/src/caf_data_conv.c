@@ -37,170 +37,162 @@ static char Id[] = "$Id$";
 
 
 long *
-str2longp (char *num, int base)
-{
-    long *rlong;
-    int p_errno;
-    if (num != (char *)NULL) {
-        rlong = xmalloc (sizeof(long));
-        if (rlong != (long *)NULL) {
-            p_errno = errno;
-            errno = 0;
-            *rlong = strtol(num, (char **)NULL, base);
-            if (errno == 0) {
-                errno = p_errno;
-                return rlong;
-            }
-            xfree (rlong);
-            return (long *)NULL;
-        }
-    }
-    return (long *)NULL;
+str2longp (char *num, int base) {
+	long *rlong;
+	int p_errno;
+	if (num != (char *)NULL) {
+		rlong = xmalloc (sizeof(long));
+		if (rlong != (long *)NULL) {
+			p_errno = errno;
+			errno = 0;
+			*rlong = strtol(num, (char **)NULL, base);
+			if (errno == 0) {
+				errno = p_errno;
+				return rlong;
+			}
+			xfree (rlong);
+			return (long *)NULL;
+		}
+	}
+	return (long *)NULL;
 }
 
 
 long
-str2long (char *num, int base)
-{
-    long rlong;
-    int p_errno;
-    if (num != (char *)NULL) {
-        p_errno = errno;
-        errno = 0;
-        rlong = strtol(num, (char **)NULL, base);
-        if (errno == 0) {
-            errno = p_errno;
-            return rlong;
-        }
-        return 0;
-    }
-    return 0;
+str2long (char *num, int base) {
+	long rlong;
+	int p_errno;
+	if (num != (char *)NULL) {
+		p_errno = errno;
+		errno = 0;
+		rlong = strtol(num, (char **)NULL, base);
+		if (errno == 0) {
+			errno = p_errno;
+			return rlong;
+		}
+		return 0;
+	}
+	return 0;
 }
 
 
 float *
-str2floatp (char *num)
-{
-    float *rfloat;
-    int p_errno;
-    if (num != (char *)NULL) {
-        rfloat = xmalloc (sizeof(float));
-        if (rfloat != (float *)NULL) {
-            p_errno = errno;
-            errno = 0;
-            *rfloat = strtof(num, (char **)NULL);
-            if (errno == 0) {
-                errno = p_errno;
-                return rfloat;
-            }
-            xfree (rfloat);
-            return (float *)NULL;
-        }
-    }
-    return (float *)NULL;
+str2floatp (char *num) {
+	float *rfloat;
+	int p_errno;
+	if (num != (char *)NULL) {
+		rfloat = xmalloc (sizeof(float));
+		if (rfloat != (float *)NULL) {
+			p_errno = errno;
+			errno = 0;
+			*rfloat = strtof(num, (char **)NULL);
+			if (errno == 0) {
+				errno = p_errno;
+				return rfloat;
+			}
+			xfree (rfloat);
+			return (float *)NULL;
+		}
+	}
+	return (float *)NULL;
 }
 
 
 float
-str2float (char *num)
-{
-    float rfloat;
-    int p_errno;
-    if (num != (char *)NULL) {
-        p_errno = errno;
-        errno = 0;
-        rfloat = strtof(num, (char **)NULL);
-        if (errno == 0) {
-            errno = p_errno;
-            return rfloat;
-        }
-        return 0.0;
-    }
-    return 0.0;
+str2float (char *num) {
+	float rfloat;
+	int p_errno;
+	if (num != (char *)NULL) {
+		p_errno = errno;
+		errno = 0;
+		rfloat = strtof(num, (char **)NULL);
+		if (errno == 0) {
+			errno = p_errno;
+			return rfloat;
+		}
+		return 0.0;
+	}
+	return 0.0;
 }
 
 
 double *
-str2doublep (char *num)
-{
-    double *rdouble;
-    int p_errno;
-    if (num != (char *)NULL) {
-        rdouble = xmalloc (sizeof(double));
-        if (rdouble != (double *)NULL) {
-            p_errno = errno;
-            errno = 0;
-            *rdouble = strtod(num, (char **)NULL);
-            if (errno == 0) {
-                errno = p_errno;
-                return rdouble;
-            }
-        }
-        xfree (rdouble);
-        return (double *)NULL;
-    }
-    return (double *)NULL;
+str2doublep (char *num) {
+	double *rdouble;
+	int p_errno;
+	if (num != (char *)NULL) {
+		rdouble = xmalloc (sizeof(double));
+		if (rdouble != (double *)NULL) {
+			p_errno = errno;
+			errno = 0;
+			*rdouble = strtod(num, (char **)NULL);
+			if (errno == 0) {
+				errno = p_errno;
+				return rdouble;
+			}
+		}
+		xfree (rdouble);
+		return (double *)NULL;
+	}
+	return (double *)NULL;
 }
 
 
 double
-str2double (char *num)
-{
-    double rdouble;
-    int p_errno;
-    if (num != (char *)NULL) {
-        p_errno = errno;
-        errno = 0;
-        rdouble = strtod(num, (char **)NULL);
-        if (errno == 0) {
-            errno = p_errno;
-            return rdouble;
-        }
-        return 0.0;
-    }
-    return 0.0;
+str2double (char *num) {
+	double rdouble;
+	int p_errno;
+	if (num != (char *)NULL) {
+		p_errno = errno;
+		errno = 0;
+		rdouble = strtod(num, (char **)NULL);
+		if (errno == 0) {
+			errno = p_errno;
+			return rdouble;
+		}
+		return 0.0;
+	}
+	return 0.0;
 }
 
 
 long double *
-str2ldoublep (char *num)
-{
-    long double *rdouble;
-    int p_errno;
-    if (num != (char *)NULL) {
-        rdouble = xmalloc (sizeof(double));
-        if (rdouble != (long double *)NULL) {
-            p_errno = errno;
-            errno = 0;
-            *rdouble = (long double)strtod(num, (char **)NULL);
-            if (errno == 0) {
-                errno = p_errno;
-                return rdouble;
-            }
-        }
-        xfree (rdouble);
-        return (long double *)NULL;
-    }
-    return (long double *)NULL;
+str2ldoublep (char *num) {
+	long double *rdouble;
+	int p_errno;
+	if (num != (char *)NULL) {
+		rdouble = xmalloc (sizeof(double));
+		if (rdouble != (long double *)NULL) {
+			p_errno = errno;
+			errno = 0;
+			*rdouble = (long double)strtod(num, (char **)NULL);
+			if (errno == 0) {
+				errno = p_errno;
+				return rdouble;
+			}
+		}
+		xfree (rdouble);
+		return (long double *)NULL;
+	}
+	return (long double *)NULL;
 }
 
 
 long double
-str2ldouble (char *num)
-{
-    long double rdouble;
-    int p_errno;
-    if (num != (char *)NULL) {
-        p_errno = errno;
-        errno = 0;
-        rdouble = (long double)strtod(num, (char **)NULL);
-        if (errno == 0) {
-            errno = p_errno;
-            return rdouble;
-        }
-        return 0.0;
-    }
-    return 0.0;
+str2ldouble (char *num) {
+	long double rdouble;
+	int p_errno;
+	if (num != (char *)NULL) {
+		p_errno = errno;
+		errno = 0;
+		rdouble = (long double)strtod(num, (char **)NULL);
+		if (errno == 0) {
+			errno = p_errno;
+			return rdouble;
+		}
+		return 0.0;
+	}
+	return 0.0;
 }
 
 /* caf_data_conv.c ends here */

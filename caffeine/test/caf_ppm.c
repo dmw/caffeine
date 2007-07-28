@@ -42,39 +42,36 @@ lstdl_t *pool;
 int exit_success;
 
 int
-main (void)
-{
-    extern lstdl_t *pool;
-    extern int exit_success;
-    exit_success = 0;
+main (void) {
+	extern lstdl_t *pool;
+	extern int exit_success;
+	exit_success = 0;
 
-    pool = ppm_pool_create (3, (lstdl_t *)NULL, test_pt);
-    sleep (20);
-    ppm_kill_pool (pool, SIGHUP);
-    lstdl_delete (pool, lstdl_delete_cb);
-    return 0;
+	pool = ppm_pool_create (3, (lstdl_t *)NULL, test_pt);
+	sleep (20);
+	ppm_kill_pool (pool, SIGHUP);
+	lstdl_delete (pool, lstdl_delete_cb);
+	return 0;
 }
 
 int
-test_pt (void *p)
-{
-    extern lstdl_t *pool;
-    extern int exit_success;
-    signal (SIGHUP, test_signal_handler);
-    while (1 && exit_success == 0) {
-        sleep (1);
-        printf ("pid: %d (%p)\n", getpid (), p);
-    }
-    lstdl_delete (pool, lstdl_delete_cb);
-    return 1;
+test_pt (void *p) {
+	extern lstdl_t *pool;
+	extern int exit_success;
+	signal (SIGHUP, test_signal_handler);
+	while (1 && exit_success == 0) {
+		sleep (1);
+		printf ("pid: %d (%p)\n", getpid (), p);
+	}
+	lstdl_delete (pool, lstdl_delete_cb);
+	return 1;
 }
 
 void
-test_signal_handler (int sig)
-{
-    extern int exit_success;
-    exit_success = 1;
-    printf ("received signal: %d\n", sig);
+test_signal_handler (int sig) {
+	extern int exit_success;
+	exit_success = 1;
+	printf ("received signal: %d\n", sig);
 }
 
 /* caf_ppm.c ends here */

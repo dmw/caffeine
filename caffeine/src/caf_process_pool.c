@@ -43,118 +43,111 @@ static char Id[] = "$Id$";
 
 proc_info_t *
 ppm_pinfo_new (int num, pid_t pid, pid_t pgrp, lstdl_t *lst,
-               CAF_ENTRY_POINT(point))
-{
-    proc_info_t *nfo = (proc_info_t *)NULL;
-    if (pid > 0 && point) {
-        nfo = (proc_info_t *)xmalloc (CAF_PINFO_SZ);
-        if (nfo != (proc_info_t *)NULL) {
-            nfo->number = num;
-            nfo->pid = pid;
-            nfo->pgrp = pgrp;
-            nfo->lst = lst;
-            nfo->point = point;
-        }
-    }
-    return nfo;
+               CAF_ENTRY_POINT(point)) {
+	proc_info_t *nfo = (proc_info_t *)NULL;
+	if (pid > 0 && point) {
+		nfo = (proc_info_t *)xmalloc (CAF_PINFO_SZ);
+		if (nfo != (proc_info_t *)NULL) {
+			nfo->number = num;
+			nfo->pid = pid;
+			nfo->pgrp = pgrp;
+			nfo->lst = lst;
+			nfo->point = point;
+		}
+	}
+	return nfo;
 }
 
 
 void
-ppm_info_delete (proc_info_t *nfo)
-{
-    if (nfo != (proc_info_t *)NULL) {
-        xfree (nfo);
-    }
+ppm_info_delete (proc_info_t *nfo) {
+	if (nfo != (proc_info_t *)NULL) {
+		xfree (nfo);
+	}
 }
 
 
 proc_info_t *
-ppm_daemonize (int num, pid_t pgrp, lstdl_t *lst, CAF_ENTRY_POINT(pt))
-{
-    proc_info_t *nfo = (proc_info_t *)NULL;
-    pid_t pid = 0;
-    if (pt) {
-        pid = fork();
-        switch (pid) {
-            case -1:
-                pid = 0;
-                break;
-            case 0:
+ppm_daemonize (int num, pid_t pgrp, lstdl_t *lst, CAF_ENTRY_POINT(pt)) {
+	proc_info_t *nfo = (proc_info_t *)NULL;
+	pid_t pid = 0;
+	if (pt) {
+		pid = fork();
+		switch (pid) {
+		case -1:
+			pid = 0;
+			break;
+		case 0:
 #ifndef CAFFEINE_DEBUG
-                fclose (stdout);
-                fclose (stderr);
+			fclose (stdout);
+			fclose (stderr);
 #endif
 #ifdef LINUX
-                setpgid (getpid(), pgrp);
+			setpgid (getpid(), pgrp);
 #endif /* !LINUX */
-                pt (lst);
-                break;
-            default:
-                nfo = ppm_pinfo_new (num, pid, pgrp, lst, pt);
+			pt (lst);
+			break;
+		default:
+			nfo = ppm_pinfo_new (num, pid, pgrp, lst, pt);
 #ifdef LINUX
-                setpgrp (pid, pgrp);
+			setpgrp (pid, pgrp);
 #endif /* !LINUX */
-                break;
-        }
-    }
-    return nfo;
+			break;
+		}
+	}
+	return nfo;
 }
 
 
 int
-ppm_kill (proc_info_t *nfo, int sig)
-{
-    if (nfo != (proc_info_t *)NULL) {
-        return kill (nfo->pid, sig);
-    }
-    return CAF_ERROR;
+ppm_kill (proc_info_t *nfo, int sig) {
+	if (nfo != (proc_info_t *)NULL) {
+		return kill (nfo->pid, sig);
+	}
+	return CAF_ERROR;
 }
 
 
 lstdl_t *
-ppm_pool_create (int c, lstdl_t *plst, CAF_ENTRY_POINT(pt))
-{
-    int count = 0;
-    lstdl_t *lst = (lstdl_t *)NULL;
-    proc_info_t *nfo = (proc_info_t *)NULL;
-    pid_t pgrp = 0;
-    if (c > 0 && pt) {
-        pgrp = setsid ();
-        lst = lstdl_create ();
-        for (count = 1; count <= c; count++) {
-            nfo = ppm_daemonize (count, pgrp, plst, pt);
-            if (nfo != (proc_info_t *)NULL) {
-                lstdl_push (lst, nfo);
-            }
-        }
-    }
-    return lst;
+ppm_pool_create (int c, lstdl_t *plst, CAF_ENTRY_POINT(pt)) {
+	int count = 0;
+	lstdl_t *lst = (lstdl_t *)NULL;
+	proc_info_t *nfo = (proc_info_t *)NULL;
+	pid_t pgrp = 0;
+	if (c > 0 && pt) {
+		pgrp = setsid ();
+		lst = lstdl_create ();
+		for (count = 1; count <= c; count++) {
+			nfo = ppm_daemonize (count, pgrp, plst, pt);
+			if (nfo != (proc_info_t *)NULL) {
+				lstdl_push (lst, nfo);
+			}
+		}
+	}
+	return lst;
 }
 
 
 int
-ppm_kill_pool (lstdl_t *lst, int sig)
-{
-    int c = 0;
-    lstdln_t *n;
-    proc_info_t *nfo;
-    if (lst != (lstdl_t *)NULL && sig > 0) {
-        n = lst->head;
-        while (n != (lstdln_t *)NULL) {
-            nfo = (proc_info_t *)n->data;
-            ppm_kill (nfo, sig);
-            n = n->next;
-        }
-    }
-    return c;
+ppm_kill_pool (lstdl_t *lst, int sig) {
+	int c = 0;
+	lstdln_t *n;
+	proc_info_t *nfo;
+	if (lst != (lstdl_t *)NULL && sig > 0) {
+		n = lst->head;
+		while (n != (lstdln_t *)NULL) {
+			nfo = (proc_info_t *)n->data;
+			ppm_kill (nfo, sig);
+			n = n->next;
+		}
+	}
+	return c;
 }
 
 
 int
-ppm_kill_group (int sig)
-{
-    return killpg (getpgrp (), sig);
+ppm_kill_group (int sig) {
+	return killpg (getpgrp (), sig);
 }
 
 /* caf_process_pool.c ends here */

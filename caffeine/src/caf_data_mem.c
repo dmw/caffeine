@@ -32,73 +32,67 @@ static char Id[] = "$Id$";
 
 #ifndef CAFFEINE_DEBUG
 void *
-xmalloc (size_t mem)
-{
-    void *ptr;
-    if ((int)mem) {
-        ptr = (void *)malloc (mem);
-        return ptr;
-    } else {
-        return (void *)NULL;
-}
+xmalloc (size_t mem) {
+	void *ptr;
+	if ((int)mem) {
+		ptr = (void *)malloc (mem);
+		return ptr;
+	} else {
+		return (void *)NULL;
+	}
 
 
-void
-xempty (void *ptr, size_t sz)
-{
-    if (((void *)ptr != (void *)NULL) && (sz > (size_t)0)) {
-        memset (ptr, (int)NULL, sz);
-    }
-}
+	void
+	xempty (void *ptr, size_t sz) {
+		if (((void *)ptr != (void *)NULL) && (sz > (size_t)0)) {
+			memset (ptr, (int)NULL, sz);
+		}
+	}
 
 
-void
-xfree (void *ptr)
-{
-    if (ptr != (void *)NULL) {
-        free (ptr);
-        ptr = (void *)NULL;
-    }
-}
+	void
+	xfree (void *ptr) {
+		if (ptr != (void *)NULL) {
+			free (ptr);
+			ptr = (void *)NULL;
+		}
+	}
 
 
-void
-xdestroy (void *ptr, size_t sz)
-{
-    xempty(ptr, sz);
-    xfree(ptr);
-}
+	void
+	xdestroy (void *ptr, size_t sz) {
+		xempty(ptr, sz);
+		xfree(ptr);
+	}
 
 
-void *
-xrealloc (void *ptr, size_t sz)
-{
-    void *new;
-    new = realloc(ptr, sz);
-    return new;
-}
+	void *
+	xrealloc (void *ptr, size_t sz) {
+		void *new;
+		new = realloc(ptr, sz);
+		return new;
+	}
 
 
-void
-xstrdestroy (ptr)
-    void *ptr;
-{
-    size_t mem;
-    if (ptr != (void *)NULL) {
-        mem = STRSZ(ptr);
-        xdestroy(ptr, mem);
-    }
-}
+	void
+	xstrdestroy (ptr)
+	void *ptr;
+	{
+		size_t mem;
+		if (ptr != (void *)NULL) {
+			mem = STRSZ(ptr);
+			xdestroy(ptr, mem);
+		}
+	}
 
 
-void *
-xmemcpy (void *dst, void *src, size_t sz)
-{
-    if (dst != (void *)NULL && src != (void *)NULL && sz > (long)NULL) {
-        return memcpy(dst, src, sz);
-    }
-    return (void *)NULL;
-}
+	void *
+	xmemcpy (void *dst, void *src, size_t sz) {
+		if (dst != (void *)NULL && src != (void *)NULL && sz > (long)NULL) {
+			return memcpy(dst, src, sz);
+		}
+		return (void *)NULL;
+	}
 
 #endif /* !CAFFEINE_DEBUG */
-/* caf_data_mem.c ends here */
+	/* caf_data_mem.c ends here */

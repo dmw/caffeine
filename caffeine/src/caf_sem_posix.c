@@ -35,118 +35,107 @@ static char Id[] = "$Id$";
 
 
 caf_sem_posix_t *
-caf_sem_posix_new (const sem_t key, const int flag, const int value)
-{
-    caf_sem_posix_t *r = (caf_sem_posix_t *)NULL;
-    r = (caf_sem_posix_t *)xmalloc (CAF_SEM_POSIX_SZ);
-    if (r != (caf_sem_posix_t *)NULL) {
-        r->key = key;
-        if ((sem_init (&(r->key), flag, value)) == 0) {
-            r->flag = flag;
-            r->value = value;
-            return r;
-        } else {
-            xfree (r);
-            r = (caf_sem_posix_t *)NULL;
-        }
-    }
-    return r;
+caf_sem_posix_new (const sem_t key, const int flag, const int value) {
+	caf_sem_posix_t *r = (caf_sem_posix_t *)NULL;
+	r = (caf_sem_posix_t *)xmalloc (CAF_SEM_POSIX_SZ);
+	if (r != (caf_sem_posix_t *)NULL) {
+		r->key = key;
+		if ((sem_init (&(r->key), flag, value)) == 0) {
+			r->flag = flag;
+			r->value = value;
+			return r;
+		} else {
+			xfree (r);
+			r = (caf_sem_posix_t *)NULL;
+		}
+	}
+	return r;
 }
 
 
 int
-caf_sem_posix_delete (caf_sem_posix_t *r)
-{
-    if (r != (caf_sem_posix_t *)NULL) {
-        if ((sem_destroy (&(r->key))) == 0) {
-            xfree (r);
-            return CAF_OK;
-        }
-    }
-    return CAF_ERROR;
+caf_sem_posix_delete (caf_sem_posix_t *r) {
+	if (r != (caf_sem_posix_t *)NULL) {
+		if ((sem_destroy (&(r->key))) == 0) {
+			xfree (r);
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
 }
 
 
 caf_sem_posix_t *
-caf_sem_posix_get (const sem_t k, const int f, const int v)
-{
-    caf_sem_posix_t *r = caf_sem_posix_new (k, f, v);
-    return r;
+caf_sem_posix_get (const sem_t k, const int f, const int v) {
+	caf_sem_posix_t *r = caf_sem_posix_new (k, f, v);
+	return r;
 }
 
 
 int
-caf_sem_posix_exists (caf_sem_posix_t *r)
-{
-    int v;
-    if (r != (caf_sem_posix_t *)NULL) {
-        if ((sem_getvalue (&(r->key), &v)) == 0) {
-            return CAF_OK;
-        } else {
-            return CAF_ERROR;
-        }
-    }
-    return CAF_ERROR;
+caf_sem_posix_exists (caf_sem_posix_t *r) {
+	int v;
+	if (r != (caf_sem_posix_t *)NULL) {
+		if ((sem_getvalue (&(r->key), &v)) == 0) {
+			return CAF_OK;
+		} else {
+			return CAF_ERROR;
+		}
+	}
+	return CAF_ERROR;
 }
 
 
 int
-caf_sem_posix_post (caf_sem_posix_t *r)
-{
-    if (r != (caf_sem_posix_t *)NULL) {
-        return sem_post (&(r->key));
-    }
-    return CAF_ERROR;
+caf_sem_posix_post (caf_sem_posix_t *r) {
+	if (r != (caf_sem_posix_t *)NULL) {
+		return sem_post (&(r->key));
+	}
+	return CAF_ERROR;
 }
 
 
 int
-caf_sem_posix_getvalue (caf_sem_posix_t *r)
-{
-    if (r != (caf_sem_posix_t *)NULL) {
-        return sem_getvalue (&(r->key), &(r->value));
-    }
-    return CAF_ERROR;
+caf_sem_posix_getvalue (caf_sem_posix_t *r) {
+	if (r != (caf_sem_posix_t *)NULL) {
+		return sem_getvalue (&(r->key), &(r->value));
+	}
+	return CAF_ERROR;
 }
 
 
 int
-caf_sem_posix_wait (caf_sem_posix_t *r)
-{
-    if (r != (caf_sem_posix_t *)NULL) {
-        return sem_wait (&(r->key));
-    }
-    return CAF_ERROR;
+caf_sem_posix_wait (caf_sem_posix_t *r) {
+	if (r != (caf_sem_posix_t *)NULL) {
+		return sem_wait (&(r->key));
+	}
+	return CAF_ERROR;
 }
 
 
 int
-caf_sem_posix_trywait (caf_sem_posix_t *r)
-{
-    if (r != (caf_sem_posix_t *)NULL) {
-        return sem_trywait (&(r->key));
-    }
-    return CAF_ERROR;
+caf_sem_posix_trywait (caf_sem_posix_t *r) {
+	if (r != (caf_sem_posix_t *)NULL) {
+		return sem_trywait (&(r->key));
+	}
+	return CAF_ERROR;
 }
 
 
 int
-caf_sem_posix_lock (caf_sem_posix_t *r)
-{
-    return caf_sem_posix_wait (r);
+caf_sem_posix_lock (caf_sem_posix_t *r) {
+	return caf_sem_posix_wait (r);
 }
 
 
 int
-caf_sem_posix_trylock (caf_sem_posix_t *r)
-{
-    return caf_sem_posix_trywait (r);
+caf_sem_posix_trylock (caf_sem_posix_t *r) {
+	return caf_sem_posix_trywait (r);
 }
 
 int
-caf_sem_posix_unlock (caf_sem_posix_t *r)
-{
-    return caf_sem_posix_post (r);
+caf_sem_posix_unlock (caf_sem_posix_t *r) {
+	return caf_sem_posix_post (r);
 }
 
 /* caf_sem_posix.c ends here */

@@ -51,64 +51,62 @@ caf_tail_stream_t *stream;
 cbuffer_t *buf;
 
 int
-main (int argc, char **argv)
-{
-    ctrl = CAF_OK;
-    int c;
-    char msg[] =
-        "=============\n"
-        "stream->status:    %d\n"
-        "stream->complete:  %d\n"
-        "stream->reset:     %d\n"
-        "stream->offset:    %lx\n"
-        "-------------\n"
-        "buf->sz:           %lx\n"
-        "buf->iosz:         %lx\n"
-        "------------- read data:\n";
-    if (argc > 1) {
-        printf ("opening %s\n", argv[1]);
-        signal (SIGHUP, sigrtn);
-        signal (SIGINT, sigrtn);
-        signal (SIGKILL, sigrtn);
+main (int argc, char **argv) {
+	ctrl = CAF_OK;
+	int c;
+	char msg[] =
+	    "=============\n"
+	    "stream->status:    %d\n"
+	    "stream->complete:  %d\n"
+	    "stream->reset:     %d\n"
+	    "stream->offset:    %lx\n"
+	    "-------------\n"
+	    "buf->sz:           %lx\n"
+	    "buf->iosz:         %lx\n"
+	    "------------- read data:\n";
+	if (argc > 1) {
+		printf ("opening %s\n", argv[1]);
+		signal (SIGHUP, sigrtn);
+		signal (SIGINT, sigrtn);
+		signal (SIGKILL, sigrtn);
 
-        stream = caf_tail_open (argv[1], 1);
+		stream = caf_tail_open (argv[1], 1);
 
-        if (stream != (caf_tail_stream_t *)NULL) {
-            printf ("stream for %s opened\n", argv[1]);
-            buf = cbuf_create (512);
-            if (buf != (cbuffer_t *)NULL) {
-                for (c = 0; c < 30; c++) {
-                    if ((caf_tail_read (stream, buf)) == CAF_OK) {
-                        printf (msg, stream->status, stream->complete,
-                                stream->reset, stream->offset, buf->sz,
-                                buf->iosz);
-                        write (fileno (stdout), buf->data, buf->iosz);
-                        printf ("\n");
-                    }
-                    sleep (1);
-                }
-                cbuf_delete (buf);
-            }
-        }
+		if (stream != (caf_tail_stream_t *)NULL) {
+			printf ("stream for %s opened\n", argv[1]);
+			buf = cbuf_create (512);
+			if (buf != (cbuffer_t *)NULL) {
+				for (c = 0; c < 30; c++) {
+					if ((caf_tail_read (stream, buf)) == CAF_OK) {
+						printf (msg, stream->status, stream->complete,
+						        stream->reset, stream->offset, buf->sz,
+						        buf->iosz);
+						write (fileno (stdout), buf->data, buf->iosz);
+						printf ("\n");
+					}
+					sleep (1);
+				}
+				cbuf_delete (buf);
+			}
+		}
 
-        if ((caf_tail_close (stream)) == CAF_OK) {
-            printf ("stream for %s closed\n", argv[1]);
-        } else {
-            printf ("stream for %s not closed\n", argv[1]);
-        }
+		if ((caf_tail_close (stream)) == CAF_OK) {
+			printf ("stream for %s closed\n", argv[1]);
+		} else {
+			printf ("stream for %s not closed\n", argv[1]);
+		}
 
-        return 1;
-    }
-    return 0;
+		return 1;
+	}
+	return 0;
 }
 
 void
-sigrtn (int sig)
-{
-    ctrl = CAF_ERROR;
-    caf_tail_close (stream);
-    cbuf_delete (buf);
-    printf ("signal: %d\n", sig);
+sigrtn (int sig) {
+	ctrl = CAF_ERROR;
+	caf_tail_close (stream);
+	cbuf_delete (buf);
+	printf ("signal: %d\n", sig);
 }
 
 /* caf_tail.c ends here */

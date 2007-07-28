@@ -41,167 +41,158 @@ static char Id[] = "$Id$";
 
 
 io_evt_t *
-caf_io_evt_new  (int fd, int type, int to)
-{
-    io_evt_t *r = (io_evt_t *)NULL;
-    if (fd > -1 && type > 0) {
-        r = (io_evt_t *)xmalloc (IO_EVT_SZ);
-        if (r != (io_evt_t *)NULL) {
-            r->ev_mfd = fd;
-            r->ev_type = type;
-            r->ev_use = IO_EVENTS_SELECT;
-            r->ev_sz = IO_EVENT_DATA_SELECT_SZ;
-            r->ev_info = (io_evt_select_t *)xmalloc (r->ev_sz);
-            r->ev_timeout = to;
-            if (r->ev_info == (io_evt_select_t *)NULL ||
-                (caf_io_evt_init (r)) != CAF_OK) {
-                xfree (r);
-                r = (io_evt_t *)NULL;
-            }
-        }
-    }
-    return r;
+caf_io_evt_new  (int fd, int type, int to) {
+	io_evt_t *r = (io_evt_t *)NULL;
+	if (fd > -1 && type > 0) {
+		r = (io_evt_t *)xmalloc (IO_EVT_SZ);
+		if (r != (io_evt_t *)NULL) {
+			r->ev_mfd = fd;
+			r->ev_type = type;
+			r->ev_use = IO_EVENTS_SELECT;
+			r->ev_sz = IO_EVENT_DATA_SELECT_SZ;
+			r->ev_info = (io_evt_select_t *)xmalloc (r->ev_sz);
+			r->ev_timeout = to;
+			if (r->ev_info == (io_evt_select_t *)NULL ||
+			        (caf_io_evt_init (r)) != CAF_OK) {
+				xfree (r);
+				r = (io_evt_t *)NULL;
+			}
+		}
+	}
+	return r;
 }
 
 
 int
-caf_io_evt_delete (io_evt_t *e)
-{
-    if (e != (io_evt_t *)NULL) {
-        if ((caf_io_evt_destroy (e)) == CAF_OK) {
-            if (e->ev_info != (void *)NULL) {
-                xfree (e->ev_info);
-            }
-            xfree (e);
-            return CAF_OK;
-        }
-    }
-    return CAF_ERROR;
+caf_io_evt_delete (io_evt_t *e) {
+	if (e != (io_evt_t *)NULL) {
+		if ((caf_io_evt_destroy (e)) == CAF_OK) {
+			if (e->ev_info != (void *)NULL) {
+				xfree (e->ev_info);
+			}
+			xfree (e);
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
 }
 
 
 int
-caf_io_evt_init (io_evt_t *e)
-{
-    io_evt_select_t *s;
-    if (e != (io_evt_t *)NULL) {
-        s = (io_evt_select_t *)e->ev_info;
-        if (s != (io_evt_select_t *)NULL) {
-            s->timeout.tv_sec = e->ev_timeout;
-            s->timeout.tv_usec = 0;
-            FD_ZERO (&(s->rd));
-            FD_ZERO (&(s->wr));
-            if (e->ev_type & EVT_IO_READ) {
-                FD_SET (e->ev_mfd, &(s->rd));
-            }
-            if (e->ev_type & EVT_IO_WRITE) {
-                FD_SET (e->ev_mfd, &(s->wr));
-            }
-            return CAF_OK;
-        }
-    }
-    return CAF_ERROR;
+caf_io_evt_init (io_evt_t *e) {
+	io_evt_select_t *s;
+	if (e != (io_evt_t *)NULL) {
+		s = (io_evt_select_t *)e->ev_info;
+		if (s != (io_evt_select_t *)NULL) {
+			s->timeout.tv_sec = e->ev_timeout;
+			s->timeout.tv_usec = 0;
+			FD_ZERO (&(s->rd));
+			FD_ZERO (&(s->wr));
+			if (e->ev_type & EVT_IO_READ) {
+				FD_SET (e->ev_mfd, &(s->rd));
+			}
+			if (e->ev_type & EVT_IO_WRITE) {
+				FD_SET (e->ev_mfd, &(s->wr));
+			}
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
 }
 
 
 int
-caf_io_evt_reinit (io_evt_t *e)
-{
-    io_evt_select_t *s;
-    if (e != (io_evt_t *)NULL) {
-        s = (io_evt_select_t *)e->ev_info;
-        if (s != (io_evt_select_t *)NULL) {
-            s->timeout.tv_sec = e->ev_timeout;
-            s->timeout.tv_usec = 0;
-            FD_ZERO (&(s->rd));
-            FD_ZERO (&(s->wr));
-            if (e->ev_type & EVT_IO_READ) {
-                FD_SET (e->ev_mfd, &(s->rd));
-            }
-            if (e->ev_type & EVT_IO_WRITE) {
-                FD_SET (e->ev_mfd, &(s->wr));
-            }
-            return CAF_OK;
-        }
-    }
-    return CAF_ERROR;
+caf_io_evt_reinit (io_evt_t *e) {
+	io_evt_select_t *s;
+	if (e != (io_evt_t *)NULL) {
+		s = (io_evt_select_t *)e->ev_info;
+		if (s != (io_evt_select_t *)NULL) {
+			s->timeout.tv_sec = e->ev_timeout;
+			s->timeout.tv_usec = 0;
+			FD_ZERO (&(s->rd));
+			FD_ZERO (&(s->wr));
+			if (e->ev_type & EVT_IO_READ) {
+				FD_SET (e->ev_mfd, &(s->rd));
+			}
+			if (e->ev_type & EVT_IO_WRITE) {
+				FD_SET (e->ev_mfd, &(s->wr));
+			}
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
 }
 
 
 int
-caf_io_evt_add (io_evt_t *e, int ev)
-{
-    return e != (io_evt_t *)NULL && ev > 0 ? CAF_ERROR : CAF_ERROR;
+caf_io_evt_add (io_evt_t *e, int ev) {
+	return e != (io_evt_t *)NULL && ev > 0 ? CAF_ERROR : CAF_ERROR;
 }
 
 
 int
-caf_io_evt_destroy (io_evt_t *e)
-{
-    io_evt_select_t *s;
-    if (e != (io_evt_t *)NULL) {
-        s = (io_evt_select_t *)e->ev_info;
-        if (s != (io_evt_select_t *)NULL) {
-            if (e->ev_type & EVT_IO_READ) {
-                FD_CLR (e->ev_mfd, &(s->rd));
-            }
-            if (e->ev_type & EVT_IO_WRITE) {
-                FD_CLR (e->ev_mfd, &(s->wr));
-            }
-            FD_ZERO (&(s->rd));
-            FD_ZERO (&(s->wr));
-            return CAF_OK;
-        }
-    }
-    return CAF_ERROR;
+caf_io_evt_destroy (io_evt_t *e) {
+	io_evt_select_t *s;
+	if (e != (io_evt_t *)NULL) {
+		s = (io_evt_select_t *)e->ev_info;
+		if (s != (io_evt_select_t *)NULL) {
+			if (e->ev_type & EVT_IO_READ) {
+				FD_CLR (e->ev_mfd, &(s->rd));
+			}
+			if (e->ev_type & EVT_IO_WRITE) {
+				FD_CLR (e->ev_mfd, &(s->wr));
+			}
+			FD_ZERO (&(s->rd));
+			FD_ZERO (&(s->wr));
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
 }
 
 
 int
-caf_io_evt_handle (io_evt_t *e)
-{
-    int r = CAF_ERROR;
-    io_evt_select_t *s;
-    if (e != (io_evt_t *)NULL) {
-        s = (io_evt_select_t *)e->ev_info;
-        if (s != (io_evt_select_t *)NULL) {
-            if ((select (e->ev_mfd, &(s->rd), &(s->wr), NULL, &(s->timeout))) >
-                0) {
-                return CAF_OK;
-            }
-        }
-    }
-    return r;
+caf_io_evt_handle (io_evt_t *e) {
+	int r = CAF_ERROR;
+	io_evt_select_t *s;
+	if (e != (io_evt_t *)NULL) {
+		s = (io_evt_select_t *)e->ev_info;
+		if (s != (io_evt_select_t *)NULL) {
+			if ((select (e->ev_mfd, &(s->rd), &(s->wr), NULL, &(s->timeout))) >
+			        0) {
+				return CAF_OK;
+			}
+		}
+	}
+	return r;
 }
 
 
 int
-caf_io_evt_isread (io_evt_t *e)
-{
-    int r = CAF_ERROR;
-    io_evt_select_t *s;
-    if (e != (io_evt_t *)NULL) {
-        s = (io_evt_select_t *)e->ev_info;
-        if (s != (io_evt_select_t *)NULL) {
-            r = FD_ISSET(e->ev_mfd, &(s->wr)) ? CAF_OK : CAF_ERROR;
-        }
-    }
-    return r;
+caf_io_evt_isread (io_evt_t *e) {
+	int r = CAF_ERROR;
+	io_evt_select_t *s;
+	if (e != (io_evt_t *)NULL) {
+		s = (io_evt_select_t *)e->ev_info;
+		if (s != (io_evt_select_t *)NULL) {
+			r = FD_ISSET(e->ev_mfd, &(s->wr)) ? CAF_OK : CAF_ERROR;
+		}
+	}
+	return r;
 }
 
 
 int
-caf_io_evt_iswrite (io_evt_t *e)
-{
-    int r = CAF_ERROR;
-    io_evt_select_t *s;
-    if (e != (io_evt_t *)NULL) {
-        s = (io_evt_select_t *)e->ev_info;
-        if (s != (io_evt_select_t *)NULL) {
-            r = FD_ISSET(e->ev_mfd, &(s->rd)) ? CAF_OK : CAF_ERROR;
-        }
-    }
-    return r;
+caf_io_evt_iswrite (io_evt_t *e) {
+	int r = CAF_ERROR;
+	io_evt_select_t *s;
+	if (e != (io_evt_t *)NULL) {
+		s = (io_evt_select_t *)e->ev_info;
+		if (s != (io_evt_select_t *)NULL) {
+			r = FD_ISSET(e->ev_mfd, &(s->rd)) ? CAF_OK : CAF_ERROR;
+		}
+	}
+	return r;
 }
 
 

@@ -36,11 +36,9 @@ static char Id[] = "$Id$";
 
 #ifdef BSD_SYSTEM
 char *
-caf_io_fdname (int fd)
-{
-    if (fd >= 0) {
-    }
-    return (char *)NULL;
+caf_io_fdname (int fd) {
+	if (fd >= 0) {}
+	return (char *)NULL;
 }
 #endif /* !BSD_SYSTEM */
 

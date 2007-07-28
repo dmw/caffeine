@@ -41,160 +41,150 @@ static char Id[] = "$Id$";
 
 
 caf_io_file_t *
-io_fopen (const char *path, const int flg, const mode_t md, int fs)
-{
-    caf_io_file_t *r = (caf_io_file_t *)NULL;
-    if (path != (char *)NULL) {
-        r = (caf_io_file_t *)xmalloc (CAF_IO_FILE_SZ);
-        if (r != (caf_io_file_t *)NULL) {
-            if (md != 0) {
-                r->fd = open (path, flg, md);
-            } else {
-                r->fd = open (path, flg);
-            }
-            if (r->fd >= 0) {
-                if (r->ustat >= 0) {
-                    r->flags = flg;
-                    r->mode = md;
-                    r->path = strdup (path);
-                    r->ustat = fs;
-                    if (fs == CAF_OK) {
-                        if ((fstat (r->fd, &(r->sd))) == 0) {
-                            return r;
-                        } else {
-                            close (r->fd);
-                            xfree (r->path);
-                            xfree (r);
-                            r = (caf_io_file_t *)NULL;
-                        }
-                    }
-                }
-            } else {
-                xfree (r);
-                r = (caf_io_file_t *)NULL;
-            }
-        }
-    }
-    return r;
+io_fopen (const char *path, const int flg, const mode_t md, int fs) {
+	caf_io_file_t *r = (caf_io_file_t *)NULL;
+	if (path != (char *)NULL) {
+		r = (caf_io_file_t *)xmalloc (CAF_IO_FILE_SZ);
+		if (r != (caf_io_file_t *)NULL) {
+			if (md != 0) {
+				r->fd = open (path, flg, md);
+			} else {
+				r->fd = open (path, flg);
+			}
+			if (r->fd >= 0) {
+				if (r->ustat >= 0) {
+					r->flags = flg;
+					r->mode = md;
+					r->path = strdup (path);
+					r->ustat = fs;
+					if (fs == CAF_OK) {
+						if ((fstat (r->fd, &(r->sd))) == 0) {
+							return r;
+						} else {
+							close (r->fd);
+							xfree (r->path);
+							xfree (r);
+							r = (caf_io_file_t *)NULL;
+						}
+					}
+				}
+			} else {
+				xfree (r);
+				r = (caf_io_file_t *)NULL;
+			}
+		}
+	}
+	return r;
 }
 
 
 int
-io_fclose (caf_io_file_t *r)
-{
-    if (r != (caf_io_file_t *)NULL) {
-        if ((close (r->fd)) == 0) {
-            xfree (r->path);
-            xfree (r);
-            return CAF_OK;
-        }
-    }
-    return CAF_ERROR;
+io_fclose (caf_io_file_t *r) {
+	if (r != (caf_io_file_t *)NULL) {
+		if ((close (r->fd)) == 0) {
+			xfree (r->path);
+			xfree (r);
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
 }
 
 
 caf_io_file_t *
-io_reopen (caf_io_file_t *r)
-{
-    caf_io_file_t *r2 = (caf_io_file_t *)NULL;
-    if (r != (caf_io_file_t *)NULL) {
-        r2 = io_fopen (r->path, r->flags, r->mode, r->ustat);
-        if (r2 != (caf_io_file_t *)NULL) {
-            if ((io_fclose (r)) == CAF_OK) {
-                return r2;
-            } else {
-                io_fclose (r2);
-                r2 = (caf_io_file_t *)NULL;
-            }
-        }
-    }
-    return r2;
+io_reopen (caf_io_file_t *r) {
+	caf_io_file_t *r2 = (caf_io_file_t *)NULL;
+	if (r != (caf_io_file_t *)NULL) {
+		r2 = io_fopen (r->path, r->flags, r->mode, r->ustat);
+		if (r2 != (caf_io_file_t *)NULL) {
+			if ((io_fclose (r)) == CAF_OK) {
+				return r2;
+			} else {
+				io_fclose (r2);
+				r2 = (caf_io_file_t *)NULL;
+			}
+		}
+	}
+	return r2;
 }
 
 
 int
-io_restat (caf_io_file_t *r)
-{
-    struct stat sb;
-    if (r != (caf_io_file_t *)NULL) {
-        if ((fstat (r->fd, &sb)) == 0) {
-            r->sd = sb;
-            return CAF_OK;
-        }
-    }
-    return CAF_ERROR;
+io_restat (caf_io_file_t *r) {
+	struct stat sb;
+	if (r != (caf_io_file_t *)NULL) {
+		if ((fstat (r->fd, &sb)) == 0) {
+			r->sd = sb;
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
 }
 
 
 int
-io_fchanged (caf_io_file_t *r, struct timespec *lmt, struct timespec *lct)
-{
-    time_t diff;
-    if (r != (caf_io_file_t *)NULL) {
-        diff = (r->sd.st_mtime - lmt->tv_sec) + (r->sd.st_ctime - lct->tv_sec);
-        return (int)diff;
-    }
-    return CAF_OK;
+io_fchanged (caf_io_file_t *r, struct timespec *lmt, struct timespec *lct) {
+	time_t diff;
+	if (r != (caf_io_file_t *)NULL) {
+		diff = (r->sd.st_mtime - lmt->tv_sec) + (r->sd.st_ctime - lct->tv_sec);
+		return (int)diff;
+	}
+	return CAF_OK;
 }
 
 
 ssize_t
-io_read (caf_io_file_t *r, cbuffer_t *b)
-{
-    ssize_t sz = 0;
-    if (r != (caf_io_file_t *)NULL && b != (cbuffer_t *)NULL) {
-        sz = read (r->fd, b->data, b->sz);
-        b->iosz = sz;
-    }
-    return sz;
+io_read (caf_io_file_t *r, cbuffer_t *b) {
+	ssize_t sz = 0;
+	if (r != (caf_io_file_t *)NULL && b != (cbuffer_t *)NULL) {
+		sz = read (r->fd, b->data, b->sz);
+		b->iosz = sz;
+	}
+	return sz;
 }
 
 
 ssize_t
-io_write (caf_io_file_t *r, cbuffer_t *b)
-{
-    ssize_t sz = 0;
-    if (r != (caf_io_file_t *)NULL && b != (cbuffer_t *)NULL && sz > 0) {
-        sz = write (r->fd, b->data, b->iosz);
-        b->iosz = sz;
-    }
-    return sz;
+io_write (caf_io_file_t *r, cbuffer_t *b) {
+	ssize_t sz = 0;
+	if (r != (caf_io_file_t *)NULL && b != (cbuffer_t *)NULL && sz > 0) {
+		sz = write (r->fd, b->data, b->iosz);
+		b->iosz = sz;
+	}
+	return sz;
 }
 
 
 int
-io_pipe (caf_io_file_t *r)
-{
-    if (r != (caf_io_file_t *)NULL) {
-        return pipe (&(r->fd));
-    }
-    return CAF_ERROR_SUB;
+io_pipe (caf_io_file_t *r) {
+	if (r != (caf_io_file_t *)NULL) {
+		return pipe (&(r->fd));
+	}
+	return CAF_ERROR_SUB;
 }
 
 
 int
-io_fcntl (caf_io_file_t *r, int cmd, int *arg)
-{
-    if (r != (caf_io_file_t *)NULL) {
-        if (arg != (int *)NULL) {
-            return fcntl (r->fd, cmd, *arg);
-        } else {
-            return fcntl (r->fd, cmd);
-        }
-    }
-    return CAF_ERROR_SUB;
+io_fcntl (caf_io_file_t *r, int cmd, int *arg) {
+	if (r != (caf_io_file_t *)NULL) {
+		if (arg != (int *)NULL) {
+			return fcntl (r->fd, cmd, *arg);
+		} else {
+			return fcntl (r->fd, cmd);
+		}
+	}
+	return CAF_ERROR_SUB;
 }
 
 
 int
-io_flseek (caf_io_file_t *r, off_t o, int w)
-{
-    if (r != (caf_io_file_t *)NULL) {
-        if ((lseek (r->fd, o, w)) > -1) {
-            return CAF_OK;
-        }
-    }
-    return CAF_ERROR;
+io_flseek (caf_io_file_t *r, off_t o, int w) {
+	if (r != (caf_io_file_t *)NULL) {
+		if ((lseek (r->fd, o, w)) > -1) {
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
 }
 
 

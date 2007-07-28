@@ -38,174 +38,163 @@ static char Id[] = "$Id$";
 
 
 pth_rwlock_t *
-pth_rwl_new (int id)
-{
-    pth_rwlock_t *rwl = (pth_rwlock_t *)NULL;
-    rwl = (pth_rwlock_t *)xmalloc (CAF_PTH_RWLOCK_T_SZ);
-    if (rwl != (pth_rwlock_t *)NULL) {
-        rwl->id = id;
-        rwl->at = 0;
-    }
-    return rwl;
+pth_rwl_new (int id) {
+	pth_rwlock_t *rwl = (pth_rwlock_t *)NULL;
+	rwl = (pth_rwlock_t *)xmalloc (CAF_PTH_RWLOCK_T_SZ);
+	if (rwl != (pth_rwlock_t *)NULL) {
+		rwl->id = id;
+		rwl->at = 0;
+	}
+	return rwl;
 }
 
 
 void
-pth_rwl_delete (pth_rwlock_t *rwl)
-{
-    if (rwl != (pth_rwlock_t *)NULL) {
-        xfree (rwl);
-    }
+pth_rwl_delete (pth_rwlock_t *rwl) {
+	if (rwl != (pth_rwlock_t *)NULL) {
+		xfree (rwl);
+	}
 }
 
 
 int
-pth_rwlattr_init (pth_rwlock_t *rwl)
-{
-    if (rwl != (pth_rwlock_t *)NULL) {
-        return pthread_rwlockattr_init(&(rwl->attr));
-    }
-    return CAF_ERROR_SUB;
+pth_rwlattr_init (pth_rwlock_t *rwl) {
+	if (rwl != (pth_rwlock_t *)NULL) {
+		return pthread_rwlockattr_init(&(rwl->attr));
+	}
+	return CAF_ERROR_SUB;
 }
 
 
 int
-pth_rwlattr_destroy (pth_rwlock_t *rwl)
-{
-    if (rwl != (pth_rwlock_t *)NULL) {
-        return pthread_rwlockattr_destroy(&(rwl->attr));
-    }
-    return CAF_ERROR_SUB;
+pth_rwlattr_destroy (pth_rwlock_t *rwl) {
+	if (rwl != (pth_rwlock_t *)NULL) {
+		return pthread_rwlockattr_destroy(&(rwl->attr));
+	}
+	return CAF_ERROR_SUB;
 }
 
 
 int
-pth_rwl_init (pth_rwlock_t *rwl)
-{
-    if (rwl != (pth_rwlock_t *)NULL) {
-        return pthread_rwlock_init(&(rwl->rwlock), &(rwl->attr));
-    }
-    return CAF_ERROR_SUB;
+pth_rwl_init (pth_rwlock_t *rwl) {
+	if (rwl != (pth_rwlock_t *)NULL) {
+		return pthread_rwlock_init(&(rwl->rwlock), &(rwl->attr));
+	}
+	return CAF_ERROR_SUB;
 }
 
 
 int
-pth_rwl_destroy (pth_rwlock_t *rwl)
-{
-    if (rwl != (pth_rwlock_t *)NULL) {
-        return pthread_rwlock_destroy(&(rwl->rwlock));
-    }
-    return CAF_ERROR_SUB;
+pth_rwl_destroy (pth_rwlock_t *rwl) {
+	if (rwl != (pth_rwlock_t *)NULL) {
+		return pthread_rwlock_destroy(&(rwl->rwlock));
+	}
+	return CAF_ERROR_SUB;
 }
 
 
 int
-pth_rwlattr_set (pth_rwlock_t *rwl, pth_rwlock_types_t t, int data)
-{
-    if (rwl != (pth_rwlock_t *)NULL) {
-        switch (t) {
-        /* pthread_rwlockattr_setpshared */
-        case PTHDR_RWLOCK_PSHARED:
-            rwl->at |= t;
-            return pthread_rwlockattr_setpshared (&(rwl->attr), data);
-        /* pthread_rwlockattr_setpshared */
-        case PTHDR_RWLOCK_PPRIVATE:
-            rwl->at |= t;
-            return pthread_rwlockattr_setpshared (&(rwl->attr), data);
-        /* read/write lock */
-        case PTHDR_RWLOCK_RDLOCK:
-        case PTHDR_RWLOCK_WRLOCK:
-        case PTHDR_RWLOCK_TRDLOCK:
-        case PTHDR_RWLOCK_TWRLOCK:
-            rwl->at |= t;
-            return CAF_OK;
-        default:
-            return CAF_ERROR_SUB;
-        }
-    }
-    return CAF_ERROR_SUB;
+pth_rwlattr_set (pth_rwlock_t *rwl, pth_rwlock_types_t t, int data) {
+	if (rwl != (pth_rwlock_t *)NULL) {
+		switch (t) {
+			/* pthread_rwlockattr_setpshared */
+		case PTHDR_RWLOCK_PSHARED:
+			rwl->at |= t;
+			return pthread_rwlockattr_setpshared (&(rwl->attr), data);
+			/* pthread_rwlockattr_setpshared */
+		case PTHDR_RWLOCK_PPRIVATE:
+			rwl->at |= t;
+			return pthread_rwlockattr_setpshared (&(rwl->attr), data);
+			/* read/write lock */
+		case PTHDR_RWLOCK_RDLOCK:
+		case PTHDR_RWLOCK_WRLOCK:
+		case PTHDR_RWLOCK_TRDLOCK:
+		case PTHDR_RWLOCK_TWRLOCK:
+			rwl->at |= t;
+			return CAF_OK;
+		default:
+			return CAF_ERROR_SUB;
+		}
+	}
+	return CAF_ERROR_SUB;
 }
 
 
 int
-pth_rwlattr_get (pth_rwlock_t *rwl, pth_rwlock_types_t t, int *data)
-{
-    if (rwl != (pth_rwlock_t *)NULL) {
-        switch (t) {
-        /* pthread_rwlockattr_getpshared */
-        case PTHDR_RWLOCK_PSHARED:
-            return pthread_rwlockattr_getpshared (&(rwl->attr), data);
-        /* pthread_rwlockattr_getpshared */
-        case PTHDR_RWLOCK_PPRIVATE:
-            return pthread_rwlockattr_getpshared (&(rwl->attr), data);
-        /* read/write lock */
-        case PTHDR_RWLOCK_RDLOCK:
-        case PTHDR_RWLOCK_WRLOCK:
-        case PTHDR_RWLOCK_TRDLOCK:
-        case PTHDR_RWLOCK_TWRLOCK:
-            return (rwl->at & t);
-        default:
-            return CAF_ERROR_SUB;
-        }
-    }
-    return CAF_ERROR_SUB;
+pth_rwlattr_get (pth_rwlock_t *rwl, pth_rwlock_types_t t, int *data) {
+	if (rwl != (pth_rwlock_t *)NULL) {
+		switch (t) {
+			/* pthread_rwlockattr_getpshared */
+		case PTHDR_RWLOCK_PSHARED:
+			return pthread_rwlockattr_getpshared (&(rwl->attr), data);
+			/* pthread_rwlockattr_getpshared */
+		case PTHDR_RWLOCK_PPRIVATE:
+			return pthread_rwlockattr_getpshared (&(rwl->attr), data);
+			/* read/write lock */
+		case PTHDR_RWLOCK_RDLOCK:
+		case PTHDR_RWLOCK_WRLOCK:
+		case PTHDR_RWLOCK_TRDLOCK:
+		case PTHDR_RWLOCK_TWRLOCK:
+			return (rwl->at & t);
+		default:
+			return CAF_ERROR_SUB;
+		}
+	}
+	return CAF_ERROR_SUB;
 }
 
 
 int
-pth_rwl_wrlock (pth_rwlock_t *rwl, int tl, const struct timespec *to)
-{
-    if (rwl != (pth_rwlock_t *)NULL) {
-        if (to != (struct timespec *)NULL) {
-            if ((pthread_rwlock_timedwrlock (&(rwl->rwlock), to)) == 0) {
-                return pth_rwlattr_set (rwl, PTHDR_RWLOCK_TWRLOCK, 0);
-            }
-        } else if (tl != 0) {
-            if ((pthread_rwlock_trywrlock (&(rwl->rwlock))) == 0) {
-                return pth_rwlattr_set (rwl, PTHDR_RWLOCK_WRLOCK, 0);
-            }
-        } else {
-            if ((pthread_rwlock_wrlock (&(rwl->rwlock))) == 0) {
-                return pth_rwlattr_set (rwl, PTHDR_RWLOCK_WRLOCK, 0);
-            }
-        }
-    }
-    return CAF_ERROR_SUB;
+pth_rwl_wrlock (pth_rwlock_t *rwl, int tl, const struct timespec *to) {
+	if (rwl != (pth_rwlock_t *)NULL) {
+		if (to != (struct timespec *)NULL) {
+			if ((pthread_rwlock_timedwrlock (&(rwl->rwlock), to)) == 0) {
+				return pth_rwlattr_set (rwl, PTHDR_RWLOCK_TWRLOCK, 0);
+			}
+		} else if (tl != 0) {
+			if ((pthread_rwlock_trywrlock (&(rwl->rwlock))) == 0) {
+				return pth_rwlattr_set (rwl, PTHDR_RWLOCK_WRLOCK, 0);
+			}
+		} else {
+			if ((pthread_rwlock_wrlock (&(rwl->rwlock))) == 0) {
+				return pth_rwlattr_set (rwl, PTHDR_RWLOCK_WRLOCK, 0);
+			}
+		}
+	}
+	return CAF_ERROR_SUB;
 }
 
 
 int
-pth_rwl_rdlock (pth_rwlock_t *rwl, int tl, const struct timespec *to)
-{
-    if (rwl != (pth_rwlock_t *)NULL) {
-        if (to != (struct timespec *)NULL) {
-            if ((pthread_rwlock_timedrdlock (&(rwl->rwlock), to)) == 0) {
-                return pth_rwlattr_set (rwl, PTHDR_RWLOCK_TRDLOCK, 0);
-            }
-        } else if (tl != 0) {
-            if ((pthread_rwlock_tryrdlock (&(rwl->rwlock))) == 0) {
-                return pth_rwlattr_set (rwl, PTHDR_RWLOCK_RDLOCK, 0);
-            }
-        } else {
-            if ((pthread_rwlock_rdlock (&(rwl->rwlock))) == 0) {
-                return pth_rwlattr_set (rwl, PTHDR_RWLOCK_RDLOCK, 0);
-            }
-        }
-    }
-    return CAF_ERROR_SUB;
+pth_rwl_rdlock (pth_rwlock_t *rwl, int tl, const struct timespec *to) {
+	if (rwl != (pth_rwlock_t *)NULL) {
+		if (to != (struct timespec *)NULL) {
+			if ((pthread_rwlock_timedrdlock (&(rwl->rwlock), to)) == 0) {
+				return pth_rwlattr_set (rwl, PTHDR_RWLOCK_TRDLOCK, 0);
+			}
+		} else if (tl != 0) {
+			if ((pthread_rwlock_tryrdlock (&(rwl->rwlock))) == 0) {
+				return pth_rwlattr_set (rwl, PTHDR_RWLOCK_RDLOCK, 0);
+			}
+		} else {
+			if ((pthread_rwlock_rdlock (&(rwl->rwlock))) == 0) {
+				return pth_rwlattr_set (rwl, PTHDR_RWLOCK_RDLOCK, 0);
+			}
+		}
+	}
+	return CAF_ERROR_SUB;
 }
 
 
 int
-pth_rwl_unlock (pth_rwlock_t *rwl)
-{
-    if (rwl != (pth_rwlock_t *)NULL) {
-        if ((pthread_rwlock_unlock (&(rwl->rwlock))) == 0) {
-            rwl->at &= ~CAF_ALL_RWLOCKS;
-            return CAF_OK;
-        }
-    }
-    return CAF_ERROR_SUB;
+pth_rwl_unlock (pth_rwlock_t *rwl) {
+	if (rwl != (pth_rwlock_t *)NULL) {
+		if ((pthread_rwlock_unlock (&(rwl->rwlock))) == 0) {
+			rwl->at &= ~CAF_ALL_RWLOCKS;
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR_SUB;
 }
 
 /* caf_thread_rwlock.c ends here */

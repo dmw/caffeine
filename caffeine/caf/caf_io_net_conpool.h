@@ -47,23 +47,23 @@ extern "C" {
 
 #define CAF_CONPOOL_SZ                  (sizeof (caf_conpool_t))
 
-typedef struct caf_conpool_s caf_conpool_t;
-struct caf_conpool_s {
-    int con_id;
-    int con_num;
-    int *con_fds;
-    caf_conn_t *con_seed;
-    lstdl_t *con_lst;
-};
+	typedef struct caf_conpool_s caf_conpool_t;
+	struct caf_conpool_s {
+		int con_id;
+		int con_num;
+		int *con_fds;
+		caf_conn_t *con_seed;
+		lstdl_t *con_lst;
+	};
 
-caf_conpool_t *caf_conpool_new (int id, int num, caf_conn_t *seed);
-int caf_conpool_delete (caf_conpool_t *svc);
-int caf_conpool_init (caf_conpool_t *svc);
-int caf_conpool_connect (caf_conpool_t *con);
-int caf_conpool_stop (caf_conpool_t *svc);
-int caf_conpool_close (caf_conpool_t *svc);
-int caf_conpool_finalize (caf_conpool_t *svc);
-int caf_conpool_reopen (caf_conpool_t *svc);
+	caf_conpool_t *caf_conpool_new (int id, int num, caf_conn_t *seed);
+	int caf_conpool_delete (caf_conpool_t *svc);
+	int caf_conpool_init (caf_conpool_t *svc);
+	int caf_conpool_connect (caf_conpool_t *con);
+	int caf_conpool_stop (caf_conpool_t *svc);
+	int caf_conpool_close (caf_conpool_t *svc);
+	int caf_conpool_finalize (caf_conpool_t *svc);
+	int caf_conpool_reopen (caf_conpool_t *svc);
 
 #ifdef __cplusplus
 };

@@ -55,138 +55,136 @@ static char Id[] = "$Id$";
 
 
 static caf_evt_io_event_mapping_t io_evt_mapping[] = {
-    /* read events */
-    {
-        EVT_IO_READ_IDX,
-        POLLIN | POLLPRI,
-        EVT_IO_READ,
+            /* read events */
+            {
+                EVT_IO_READ_IDX,
+                POLLIN | POLLPRI,
+                EVT_IO_READ,
 #ifdef BSD_SYSTEM
-        EVFILT_READ,
+                EVFILT_READ,
 #else
-        0,
+                0,
 #endif /* !BSD_SYSTEM */
 #ifdef LINUX_SYSTEM
-        EPOLLIN | EPOLLPRI
+                EPOLLIN | EPOLLPRI
 #else
-        0
+                0
 #endif /* !LINUX_SYSTEM */
-    },
-    /* write events */
-    {
-        EVT_IO_WRITE_IDX,
-        POLLOUT,
-        EVT_IO_WRITE,
+            },
+            /* write events */
+            {
+                EVT_IO_WRITE_IDX,
+                POLLOUT,
+                EVT_IO_WRITE,
 #ifdef BSD_SYSTEM
-        EVFILT_WRITE,
+                EVFILT_WRITE,
 #else
-        0,
+                0,
 #endif /* !BSD_SYSTEM */
 #ifdef LINUX_SYSTEM
-        EPOLLOUT
+                EPOLLOUT
 #else
-        0
+                0
 #endif /* !ILINUX_SYSTEM */
-    }
-};
+            }
+        };
 
 
 int
-io_evt_events (io_evt_t *e)
-{
-    int evt = 0;
-    if (e != (io_evt_t *)NULL) {
-        switch (e->ev_use) {
-        case IO_EVENTS_SELECT:
-            if (e->ev_type & EVT_IO_READ) {
-                evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_select;
-            }
-            if (e->ev_type & EVT_IO_WRITE) {
-                evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_select;
-            }
-            return evt;
-        case IO_EVENTS_POLL:
-            if (e->ev_type & EVT_IO_READ) {
-                evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_poll;
-            }
-            if (e->ev_type & EVT_IO_WRITE) {
-                evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_poll;
-            }
-            return evt;
+io_evt_events (io_evt_t *e) {
+	int evt = 0;
+	if (e != (io_evt_t *)NULL) {
+		switch (e->ev_use) {
+		case IO_EVENTS_SELECT:
+			if (e->ev_type & EVT_IO_READ) {
+				evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_select;
+			}
+			if (e->ev_type & EVT_IO_WRITE) {
+				evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_select;
+			}
+			return evt;
+		case IO_EVENTS_POLL:
+			if (e->ev_type & EVT_IO_READ) {
+				evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_poll;
+			}
+			if (e->ev_type & EVT_IO_WRITE) {
+				evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_poll;
+			}
+			return evt;
 #ifdef BSD_SYSTEM
-        case IO_EVENTS_KEVENT:
-            if (e->ev_type & EVT_IO_READ) {
-                evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_kevent;
-            }
-            if (e->ev_type & EVT_IO_WRITE) {
-                evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_kevent;
-            }
-            return evt;
+		case IO_EVENTS_KEVENT:
+			if (e->ev_type & EVT_IO_READ) {
+				evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_kevent;
+			}
+			if (e->ev_type & EVT_IO_WRITE) {
+				evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_kevent;
+			}
+			return evt;
 #endif /* !BSD_SYSTEM */
 #ifdef LINUX_SYSTEM
-        case IO_EVENTS_EPOLL:
-            if (e->ev_type & EVT_IO_READ) {
-                evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_epoll;
-            }
-            if (e->ev_type & EVT_IO_WRITE) {
-                evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_epoll;
-            }
-            return evt;
+		case IO_EVENTS_EPOLL:
+			if (e->ev_type & EVT_IO_READ) {
+				evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_epoll;
+			}
+			if (e->ev_type & EVT_IO_WRITE) {
+				evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_epoll;
+			}
+			return evt;
 #endif /* !LINUX_SYSTEM */
-        default:
-            return evt;
-        }
-    }
-    return evt;
+		default:
+			return evt;
+		}
+	}
+	return evt;
 }
 
 
 int
-io_evt_events_use (io_evt_t *e, io_evt_use_t use)
-{
-    int evt = 0;
-    if (e != (io_evt_t *)NULL) {
-        switch (e->ev_use) {
-        case IO_EVENTS_SELECT:
-            if (use & EVT_IO_READ) {
-                evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_select;
-            }
-            if (use & EVT_IO_WRITE) {
-                evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_select;
-            }
-            return evt;
-        case IO_EVENTS_POLL:
-            if (use & EVT_IO_READ) {
-                evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_poll;
-            }
-            if (use & EVT_IO_WRITE) {
-                evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_poll;
-            }
-            return evt;
+io_evt_events_use (io_evt_t *e, io_evt_use_t use) {
+	int evt = 0;
+	if (e != (io_evt_t *)NULL) {
+		switch (e->ev_use) {
+		case IO_EVENTS_SELECT:
+			if (use & EVT_IO_READ) {
+				evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_select;
+			}
+			if (use & EVT_IO_WRITE) {
+				evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_select;
+			}
+			return evt;
+		case IO_EVENTS_POLL:
+			if (use & EVT_IO_READ) {
+				evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_poll;
+			}
+			if (use & EVT_IO_WRITE) {
+				evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_poll;
+			}
+			return evt;
 #ifdef BSD_SYSTEM
-        case IO_EVENTS_KEVENT:
-            if (use & EVT_IO_READ) {
-                evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_kevent;
-            }
-            if (use & EVT_IO_WRITE) {
-                evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_kevent;
-            }
-            return evt;
+		case IO_EVENTS_KEVENT:
+			if (use & EVT_IO_READ) {
+				evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_kevent;
+			}
+			if (use & EVT_IO_WRITE) {
+				evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_kevent;
+			}
+			return evt;
 #endif /* !BSD_SYSTEM */
 #ifdef LINUX_SYSTEM
-        case IO_EVENTS_EPOLL:
-            if (use & EVT_IO_READ) {
-                evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_epoll;
-            }
-            if (use & EVT_IO_WRITE) {
-                evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_epoll;
-            }
-            return evt;
+		case IO_EVENTS_EPOLL:
+			if (use & EVT_IO_READ) {
+				evt |= io_evt_mapping[EVT_IO_READ_IDX].evt_epoll;
+			}
+			if (use & EVT_IO_WRITE) {
+				evt |= io_evt_mapping[EVT_IO_WRITE_IDX].evt_epoll;
+			}
+			return evt;
 #endif /* !LINUX_SYSTEM */
-        default:
-            return evt;
-        }
-    }
-    return evt;
+		default:
+			return evt;
+		}
+	}
+	return evt;
 }
 
 

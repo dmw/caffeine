@@ -38,33 +38,30 @@ void test_pidfile (void);
 void test_kill_handler (int sig);
 
 int
-main (void)
-{
-    signal (SIGHUP, test_kill_handler);
-    test_pidfile ();
-    return 0;
+main (void) {
+	signal (SIGHUP, test_kill_handler);
+	test_pidfile ();
+	return 0;
 }
 
 void
-test_pidfile (void)
-{
-    pidfile_create ("testpidfile.pid", getpid());
-    usleep (1000);
-    printf ("pid: %d\n", pidfile_getpid ("testpidfile.pid"));
-    usleep (1000);
-    pidfile_kill ("testpidfile.pid", SIGHUP);
-    usleep (1000);
-    printf ("sid: %d\n", pidfile_getsid ("testpidfile.pid"));
-    usleep (1000);
-    printf ("gid: %d\n", pidfile_getpgid ("testpidfile.pid"));
-    usleep (1000);
-    pidfile_destroy ("testpidfile.pid");
+test_pidfile (void) {
+	pidfile_create ("testpidfile.pid", getpid());
+	usleep (1000);
+	printf ("pid: %d\n", pidfile_getpid ("testpidfile.pid"));
+	usleep (1000);
+	pidfile_kill ("testpidfile.pid", SIGHUP);
+	usleep (1000);
+	printf ("sid: %d\n", pidfile_getsid ("testpidfile.pid"));
+	usleep (1000);
+	printf ("gid: %d\n", pidfile_getpgid ("testpidfile.pid"));
+	usleep (1000);
+	pidfile_destroy ("testpidfile.pid");
 }
 
 void
-test_kill_handler (int sig)
-{
-    printf ("signal: %d\n", sig);
+test_kill_handler (int sig) {
+	printf ("signal: %d\n", sig);
 }
 
 /* caf_pidfile.c ends here */

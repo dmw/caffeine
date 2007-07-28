@@ -45,105 +45,105 @@
 extern "C" {
 #endif /* !__cplusplus */
 
-/**
- *
- * @brief    Converts a string to long pointer.
- *
- * Converts a string to native long type, also receibes a parameter
- * with the base that could be 8, 10 or 16. If the conversion have
- * not success, returns a NULL pointer.
- *
- * @param[in]    num             number string to convert.
- * @param[in]    base            base for the number.
- * @return       long *          a new allocated long pointer.
- */
-long *str2longp(char *num, int base);
+	/**
+	 *
+	 * @brief    Converts a string to long pointer.
+	 *
+	 * Converts a string to native long type, also receibes a parameter
+	 * with the base that could be 8, 10 or 16. If the conversion have
+	 * not success, returns a NULL pointer.
+	 *
+	 * @param[in]    num             number string to convert.
+	 * @param[in]    base            base for the number.
+	 * @return       long *          a new allocated long pointer.
+	 */
+	long *str2longp(char *num, int base);
 
-/**
- *
- * @brief    Converts a string to long.
- *
- * Converts a string to native long type, also receibes a parameter
- * with the base that could be 8, 10 or 16. If the conversion have
- * not success, returns a zero long value.
- *
- * @param[in]    num             number string to convert.
- * @param[in]    base            base for the number.
- * @return       long *          a new allocated long pointer.
- */
-long str2long(char *num, int base);
+	/**
+	 *
+	 * @brief    Converts a string to long.
+	 *
+	 * Converts a string to native long type, also receibes a parameter
+	 * with the base that could be 8, 10 or 16. If the conversion have
+	 * not success, returns a zero long value.
+	 *
+	 * @param[in]    num             number string to convert.
+	 * @param[in]    base            base for the number.
+	 * @return       long *          a new allocated long pointer.
+	 */
+	long str2long(char *num, int base);
 
-/**
- *
- * @brief    Converts a string to float pointer.
- *
- * Converts a string to native float type, If the conversion have
- * not success, returns a NULL pointer.
- *
- * @param[in]    num             number string to convert.
- * @return       float *         a new allocated float pointer.
- */
-float *str2floatp(char *num);
+	/**
+	 *
+	 * @brief    Converts a string to float pointer.
+	 *
+	 * Converts a string to native float type, If the conversion have
+	 * not success, returns a NULL pointer.
+	 *
+	 * @param[in]    num             number string to convert.
+	 * @return       float *         a new allocated float pointer.
+	 */
+	float *str2floatp(char *num);
 
-/**
- *
- * @brief    Converts a string to float.
- *
- * Converts a string to native float type, If the conversion have
- * not success, returns a zero float value.
- *
- * @param[in]    num             number string to convert.
- * @return       float *         a new allocated float pointer.
- */
-float str2float(char *num);
+	/**
+	 *
+	 * @brief    Converts a string to float.
+	 *
+	 * Converts a string to native float type, If the conversion have
+	 * not success, returns a zero float value.
+	 *
+	 * @param[in]    num             number string to convert.
+	 * @return       float *         a new allocated float pointer.
+	 */
+	float str2float(char *num);
 
-/**
- *
- * @brief    Converts a string to double pointer.
- *
- * Converts a string to native double type, If the conversion have
- * not success, returns a NULL pointer.
- *
- * @param[in]    num             number string to convert.
- * @return       double *        a new allocated double pointer.
- */
-double *str2doublep(char *num);
+	/**
+	 *
+	 * @brief    Converts a string to double pointer.
+	 *
+	 * Converts a string to native double type, If the conversion have
+	 * not success, returns a NULL pointer.
+	 *
+	 * @param[in]    num             number string to convert.
+	 * @return       double *        a new allocated double pointer.
+	 */
+	double *str2doublep(char *num);
 
-/**
- *
- * @brief    Converts a string to double.
- *
- * Converts a string to native double type, If the conversion have
- * not success, returns a zero double value.
- *
- * @param[in]    num             number string to convert.
- * @return       double *        a new allocated double pointer.
- */
-double str2double(char *num);
+	/**
+	 *
+	 * @brief    Converts a string to double.
+	 *
+	 * Converts a string to native double type, If the conversion have
+	 * not success, returns a zero double value.
+	 *
+	 * @param[in]    num             number string to convert.
+	 * @return       double *        a new allocated double pointer.
+	 */
+	double str2double(char *num);
 
-/**
- *
- * @brief    Converts a string to long double pointer.
- *
- * Converts a string to native long double type, If the conversion have
- * not success, returns a NULL pointer.
- *
- * @param[in]    num             number string to convert.
- * @return       long double *   a new allocated long double pointer.
- */
-long double *str2ldoublep(char *num);
+	/**
+	 *
+	 * @brief    Converts a string to long double pointer.
+	 *
+	 * Converts a string to native long double type, If the conversion have
+	 * not success, returns a NULL pointer.
+	 *
+	 * @param[in]    num             number string to convert.
+	 * @return       long double *   a new allocated long double pointer.
+	 */
+	long double *str2ldoublep(char *num);
 
-/**
- *
- * @brief    Converts a string to long double.
- *
- * Converts a string to native long double type, If the conversion have
- * not success, returns zero long double value.
- *
- * @param[in]    num             number string to convert.
- * @return       long double *   a new allocated long double pointer.
- */
-long double str2ldouble(char *num);
+	/**
+	 *
+	 * @brief    Converts a string to long double.
+	 *
+	 * Converts a string to native long double type, If the conversion have
+	 * not success, returns zero long double value.
+	 *
+	 * @param[in]    num             number string to convert.
+	 * @return       long double *   a new allocated long double pointer.
+	 */
+	long double str2ldouble(char *num);
 
 #ifdef __cplusplus
 };

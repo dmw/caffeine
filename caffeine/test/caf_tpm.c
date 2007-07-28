@@ -39,46 +39,44 @@
 void *pth_rtn(void *p);
 
 int
-main (void)
-{
-    int rt = 0;
-    pth_attri_t *attr = (pth_attri_t *)NULL;
-    pth_pool_t *pth_pool = (pth_pool_t *)NULL;
-    attr = pth_attri_new ();
-    if (attr != (pth_attri_t *)NULL) {
-        printf ("%d: attr = %p\n", getpid (), (void *)attr);
-        rt = pth_attr_init (attr);
-        if (rt == 0) {
-            printf ("%d: attr init = %d\n", getpid (), rt);
-            rt = pth_attri_set (attr, PTH_ATTR_DETACHED, (void *)NULL);
-            if (rt == 0) {
-                printf ("%d: attr PTHDR_ATTR_DETACHED = %d\n", getpid (), rt);
-                pth_pool = pth_pool_create (attr, pth_rtn, 3, (void *)NULL);
-                printf ("%d: threads: %d\n", getpid (),
-                        lstdl_length (pth_pool->threads));
-            }
-        }
-    }
-    sleep (15);
-    pth_pool_delete (pth_pool);
-    sleep (5);
-    pth_attri_destroy (attr);
-    sleep (5);
-    pthread_exit (NULL);
+main (void) {
+	int rt = 0;
+	pth_attri_t *attr = (pth_attri_t *)NULL;
+	pth_pool_t *pth_pool = (pth_pool_t *)NULL;
+	attr = pth_attri_new ();
+	if (attr != (pth_attri_t *)NULL) {
+		printf ("%d: attr = %p\n", getpid (), (void *)attr);
+		rt = pth_attr_init (attr);
+		if (rt == 0) {
+			printf ("%d: attr init = %d\n", getpid (), rt);
+			rt = pth_attri_set (attr, PTH_ATTR_DETACHED, (void *)NULL);
+			if (rt == 0) {
+				printf ("%d: attr PTHDR_ATTR_DETACHED = %d\n", getpid (), rt);
+				pth_pool = pth_pool_create (attr, pth_rtn, 3, (void *)NULL);
+				printf ("%d: threads: %d\n", getpid (),
+				        lstdl_length (pth_pool->threads));
+			}
+		}
+	}
+	sleep (15);
+	pth_pool_delete (pth_pool);
+	sleep (5);
+	pth_attri_destroy (attr);
+	sleep (5);
+	pthread_exit (NULL);
 }
 
 void *
-pth_rtn (void *p)
-{
-    int c = 0;
-    pthread_t pt = pthread_self ();
-    while (c < 11) {
-        printf ("%d: pthread_self = %p\n", getpid (), (void *)&pt);
-        sleep (1);
-        c++;
-    }
-    printf ("%d: pthread_self[exit](%p) = %p\n", getpid (), p, (void *)&pt);
-    pthread_exit (NULL);
+pth_rtn (void *p) {
+	int c = 0;
+	pthread_t pt = pthread_self ();
+	while (c < 11) {
+		printf ("%d: pthread_self = %p\n", getpid (), (void *)&pt);
+		sleep (1);
+		c++;
+	}
+	printf ("%d: pthread_self[exit](%p) = %p\n", getpid (), p, (void *)&pt);
+	pthread_exit (NULL);
 }
 
 /* caf_tpm.c ends here */

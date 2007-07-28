@@ -43,27 +43,27 @@
 extern "C" {
 #endif /* !__cplusplus */
 
-typedef struct regex_pcre_s regex_pcre_t;
-struct regex_pcre_s {
-    int id;
-    int opt;
-    pcre *code;
-    pcre_extra *study;
-    char *pattern;
-    int erroff;
-    char *errstr;
-};
+	typedef struct regex_pcre_s regex_pcre_t;
+	struct regex_pcre_s {
+		int id;
+		int opt;
+		pcre *code;
+		pcre_extra *study;
+		char *pattern;
+		int erroff;
+		char *errstr;
+	};
 
 
-regex_pcre_t *regex_pcre_new (const int id, const char *pat, const int opt,
-                              const unsigned char *tbl, const int study);
-int regex_pcre_delete (regex_pcre_t *re);
-int regex_pcre_match (regex_pcre_t *re, const char *sub);
-int regex_pcre_find (regex_pcre_t *re, const char *sub, int *ov);
-int regex_pcre_subs (regex_pcre_t *re, const char *sub, cbuffer_t *out);
-regex_pcre_pool_t *regex_pcre_pool_new (const int id, const char *name);
-int regex_pcre_pool_delete (regex_pcre_pool_t *p);
-int regex_pcre_pool_match (regex_pcre_pool_t *p, const char *sub);
+	regex_pcre_t *regex_pcre_new (const int id, const char *pat, const int opt,
+	                              const unsigned char *tbl, const int study);
+	int regex_pcre_delete (regex_pcre_t *re);
+	int regex_pcre_match (regex_pcre_t *re, const char *sub);
+	int regex_pcre_find (regex_pcre_t *re, const char *sub, int *ov);
+	int regex_pcre_subs (regex_pcre_t *re, const char *sub, cbuffer_t *out);
+	regex_pcre_pool_t *regex_pcre_pool_new (const int id, const char *name);
+	int regex_pcre_pool_delete (regex_pcre_pool_t *p);
+	int regex_pcre_pool_match (regex_pcre_pool_t *p, const char *sub);
 
 #ifdef __cplusplus
 };
