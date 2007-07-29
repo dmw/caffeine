@@ -51,28 +51,28 @@ extern "C" {
 
 #define CAF_SEM_POSIX_SZ                (sizeof (caf_sem_posix_t))
 
-	typedef struct caf_sem_posix_s caf_sem_posix_t;
-	struct caf_sem_posix_s {
-		sem_t key;
-		int flag;
-		int value;
-	};
+typedef struct caf_sem_posix_s caf_sem_posix_t;
+struct caf_sem_posix_s {
+	sem_t key;
+	int flag;
+	int value;
+};
 
-	caf_sem_posix_t *caf_sem_posix_new (const sem_t key, const int flag,
-	                                    const int value);
-	int caf_sem_posix_delete (caf_sem_posix_t *r);
-	caf_sem_posix_t *caf_sem_posix_get (const sem_t key, const int flag,
-	                                    const int value);
+caf_sem_posix_t *caf_sem_posix_new (const sem_t key, const int flag,
+									const int value);
+int caf_sem_posix_delete (caf_sem_posix_t *r);
+caf_sem_posix_t *caf_sem_posix_get (const sem_t key, const int flag,
+									const int value);
 
-	int caf_sem_posix_lock (caf_sem_posix_t *r);
-	int caf_sem_posix_trylock (caf_sem_posix_t *r);
-	int caf_sem_posix_unlock (caf_sem_posix_t *r);
+int caf_sem_posix_lock (caf_sem_posix_t *r);
+int caf_sem_posix_trylock (caf_sem_posix_t *r);
+int caf_sem_posix_unlock (caf_sem_posix_t *r);
 
-	int caf_sem_posix_exists (caf_sem_posix_t *r);
-	int caf_sem_posix_post (caf_sem_posix_t *r);
-	int caf_sem_posix_getvalue (caf_sem_posix_t *r);
-	int caf_sem_posix_wait (caf_sem_posix_t *r);
-	int caf_sem_posix_trywait (caf_sem_posix_t *r);
+int caf_sem_posix_exists (caf_sem_posix_t *r);
+int caf_sem_posix_post (caf_sem_posix_t *r);
+int caf_sem_posix_getvalue (caf_sem_posix_t *r);
+int caf_sem_posix_wait (caf_sem_posix_t *r);
+int caf_sem_posix_trywait (caf_sem_posix_t *r);
 
 #ifdef __cplusplus
 };

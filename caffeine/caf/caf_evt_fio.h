@@ -55,20 +55,20 @@
 extern "C" {
 #endif /* !__cplusplus */
 
-	/**
-	 *
-	 * @brief    Defines which I/O Events can be handled
-	 * Defines the types of I/O Events that Caffeine can handle -- only the most
-	 * portable events can be handled by Caffeine.
-	 */
-	typedef enum {
-	    /** Read Events */
-	    EVT_IO_READ = 0000001,
-	    /** Write Events */
-	    EVT_IO_WRITE = 0000002,
-	    /** VNode Events */
-	    EVT_IO_VNODE = 0000004,
-	} fio_event_types_t;
+/**
+ *
+ * @brief    Defines which I/O Events can be handled
+ * Defines the types of I/O Events that Caffeine can handle -- only the most
+ * portable events can be handled by Caffeine.
+ */
+typedef enum {
+	/** Read Events */
+	EVT_IO_READ = 0000001,
+	/** Write Events */
+	EVT_IO_WRITE = 0000002,
+	/** VNode Events */
+	EVT_IO_VNODE = 0000004,
+} fio_event_types_t;
 
 #if defined(BSD_SYSTEM) && !defined(IO_EVENT_DATA_KEVENT_SZ)
 #define IO_EVENT_DATA_KEVENT_SZ     (sizeof (io_evt_kevent_t))
@@ -79,49 +79,49 @@ extern "C" {
 
 #if defined(BSD_SYSTEM) && !defined(IO_EVT_KEVENT_T_DEFINED)
 #define IO_EVT_KEVENT_T_DEFINED 1
-	typedef struct kevent io_evt_kevent_t;
+typedef struct kevent io_evt_kevent_t;
 #endif /* !BSD_SYSTEM */
 
 #if defined(LINUX_SYSTEM) && !defined(IO_EVT_INOTIFY_T_DEFINED)
 #define IO_EVT_INOTIFY_T_DEFINED 1
-	typedef struct inotify_event io_evt_inotify_t;
+typedef struct inotify_event io_evt_inotify_t;
 #endif /* !LINUX_SYSTEM */
 
 
-	typedef struct caf_evt_fio_event_mapping_s caf_evt_fio_event_mapping_t;
-	struct caf_evt_fio_event_mapping_s {
-		int id;
-		int evt_kevent;
-		int evt_inotify;
-	};
+typedef struct caf_evt_fio_event_mapping_s caf_evt_fio_event_mapping_t;
+struct caf_evt_fio_event_mapping_s {
+	int id;
+	int evt_kevent;
+	int evt_inotify;
+};
 
 
-	typedef enum {
-	    IO_EVENTS_KEVENT,
-	    IO_EVENTS_INOTIFY
-	} fio_evt_use_t;
+typedef enum {
+	IO_EVENTS_KEVENT,
+	IO_EVENTS_INOTIFY
+} fio_evt_use_t;
 
 
 #define IO_EVT_SZ               (sizeof (fio_evt_t))
-	typedef struct fio_evt_s fio_evt_t;
-	struct fio_evt_s {
-		int ev_src;
-		caf_io_file_t *ev_mf;
-		int ev_timeout;
-		int ev_type;
-		fio_evt_use_t ev_use;
-		void *ev_info;
-		void *ev_store;
-		size_t ev_sz;
-	};
+typedef struct fio_evt_s fio_evt_t;
+struct fio_evt_s {
+	int ev_src;
+	caf_io_file_t *ev_mf;
+	int ev_timeout;
+	int ev_type;
+	fio_evt_use_t ev_use;
+	void *ev_info;
+	void *ev_store;
+	size_t ev_sz;
+};
 
 #define EVT_IO_READ_IDX             0
 #define EVT_IO_WRITE_IDX            1
 #define EVT_IO_VNODE_IDX            2
 
-	/* common */
-	int fio_evt_events (fio_evt_t *e);
-	int fio_evt_events_use (fio_evt_t *e, fio_evt_use_t type);
+/* common */
+int fio_evt_events (fio_evt_t *e);
+int fio_evt_events_use (fio_evt_t *e, fio_evt_use_t type);
 
 #if defined(BSD_SYSTEM) && !defined(IO_EVENT_USE_KEVENT)
 #define IO_EVENT_USE_KEVENT 1
@@ -135,18 +135,18 @@ extern "C" {
 #define CALL_EVT_F(p)             p##_inotify
 #endif /* !IO_EVENT_USE_* */
 
-	fio_evt_t *CALL_EVT_F(fio_evt_new) (caf_io_file_t *f, int type, int to);
-	int CALL_EVT_F(fio_evt_delete) (fio_evt_t *e);
-	int CALL_EVT_F(fio_evt_init) (fio_evt_t *e);
-	int CALL_EVT_F(fio_evt_reinit) (fio_evt_t *e);
+fio_evt_t *CALL_EVT_F(fio_evt_new) (caf_io_file_t *f, int type, int to);
+int CALL_EVT_F(fio_evt_delete) (fio_evt_t *e);
+int CALL_EVT_F(fio_evt_init) (fio_evt_t *e);
+int CALL_EVT_F(fio_evt_reinit) (fio_evt_t *e);
 #ifndef LINUX_SYSTEM
-	int CALL_EVT_F(fio_evt_add) (fio_evt_t *e, int ev, int flg);
+int CALL_EVT_F(fio_evt_add) (fio_evt_t *e, int ev, int flg);
 #endif /* !LINUX_SYSTEM */
-	int CALL_EVT_F(fio_evt_destroy) (fio_evt_t *e);
-	int CALL_EVT_F(fio_evt_handle) (fio_evt_t *e);
-	int CALL_EVT_F(fio_evt_isread) (fio_evt_t *e);
-	int CALL_EVT_F(fio_evt_iswrite) (fio_evt_t *e);
-	int CALL_EVT_F(fio_evt_isvnode) (fio_evt_t *e);
+int CALL_EVT_F(fio_evt_destroy) (fio_evt_t *e);
+int CALL_EVT_F(fio_evt_handle) (fio_evt_t *e);
+int CALL_EVT_F(fio_evt_isread) (fio_evt_t *e);
+int CALL_EVT_F(fio_evt_iswrite) (fio_evt_t *e);
+int CALL_EVT_F(fio_evt_isvnode) (fio_evt_t *e);
 
 
 #define caf_fio_evt_new              CALL_EVT_F(fio_evt_new)

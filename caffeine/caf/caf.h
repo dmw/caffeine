@@ -43,11 +43,11 @@
 extern "C" {
 #endif /* !__cplusplus */
 
-	typedef enum {
-	    CAF_ERROR_SUB = -1,
-	    CAF_OK = 0,
-	    CAF_ERROR = 1
-	} caf_return_t;
+typedef enum {
+	CAF_ERROR_SUB = -1,
+	CAF_OK = 0,
+	CAF_ERROR = 1
+} caf_return_t;
 
 #ifdef __cplusplus
 };

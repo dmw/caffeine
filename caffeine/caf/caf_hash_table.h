@@ -43,6 +43,10 @@
 
 #include <caf/caf_data_lstdlc.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* !__cplusplus */
+
 #define CAF_HASH_SZ                 (sizeof (caf_hash_t))
 #define CAF_HASH_TABLE_SZ           (sizeof (caf_hash_table_t))
 
@@ -83,6 +87,10 @@ void *caf_hash_table_get (caf_hash_table_t *table, const void *key,
 int caf_hash_table_set (caf_hash_table_t *table, const void *key,
                         const size_t ksz, void *data);
 void caf_hash_table_dump (FILE *out, caf_hash_table_t *table);
+
+#ifdef __cplusplus
+};
+#endif /* !__cplusplus */
 
 /** }@ */
 #endif /* !CAF_HASH_TABLE_H */

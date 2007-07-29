@@ -47,22 +47,22 @@ extern "C" {
 
 #define CAF_SVCPOOL_SZ              (sizeof (caf_svcpool_t))
 
-	typedef struct caf_svcpool_s caf_svcpool_t;
-	struct caf_svcpool_s {
-		int svc_id;
-		int svc_num;
-		int *svc_fds;
-		caf_conn_t *svc_seed;
-		lstdl_t *svc_lst;
-	};
+typedef struct caf_svcpool_s caf_svcpool_t;
+struct caf_svcpool_s {
+	int svc_id;
+	int svc_num;
+	int *svc_fds;
+	caf_conn_t *svc_seed;
+	lstdl_t *svc_lst;
+};
 
-	caf_svcpool_t *caf_svcpool_new (int id, int num, caf_conn_t *seed);
-	int caf_svcpool_delete (caf_svcpool_t *svc);
-	int caf_svcpool_init (caf_svcpool_t *svc);
-	int caf_svcpool_stop (caf_svcpool_t *svc);
-	int caf_svcpool_close (caf_svcpool_t *svc);
-	int caf_svcpool_finalize (caf_svcpool_t *svc);
-	int caf_svcpool_reopen (caf_svcpool_t *svc);
+caf_svcpool_t *caf_svcpool_new (int id, int num, caf_conn_t *seed);
+int caf_svcpool_delete (caf_svcpool_t *svc);
+int caf_svcpool_init (caf_svcpool_t *svc);
+int caf_svcpool_stop (caf_svcpool_t *svc);
+int caf_svcpool_close (caf_svcpool_t *svc);
+int caf_svcpool_finalize (caf_svcpool_t *svc);
+int caf_svcpool_reopen (caf_svcpool_t *svc);
 
 #ifdef __cplusplus
 };

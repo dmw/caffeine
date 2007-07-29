@@ -53,27 +53,27 @@ extern "C" {
 #define CAF_MSG_SZ              (sizeof (caf_msg_t))
 #define CAF_MSG_CORE_SZ         (sizeof (caf_msg_core_t))
 
-	typedef struct caf_msg_core_s caf_msg_core_t;
-	struct caf_msg_core_s {
-		long mtype;
-		char *mtext;
-	};
+typedef struct caf_msg_core_s caf_msg_core_t;
+struct caf_msg_core_s {
+	long mtype;
+	char *mtext;
+};
 
-	typedef struct caf_msg_s caf_msg_t;
-	struct caf_msg_s {
-		key_t key;
-		int msgflg;
-		cbuffer_t *data;
-		caf_msg_core_t msg;
-	};
+typedef struct caf_msg_s caf_msg_t;
+struct caf_msg_s {
+	key_t key;
+	int msgflg;
+	cbuffer_t *data;
+	caf_msg_core_t msg;
+};
 
-	caf_msg_t *caf_ipcmsg_new (const key_t k, const int flg, const int type,
-	                           const cbuffer_t *msg);
-	int caf_ipcmsg_delete (caf_msg_t *m);
-	int caf_ipcmsg_send (const caf_msg_t *m);
-	int caf_ipcmsg_recv (caf_msg_t *m);
-	int caf_ipcmsg_get (const caf_msg_t *m);
-	int caf_ipcmsg_ctrl (const caf_msg_t *m, const int cmd, struct msqid_ds *b);
+caf_msg_t *caf_ipcmsg_new (const key_t k, const int flg, const int type,
+						   const cbuffer_t *msg);
+int caf_ipcmsg_delete (caf_msg_t *m);
+int caf_ipcmsg_send (const caf_msg_t *m);
+int caf_ipcmsg_recv (caf_msg_t *m);
+int caf_ipcmsg_get (const caf_msg_t *m);
+int caf_ipcmsg_ctrl (const caf_msg_t *m, const int cmd, struct msqid_ds *b);
 
 #ifdef __cplusplus
 };

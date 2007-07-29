@@ -53,66 +53,66 @@ extern "C" {
 #define CAD_DSM_CALL(call)      \
         caf_dsm_return_t *(*call)(void *s_data, caf_dsm_return_t *s_return)
 
-	typedef struct caf_dsm_s caf_dsm_t;
-	struct caf_dsm_s {
-		int m_id;
-		int m_cycle;
-		lstdl_t *m_state;
-	};
+typedef struct caf_dsm_s caf_dsm_t;
+struct caf_dsm_s {
+	int m_id;
+	int m_cycle;
+	lstdl_t *m_state;
+};
 
-	typedef enum {
-	    CAF_DSM_STATE_START = 0000001,
-	    CAF_DSM_STATE_NORMAL = 0000002,
-	    CAF_DSM_STATE_ERROR = 0000004,
-	    CAF_DSM_STATE_END = 0000010
-	} caf_dsm_state_type_t;
+typedef enum {
+	CAF_DSM_STATE_START = 0000001,
+	CAF_DSM_STATE_NORMAL = 0000002,
+	CAF_DSM_STATE_ERROR = 0000004,
+	CAF_DSM_STATE_END = 0000010
+} caf_dsm_state_type_t;
 
-	typedef struct caf_dsm_return_s caf_dsm_return_t;
-	struct caf_dsm_return_s {
-		                     int r_control;
-		                     void *r_data;
-		                     void *r_return;
-	                     };
+typedef struct caf_dsm_return_s caf_dsm_return_t;
+struct caf_dsm_return_s {
+						 int r_control;
+						 void *r_data;
+						 void *r_return;
+					 };
 
-	typedef struct caf_dsm_state_s caf_dsm_state_t;
-	struct caf_dsm_state_s {
-		int s_id;
-		int s_type;
-		CAD_DSM_CALL(s_call);
-		CAD_DSM_CALL(s_error);
-	};
+typedef struct caf_dsm_state_s caf_dsm_state_t;
+struct caf_dsm_state_s {
+	int s_id;
+	int s_type;
+	CAD_DSM_CALL(s_call);
+	CAD_DSM_CALL(s_error);
+};
 
-	typedef enum {
-	    CAF_DSM_CONTROL_FORWARD = 0000001,
-	    CAF_DSM_CONTROL_BACKWARD = 0000002,
-	    CAF_DSM_CONTROL_STAY = 0000004,
-	    CAF_DSM_CONTROL_ERROR = 0000010
-	} caf_dsm_state_control_t;
+typedef enum {
+	CAF_DSM_CONTROL_FORWARD = 0000001,
+	CAF_DSM_CONTROL_BACKWARD = 0000002,
+	CAF_DSM_CONTROL_STAY = 0000004,
+	CAF_DSM_CONTROL_ERROR = 0000010
+} caf_dsm_state_control_t;
 
-	typedef struct caf_dsm_runner_s caf_dsm_runner_t;
-	struct caf_dsm_runner_s {
-		int r_id;
-		int r_control;
-		caf_dsm_t *r_machine;
-		caf_dsm_state_t *r_state;
-		CAD_DSM_CALL(r_call);
-		void *r_data;
-		void *r_return;
-		lstdln_t *l_current;
-	};
+typedef struct caf_dsm_runner_s caf_dsm_runner_t;
+struct caf_dsm_runner_s {
+	int r_id;
+	int r_control;
+	caf_dsm_t *r_machine;
+	caf_dsm_state_t *r_state;
+	CAD_DSM_CALL(r_call);
+	void *r_data;
+	void *r_return;
+	lstdln_t *l_current;
+};
 
-	caf_dsm_t *caf_dsm_new (int id, int cycle);
-	int caf_dsm_delete (caf_dsm_t *r);
-	caf_dsm_state_t *caf_dsm_state_new (int s_id, caf_dsm_state_type_t s_type,
-	                                    CAD_DSM_CALL(s_call),
-	                                    CAD_DSM_CALL(s_error));
-	int caf_dsm_state_delete (caf_dsm_state_t *r);
-	int caf_dsm_add (caf_dsm_t *m, caf_dsm_state_t *s);
-	int caf_dsm_remove (caf_dsm_t *m, caf_dsm_state_t *s);
-	caf_dsm_runner_t *caf_dsm_runner_new (caf_dsm_t *m, int r_id,
-	                                      caf_dsm_state_control_t ctrl);
-	int caf_dsm_runner_delete (caf_dsm_runner_t *r);
-	int caf_dsm_runnner_work (caf_dsm_runner_t *r, void *r_data);
+caf_dsm_t *caf_dsm_new (int id, int cycle);
+int caf_dsm_delete (caf_dsm_t *r);
+caf_dsm_state_t *caf_dsm_state_new (int s_id, caf_dsm_state_type_t s_type,
+									CAD_DSM_CALL(s_call),
+									CAD_DSM_CALL(s_error));
+int caf_dsm_state_delete (caf_dsm_state_t *r);
+int caf_dsm_add (caf_dsm_t *m, caf_dsm_state_t *s);
+int caf_dsm_remove (caf_dsm_t *m, caf_dsm_state_t *s);
+caf_dsm_runner_t *caf_dsm_runner_new (caf_dsm_t *m, int r_id,
+									  caf_dsm_state_control_t ctrl);
+int caf_dsm_runner_delete (caf_dsm_runner_t *r);
+int caf_dsm_runnner_work (caf_dsm_runner_t *r, void *r_data);
 
 #ifdef __cplusplus
 };

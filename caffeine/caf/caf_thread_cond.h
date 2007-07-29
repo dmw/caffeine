@@ -51,27 +51,27 @@ extern "C" {
 
 #define PTH_COND_SZ                     (sizeof (pth_cond_t))
 
-	typedef struct pth_cond_s pth_cond_t;
-	struct pth_cond_s {
-		int at;
-		pthread_condattr_t attr;
-		pthread_cond_t cond;
-	};
+typedef struct pth_cond_s pth_cond_t;
+struct pth_cond_s {
+	int at;
+	pthread_condattr_t attr;
+	pthread_cond_t cond;
+};
 
 
-	pth_cond_t *pth_cond_new (void);
-	int pth_cond_delete (pth_cond_t *c);
-	int pth_cond_init (pth_cond_t *c);
-	int pth_cond_destroy (pth_cond_t *c);
-	int pth_condattr_init (pth_cond_t *c);
-	int pth_condattr_destroy (pth_cond_t *c);
-	pth_cond_t *pth_condi_init (void);
-	int pth_condi_delete (pth_cond_t *c);
-	int pth_cond_signal (pth_cond_t *c);
-	int pth_cond_broadcast (pth_cond_t *c);
-	int pth_cond_wait (pth_cond_t *c, pth_mutex_t *m);
-	int pth_cond_timedwait (pth_cond_t *c, pth_mutex_t *m,
-	                        const struct timespec *tm);
+pth_cond_t *pth_cond_new (void);
+int pth_cond_delete (pth_cond_t *c);
+int pth_cond_init (pth_cond_t *c);
+int pth_cond_destroy (pth_cond_t *c);
+int pth_condattr_init (pth_cond_t *c);
+int pth_condattr_destroy (pth_cond_t *c);
+pth_cond_t *pth_condi_init (void);
+int pth_condi_delete (pth_cond_t *c);
+int pth_cond_signal (pth_cond_t *c);
+int pth_cond_broadcast (pth_cond_t *c);
+int pth_cond_wait (pth_cond_t *c, pth_mutex_t *m);
+int pth_cond_timedwait (pth_cond_t *c, pth_mutex_t *m,
+						const struct timespec *tm);
 
 #ifdef __cplusplus
 };

@@ -48,37 +48,37 @@ extern "C" {
 #define CAF_VARIABLE_SZ        (sizeof(cafvar_t))
 #define CAF_VARSPACE_SZ        (sizeof(cafvarspace_t))
 
-	typedef struct caf_variable_space cafvarspace_t;
-	struct caf_variable_space {
-		int id;
-		char *name;
-		caflst_t *vars;
-	};
+typedef struct caf_variable_space cafvarspace_t;
+struct caf_variable_space {
+	int id;
+	char *name;
+	caflst_t *vars;
+};
 
-	typedef struct caf_variable cafvar_t;
-	struct caf_variable {
-		int type;
-		char *name;
-		void *value;
-	};
+typedef struct caf_variable cafvar_t;
+struct caf_variable {
+	int type;
+	char *name;
+	void *value;
+};
 
-	enum caf_vartypes
-	{
-	    CAFV_BOOLEAN = 10,
-	    CAFV_BYTE = 20,
-	    CAFV_CHAR = 30,
-	    CAFV_UCHAR = 40,
-	    CAFV_WCHAR = 50,
-	    CAFV_WUCHAR = 60,
-	    CAFV_SHORT = 70,
-	    CAFV_INT = 80,
-	    CAFV_UINT = 90,
-	    CAFV_LONG = 100,
-	    CAFV_ULONG = 110,
-	    CAFV_FLOAT = 120,
-	    CAFV_DOUBLE = 130,
-	    CAFV_STRING = 200
-	};
+enum caf_vartypes
+{
+	CAFV_BOOLEAN = 10,
+	CAFV_BYTE = 20,
+	CAFV_CHAR = 30,
+	CAFV_UCHAR = 40,
+	CAFV_WCHAR = 50,
+	CAFV_WUCHAR = 60,
+	CAFV_SHORT = 70,
+	CAFV_INT = 80,
+	CAFV_UINT = 90,
+	CAFV_LONG = 100,
+	CAFV_ULONG = 110,
+	CAFV_FLOAT = 120,
+	CAFV_DOUBLE = 130,
+	CAFV_STRING = 200
+};
 
 #define    CAFV_NATIVE_BOOLEAN        int
 #define    CAFV_NATIVE_BYTE           unsigned int:8
@@ -96,58 +96,58 @@ extern "C" {
 #define    CAFV_NATIVE_STRING         char *
 
 
-	/**
-	 *
-	 * @brief    Creates a new CAF variable space.
-	 *
-	 * Creates a new CAF variable space (allocates memory).
-	 *
-	 * @param[in]    int            the space id.
-	 * @param[in]    char *         space name.
-	 * @return       cafvarspace_t *     the allocated variable space.
-	 *
-	 * @see      cafvarspace_delete
-	 */
-	cafvarspace_t *cafvarspace_new (int id, char *name);
+/**
+ *
+ * @brief    Creates a new CAF variable space.
+ *
+ * Creates a new CAF variable space (allocates memory).
+ *
+ * @param[in]    int            the space id.
+ * @param[in]    char *         space name.
+ * @return       cafvarspace_t *     the allocated variable space.
+ *
+ * @see      cafvarspace_delete
+ */
+cafvarspace_t *cafvarspace_new (int id, char *name);
 
-	/**
-	 *
-	 * @brief    Deallocates a variable space and his variables.
-	 *
-	 * Deletes or deallocates the given CAF variable space.
-	 *
-	 * @param[in]    cafvarspace_t *        the variable space.
-	 * @return       void
-	 *
-	 * @see      cafvarspace_new
-	 */
-	cafvar_t *cafvar_new (char *name, char *value, int type);
+/**
+ *
+ * @brief    Deallocates a variable space and his variables.
+ *
+ * Deletes or deallocates the given CAF variable space.
+ *
+ * @param[in]    cafvarspace_t *        the variable space.
+ * @return       void
+ *
+ * @see      cafvarspace_new
+ */
+cafvar_t *cafvar_new (char *name, char *value, int type);
 
-	/**
-	 *
-	 * @brief    Allocates a new variable.
-	 *
-	 * Allocates a new variable using a void pointer as reference
-	 * for the data contained.
-	 *
-	 * @param[in]    name *                the variable name.
-	 * @param[in]    void *                the variable data.
-	 * @param[in]    int                   the variable type.
-	 * @return       cafvar_t *
-	 *
-	 * @see      cafvar_delete
-	 */
-	void cafvar_delete (cafvar_t *var);
-	void cafvar_dump (FILE *out, void *var);
+/**
+ *
+ * @brief    Allocates a new variable.
+ *
+ * Allocates a new variable using a void pointer as reference
+ * for the data contained.
+ *
+ * @param[in]    name *                the variable name.
+ * @param[in]    void *                the variable data.
+ * @param[in]    int                   the variable type.
+ * @return       cafvar_t *
+ *
+ * @see      cafvar_delete
+ */
+void cafvar_delete (cafvar_t *var);
+void cafvar_dump (FILE *out, void *var);
 
-	void cafvar_init (void);
-	void cafvar_finish (void);
-	void cafvar_dump (FILE *out);
-	int cafvar_destroycb (void *data);
-	int cafvar_add (char *name, char *value, int type);
-	cafvar_t *cafvar_get (char *name);
-	void *cafvar_getvalue (char *name);
-	void *cafvar_setvalue (char *name, char *value);
+void cafvar_init (void);
+void cafvar_finish (void);
+void cafvar_dump (FILE *out);
+int cafvar_destroycb (void *data);
+int cafvar_add (char *name, char *value, int type);
+cafvar_t *cafvar_get (char *name);
+void *cafvar_getvalue (char *name);
+void *cafvar_setvalue (char *name, char *value);
 
 #ifdef __cplusplus
 };

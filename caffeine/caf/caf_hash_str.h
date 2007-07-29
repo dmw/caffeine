@@ -41,6 +41,10 @@
 
 #include <sys/types.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* !__cplusplus */
+
 #define CAF_HASH_STR_FUNCTION(f)    \
     u_int32_t (*f) (const char *str, const u_int32_t len)
 
@@ -54,6 +58,10 @@ u_int32_t caf_shash_djb (const char *str, const u_int32_t len);
 u_int32_t caf_shash_dek (const char *str, const u_int32_t len);
 u_int32_t caf_shash_bp (const char *str, const u_int32_t len);
 u_int32_t caf_shash_fnv (const char *str, const u_int32_t len);
+
+#ifdef __cplusplus
+};
+#endif /* !__cplusplus */
 
 /** }@ */
 #endif /* !CAF_HASH_STR_H */

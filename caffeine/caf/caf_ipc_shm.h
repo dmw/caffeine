@@ -55,31 +55,31 @@ extern "C" {
 #define CAF_SHM_DETACH_OK(s)            (s->ptr != (void *)-1)
 #define CAF_SHM_BAD_ALLOC               ((void *)-1)
 
-	typedef struct caf_shm_pool_s caf_shm_pool_t;
-	struct caf_shm_pool_s {
-		int count;
-		size_t sz;
-		lstdl_t *pool;
-	};
+typedef struct caf_shm_pool_s caf_shm_pool_t;
+struct caf_shm_pool_s {
+	int count;
+	size_t sz;
+	lstdl_t *pool;
+};
 
-	typedef struct caf_shm_alloc_s caf_shm_alloc_t;
-	struct caf_shm_alloc_s {
-		int id;
-		int flags;
-		key_t key;
-		size_t sz;
-		void *ptr;
-	};
+typedef struct caf_shm_alloc_s caf_shm_alloc_t;
+struct caf_shm_alloc_s {
+	int id;
+	int flags;
+	key_t key;
+	size_t sz;
+	void *ptr;
+};
 
-	caf_shm_pool_t *caf_shm_pool_new ();
-	int caf_shm_pool_delete (caf_shm_pool_t *s);
-	int caf_shm_pool_add (caf_shm_pool_t *s, caf_shm_alloc_t *a);
+caf_shm_pool_t *caf_shm_pool_new ();
+int caf_shm_pool_delete (caf_shm_pool_t *s);
+int caf_shm_pool_add (caf_shm_pool_t *s, caf_shm_alloc_t *a);
 
-	caf_shm_alloc_t *caf_shm_seg_new (key_t k, size_t sz, int flg);
-	int caf_shm_seg_delete (caf_shm_alloc_t *s);
-	void *caf_shm_seg_attach (caf_shm_alloc_t *s);
-	int caf_shm_seg_detach (caf_shm_alloc_t *s);
-	int caf_shm_seg_ctrl (caf_shm_alloc_t *s, int cmd, struct shmid_ds *buf);
+caf_shm_alloc_t *caf_shm_seg_new (key_t k, size_t sz, int flg);
+int caf_shm_seg_delete (caf_shm_alloc_t *s);
+void *caf_shm_seg_attach (caf_shm_alloc_t *s);
+int caf_shm_seg_detach (caf_shm_alloc_t *s);
+int caf_shm_seg_ctrl (caf_shm_alloc_t *s, int cmd, struct shmid_ds *buf);
 
 #ifdef __cplusplus
 };

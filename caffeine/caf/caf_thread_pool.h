@@ -49,152 +49,152 @@
 extern "C" {
 #endif /* !__cplusplus */
 
-	/** Defines the pth_pool_t size */
+/** Defines the pth_pool_t size */
 #define CAF_PT_POOL_SZ             sizeof(pth_pool_t)
-	/** Defines the thread routin prototype */
+/** Defines the thread routin prototype */
 #define CAF_PT_PROTOTYPE(rtn)      void *(*rtn)(void *)
 
-	/**
-	 *
-	 * @brief    Caffeine Thread Pool Type.
-	 * The type of a thread pool.
-	 * @see      pth_pool
-	 */
-	typedef struct pth_pool_s pth_pool_t;
-	/**
-	 *
-	 * @brief    Caffeine Thread Pool Structure.
-	 * Structure designed to hold information about a pool of thread, that shares
-	 * common attributes and the same thread routine. The purpose is to create
-	 * a thread pool to build a service oriented pool.
-	 */
-	struct pth_pool_s {
-		/** Thread Count */
-		int count;
-		/** Thread Attributes */
-		pth_attri_t *attri;
-		/** Thread List */
-		lstdl_t *threads;
-		/** Thread Routine */
-		CAF_PT_PROTOTYPE(rtn);
-	};
+/**
+ *
+ * @brief    Caffeine Thread Pool Type.
+ * The type of a thread pool.
+ * @see      pth_pool
+ */
+typedef struct pth_pool_s pth_pool_t;
+/**
+ *
+ * @brief    Caffeine Thread Pool Structure.
+ * Structure designed to hold information about a pool of thread, that shares
+ * common attributes and the same thread routine. The purpose is to create
+ * a thread pool to build a service oriented pool.
+ */
+struct pth_pool_s {
+	/** Thread Count */
+	int count;
+	/** Thread Attributes */
+	pth_attri_t *attri;
+	/** Thread List */
+	lstdl_t *threads;
+	/** Thread Routine */
+	CAF_PT_PROTOTYPE(rtn);
+};
 
 
-	/**
-	 *
-	 * @brief    Allocates a new Caffeine Thread Pool Instance.
-	 *
-	 * Allocates memory for a pth_pool_t structure, setting the attributes of
-	 * the pool threads, the common routine to all threads and the amount
-	 * of threads to launch.
-	 *
-	 * @param[in]    attrs           Caffeine Thread Attributes.
-	 * @param[in]    rtn             thread routine.
-	 * @param[in]    count           number of threads to launch.
-	 * @return       pth_pool_t *    the allocated pth_pool_t structure.
-	 *
-	 * @see      pth_pool_t
-	 */
-	pth_pool_t *pth_pool_new (pth_attri_t *attrs,
-	                          CAF_PT_PROTOTYPE(rtn), int count);
+/**
+ *
+ * @brief    Allocates a new Caffeine Thread Pool Instance.
+ *
+ * Allocates memory for a pth_pool_t structure, setting the attributes of
+ * the pool threads, the common routine to all threads and the amount
+ * of threads to launch.
+ *
+ * @param[in]    attrs           Caffeine Thread Attributes.
+ * @param[in]    rtn             thread routine.
+ * @param[in]    count           number of threads to launch.
+ * @return       pth_pool_t *    the allocated pth_pool_t structure.
+ *
+ * @see      pth_pool_t
+ */
+pth_pool_t *pth_pool_new (pth_attri_t *attrs,
+						  CAF_PT_PROTOTYPE(rtn), int count);
 
-	/**
-	 *
-	 * @brief    Deletes a Caffeine Thread Pool Instance.
-	 *
-	 * Deallocates memory for a pth_pool_t structure.
-	 *
-	 * @param[in]    p               the pool to delete.
-	 *
-	 * @see      pth_pool_t
-	 */
-	void pth_pool_delete (pth_pool_t *p);
+/**
+ *
+ * @brief    Deletes a Caffeine Thread Pool Instance.
+ *
+ * Deallocates memory for a pth_pool_t structure.
+ *
+ * @param[in]    p               the pool to delete.
+ *
+ * @see      pth_pool_t
+ */
+void pth_pool_delete (pth_pool_t *p);
 
-	/**
-	 *
-	 * @brief    Callback to use with the deletion of the thread list in the pool.
-	 *
-	 * Callback to use with the deletion of the thread list in the pool.
-	 *
-	 * @param[in]    ptr             pointer to the routine thread structure.
-	 * @return       int             one on success, zero on error.
-	 *
-	 * @see      pth_pool_t
-	 */
-	int pth_pool_delete_callback (void *ptr);
+/**
+ *
+ * @brief    Callback to use with the deletion of the thread list in the pool.
+ *
+ * Callback to use with the deletion of the thread list in the pool.
+ *
+ * @param[in]    ptr             pointer to the routine thread structure.
+ * @return       int             one on success, zero on error.
+ *
+ * @see      pth_pool_t
+ */
+int pth_pool_delete_callback (void *ptr);
 
-	/**
-	 *
-	 * @brief    Creates a new Pool.
-	 *
-	 * Do all the job to create a thread pool with a common task, ideal for single
-	 * services.
-	 *
-	 * @param[in]    attrs           Caffeine Thread Attributes.
-	 * @param[in]    rtn             thread routine.
-	 * @param[in]    cnt             number of threads to launch.
-	 * @param[in]    arg             thread routine arguments.
-	 * @return       pth_pool_t *    the allocated and working pool.
-	 *
-	 * @see      pth_pool_t
-	 */
-	pth_pool_t *pth_pool_create (pth_attri_t *attrs,
-	                             CAF_PT_PROTOTYPE(rtn), int cnt, void *arg);
+/**
+ *
+ * @brief    Creates a new Pool.
+ *
+ * Do all the job to create a thread pool with a common task, ideal for single
+ * services.
+ *
+ * @param[in]    attrs           Caffeine Thread Attributes.
+ * @param[in]    rtn             thread routine.
+ * @param[in]    cnt             number of threads to launch.
+ * @param[in]    arg             thread routine arguments.
+ * @return       pth_pool_t *    the allocated and working pool.
+ *
+ * @see      pth_pool_t
+ */
+pth_pool_t *pth_pool_create (pth_attri_t *attrs,
+							 CAF_PT_PROTOTYPE(rtn), int cnt, void *arg);
 
-	/**
-	 *
-	 * @brief    Adds a Thread to the Pool.
-	 *
-	 * Adds threads to the given pool.
-	 *
-	 * @param[in]    p               Caffeine Thread Pool.
-	 * @param[in]    attrs           Caffeine Thread Attributes.
-	 * @param[in]    rtn             Thread Routine.
-	 * @return       int             zero on success.
-	 *
-	 * @see      pth_pool_t
-	 */
-	int pth_pool_add (pth_pool_t *p, pth_attri_t *attrs, CAF_PT_PROTOTYPE(rtn),
-	                  void *arg);
+/**
+ *
+ * @brief    Adds a Thread to the Pool.
+ *
+ * Adds threads to the given pool.
+ *
+ * @param[in]    p               Caffeine Thread Pool.
+ * @param[in]    attrs           Caffeine Thread Attributes.
+ * @param[in]    rtn             Thread Routine.
+ * @return       int             zero on success.
+ *
+ * @see      pth_pool_t
+ */
+int pth_pool_add (pth_pool_t *p, pth_attri_t *attrs, CAF_PT_PROTOTYPE(rtn),
+				  void *arg);
 
-	/**
-	 *
-	 * @brief    Joins the entire given pool.
-	 *
-	 * Joins the all the threads in the given thread pool.
-	 *
-	 * @param[in]    pool            Caffeine Thread Pool.
-	 * @return       int             zero on success, upper to zero on error.
-	 *
-	 * @see      pth_pool_t
-	 */
-	int pth_pool_join (pth_pool_t *pool);
+/**
+ *
+ * @brief    Joins the entire given pool.
+ *
+ * Joins the all the threads in the given thread pool.
+ *
+ * @param[in]    pool            Caffeine Thread Pool.
+ * @return       int             zero on success, upper to zero on error.
+ *
+ * @see      pth_pool_t
+ */
+int pth_pool_join (pth_pool_t *pool);
 
-	/**
-	 *
-	 * @brief    Detaches the entire given pool.
-	 *
-	 * Detaches the all the threads in the given thread pool.
-	 *
-	 * @param[in]    pool            Caffeine Thread Pool.
-	 * @return       int             zero on success, upper to zero on error.
-	 *
-	 * @see      pth_pool_t
-	 */
-	int pth_pool_detach (pth_pool_t *pool);
+/**
+ *
+ * @brief    Detaches the entire given pool.
+ *
+ * Detaches the all the threads in the given thread pool.
+ *
+ * @param[in]    pool            Caffeine Thread Pool.
+ * @return       int             zero on success, upper to zero on error.
+ *
+ * @see      pth_pool_t
+ */
+int pth_pool_detach (pth_pool_t *pool);
 
-	/**
-	 *
-	 * @brief    Cancels the entire given pool.
-	 *
-	 * Cancels the all the threads in the given thread pool.
-	 *
-	 * @param[in]    pool            Caffeine Thread Pool.
-	 * @return       int             zero on success, upper to zero on error.
-	 *
-	 * @see      pth_pool_t
-	 */
-	int pth_pool_cancel (pth_pool_t *pool);
+/**
+ *
+ * @brief    Cancels the entire given pool.
+ *
+ * Cancels the all the threads in the given thread pool.
+ *
+ * @param[in]    pool            Caffeine Thread Pool.
+ * @return       int             zero on success, upper to zero on error.
+ *
+ * @see      pth_pool_t
+ */
+int pth_pool_cancel (pth_pool_t *pool);
 
 #ifdef __cplusplus
 };
