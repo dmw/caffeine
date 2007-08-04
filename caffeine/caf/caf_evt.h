@@ -1,6 +1,6 @@
-/* -*- mode: c; c-default-style: "k&r"; indent-tabs-mode: nil; -*- */
-/* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 expandtab: */
-/* kate: space-indent on; indent-width 4; mixedindent off; indent-mode none; */
+/* -*- mode: c; indent-tabs-mode: t; tab-width: 4; c-file-style: "caf" -*- */
+/* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 noexpandtab: */
+/* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
     Caffeine - C Application Framework
     Copyright (C) 2006 Daniel Molina Wegener
