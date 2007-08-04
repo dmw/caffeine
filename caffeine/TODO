@@ -1,0 +1,15 @@
+
+CAFFEINE TODO:
+
+Mandatory:
+==========
+* Write unitary test cases for implemented functions.
+* Document implemented functions.
+* Every unit test case must be tested under valgrind and correct errors or
+  report them through the mailing list.
+
+
+On the way:
+===========
+* The caffeine design will be published in a near date.
+

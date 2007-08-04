@@ -1,0 +1,44 @@
+
+
+Caffeine Hacking Guide
+======================
+
+
+1. Before you start
+-------------------
+
+You must read the STYLE guide.
+
+
+3. Centralized Development
+--------------------------
+
+* Contributions are received through the development mailing list.
+* Module contributions retain the original copyleft notice (copyright
+  under LGPL).
+* Patch and patchset contributions that affects up to 50.000001% of a
+  module, means the inclusion of the proper copyleft notice in the
+  module file.
+* Patch and patchset contributions that affects less to 49.00001% of a
+  module, means the inclusion of the author name in the AUTHORS file.
+
+
+2. What can I do?
+-----------------
+
+* Write unitary tests for every algorithm in Caffeine. If you don't
+have enough time, you can submit the test and we will debug the
+tests for you.
+
+* Contribute with modules. Write a module to extend caffeine, something
+  that can be usefull.
+
+* Wait for the caffeine design specs. We will need a lot of programmers
+  or coder to implement the complete specifcation.
+
+
+
+
+
+
+
