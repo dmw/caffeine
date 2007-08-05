@@ -42,7 +42,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #define CAF_VARIABLE_SZ        (sizeof(cafvar_t))
@@ -150,7 +150,7 @@ void *cafvar_getvalue (char *name);
 void *cafvar_setvalue (char *name, char *value);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

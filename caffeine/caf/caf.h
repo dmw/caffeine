@@ -40,7 +40,7 @@
 #include <caf/caf_tool_macro.h>
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 typedef enum {
@@ -50,7 +50,7 @@ typedef enum {
 } caf_return_t;
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

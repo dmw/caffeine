@@ -45,7 +45,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** Computes de list structure size */
@@ -208,6 +208,35 @@ int lstdl_node_delete (lstdl_t *lst, lstdln_t *n, CAF_LSTDLNODE_CBDEL(del));
  */
 int lstdl_node_delete_by_data (lstdl_t *lst, void *n,
 							   CAF_LSTDLNODE_CBDEL(del));
+
+/**
+ *
+ * @brief    Verifies if the list is empty or not
+ *
+ * Verifies if the list is empty or not.
+ *
+ * @param[in]    lst    The list to get length
+ * @return       CAF_OK if is empty, CAF_ERROR if not.
+ *
+ * @see    lstdl_t
+ * @see    lstdln_t
+ */
+int lstdl_empty_list (lstdl_t *lst);
+
+/**
+ *
+ * @brief    Verifies if the list have only one item
+ *
+ * Verifies if the list have only one item.
+ *
+ * @param[in]    lst    The list to get length
+ * @return       CAF_OK if does have one item, CAF_ERROR if not.
+ *
+ * @see    lstdl_t
+ * @see    lstdln_t
+ */
+int lstdl_oneitem_list (lstdl_t *lst);
+
 /**
  *
  * @brief    Returns the len of the given list.
@@ -473,7 +502,7 @@ int lstdl_dump_ptr (FILE *out, lstdl_t *lst);
 int lstdl_dump_str_cb (FILE *o, void *data);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

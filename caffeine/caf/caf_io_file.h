@@ -46,7 +46,7 @@
 #include <caf/caf_data_buffer.h>
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #define CAF_IO_FILE_SZ              (sizeof (caf_io_file_t))
@@ -76,7 +76,7 @@ ssize_t io_read (caf_io_file_t *r, cbuffer_t *b);
 ssize_t io_write (caf_io_file_t *r, cbuffer_t *b);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

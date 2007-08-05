@@ -42,7 +42,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #define PTRISNULL(ptr)      (void *)ptr == (void *)NULL
@@ -173,7 +173,7 @@ void *xmemcpy (void *dst, void *src, size_t sz);
 #endif /* !CAFFEINE_DEBUG */
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

@@ -42,7 +42,7 @@
 #include "caf/caf.h"
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 u_int16_t caf_word_endian_swap (u_int16_t w);
@@ -50,7 +50,7 @@ u_int32_t caf_dword_endian_swap (u_int32_t w);
 u_int64_t caf_qword_endian_swap (u_int64_t w);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

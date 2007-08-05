@@ -47,7 +47,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #define CAF_MSG_SZ              (sizeof (caf_msg_t))
@@ -76,7 +76,7 @@ int caf_ipcmsg_get (const caf_msg_t *m);
 int caf_ipcmsg_ctrl (const caf_msg_t *m, const int cmd, struct msqid_ds *b);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

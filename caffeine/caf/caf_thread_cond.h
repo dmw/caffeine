@@ -46,7 +46,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #define PTH_COND_SZ                     (sizeof (pth_cond_t))
@@ -74,7 +74,7 @@ int pth_cond_timedwait (pth_cond_t *c, pth_mutex_t *m,
 						const struct timespec *tm);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

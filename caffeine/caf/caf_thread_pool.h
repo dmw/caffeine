@@ -46,7 +46,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** Defines the pth_pool_t size */
@@ -197,7 +197,7 @@ int pth_pool_detach (pth_pool_t *pool);
 int pth_pool_cancel (pth_pool_t *pool);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

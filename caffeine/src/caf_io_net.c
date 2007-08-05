@@ -46,27 +46,27 @@ static struct caf_sockopt_map {
 	socklen_t sz;
 }
 caf_sockopt_map_v[] = {
-                          { SO_DEBUG, (socklen_t)sizeof (int) },
-                          { SO_REUSEADDR, (socklen_t)sizeof (int) },
+	{ SO_DEBUG, (socklen_t)sizeof (int) },
+	{ SO_REUSEADDR, (socklen_t)sizeof (int) },
 #ifndef _GNU_SOURCE
-                          { SO_REUSEPORT, (socklen_t)sizeof (int) },
+	{ SO_REUSEPORT, (socklen_t)sizeof (int) },
 #endif /* !_GNU_SOURCE */
-                          { SO_KEEPALIVE, (socklen_t)sizeof (int) },
-                          { SO_DONTROUTE, (socklen_t)sizeof (int) },
-                          { SO_LINGER, (socklen_t)sizeof (struct linger) },
-                          { SO_BROADCAST, (socklen_t)sizeof (int) },
-                          { SO_OOBINLINE, (socklen_t)sizeof (int) },
-                          { SO_SNDBUF, (socklen_t)sizeof (int) },
-                          { SO_RCVBUF, (socklen_t)sizeof (int) },
-                          { SO_SNDLOWAT, (socklen_t)sizeof (int) },
-                          { SO_RCVLOWAT, (socklen_t)sizeof (int) },
-                          { SO_SNDTIMEO, (socklen_t)sizeof (struct timeval) },
-                          { SO_RCVTIMEO, (socklen_t)sizeof (struct timeval) },
+	{ SO_KEEPALIVE, (socklen_t)sizeof (int) },
+	{ SO_DONTROUTE, (socklen_t)sizeof (int) },
+	{ SO_LINGER, (socklen_t)sizeof (struct linger) },
+	{ SO_BROADCAST, (socklen_t)sizeof (int) },
+	{ SO_OOBINLINE, (socklen_t)sizeof (int) },
+	{ SO_SNDBUF, (socklen_t)sizeof (int) },
+	{ SO_RCVBUF, (socklen_t)sizeof (int) },
+	{ SO_SNDLOWAT, (socklen_t)sizeof (int) },
+	{ SO_RCVLOWAT, (socklen_t)sizeof (int) },
+	{ SO_SNDTIMEO, (socklen_t)sizeof (struct timeval) },
+	{ SO_RCVTIMEO, (socklen_t)sizeof (struct timeval) },
 #ifndef _GNU_SOURCE
-                          { SO_ACCEPTFILTER, (socklen_t)sizeof (int) },
-                          { SO_NOSIGPIPE, (socklen_t)sizeof (int) }
+	{ SO_ACCEPTFILTER, (socklen_t)sizeof (int) },
+	{ SO_NOSIGPIPE, (socklen_t)sizeof (int) }
 #endif /* !_GNU_SOURCE */
-                      };
+};
 
 
 caf_conn_t *

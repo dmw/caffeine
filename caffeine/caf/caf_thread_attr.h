@@ -47,7 +47,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** Defines the pth_attri_t structure size */
@@ -223,7 +223,7 @@ int pth_attri_set (pth_attri_t *attri, pth_attr_types_t t, void *data);
 int pth_attri_get (pth_attri_t *attri, pth_attr_types_t t, void *data);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

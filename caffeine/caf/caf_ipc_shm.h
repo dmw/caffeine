@@ -47,7 +47,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #define CAF_SHM_POOL_SZ                 (sizeof (caf_shm_pool_t))
@@ -82,7 +82,7 @@ int caf_shm_seg_detach (caf_shm_alloc_t *s);
 int caf_shm_seg_ctrl (caf_shm_alloc_t *s, int cmd, struct shmid_ds *buf);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

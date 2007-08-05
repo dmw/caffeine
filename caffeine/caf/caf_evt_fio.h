@@ -52,7 +52,7 @@
 #include <caf/caf_io_file.h>
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 /**
@@ -161,7 +161,7 @@ int CALL_EVT_F(fio_evt_isvnode) (fio_evt_t *e);
 #define caf_fio_evt_isvnode          CALL_EVT_F(fio_evt_isvnode)
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

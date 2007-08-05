@@ -44,7 +44,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** Defines the pth_rwlock_t structure size */
@@ -213,7 +213,7 @@ int pth_rwl_rdlock (pth_rwlock_t *rwl, int tl, const struct timespec *to);
 int pth_rwl_unlock (pth_rwlock_t *rwl);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

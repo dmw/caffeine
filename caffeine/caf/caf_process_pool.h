@@ -42,7 +42,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #define CAF_ENTRY_POINT(pt)     int (*pt)(void *p)
@@ -173,7 +173,7 @@ lstdl_t *ppm_pool_create (int c, lstdl_t *plst, CAF_ENTRY_POINT(pt));
 int ppm_kill_pool (lstdl_t *lst, int sig);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

@@ -72,7 +72,7 @@
 #include <caf/caf_evt_nio.h>
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 typedef struct io_evt_pool_poll_s io_evt_pool_poll_t;
@@ -175,7 +175,7 @@ int CALL_EVT_FP(io_evt_pool,handle) (EVT_FP_T *e);
 #define caf_io_evt_pool_handle           CALL_EVT_FP(io_evt_pool,handle)
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

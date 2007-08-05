@@ -45,7 +45,7 @@
 #include "caf/caf_data_lstdl.h"
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** Packer unit structure size */
@@ -377,7 +377,7 @@ caf_unit_value_t *caf_packet_getpascalstr (caf_unit_t *u, void *b, size_t p);
 cbuffer_t *caf_packet_translate (caf_packet_t *r);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

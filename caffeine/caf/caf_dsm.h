@@ -43,7 +43,7 @@
 #include <caf/caf_data_lstdl.h>
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #define CAF_DSM_SZ              (sizeof (caf_dsm_t))
@@ -115,7 +115,7 @@ int caf_dsm_runner_delete (caf_dsm_runner_t *r);
 int caf_dsm_runnner_work (caf_dsm_runner_t *r, void *r_data);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

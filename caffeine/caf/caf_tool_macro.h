@@ -35,5 +35,13 @@
 #define CAF_NULL_T(t)        ((t)NULL)
 #define CAF_ISNULL(t,x)      (CAF_NULL_T(t) == x)
 
+#ifndef CAF_BEGIN_C_EXTERNS
+#define CAF_BEGIN_C_EXTERNS				extern "C" {
+#endif /* !CAF_BEGIN_C_EXTERNS */
+
+#ifndef CAF_END_C_EXTERNS
+#define CAF_END_C_EXTERNS				};
+#endif /* !CAF_END_C_EXTERNS */
+
 #endif /* !CAF_TOOL_MACRO_H */
 /* caf_macro.h ends here */

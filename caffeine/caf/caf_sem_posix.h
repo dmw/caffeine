@@ -46,7 +46,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #define CAF_SEM_POSIX_SZ                (sizeof (caf_sem_posix_t))
@@ -75,7 +75,7 @@ int caf_sem_posix_wait (caf_sem_posix_t *r);
 int caf_sem_posix_trywait (caf_sem_posix_t *r);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

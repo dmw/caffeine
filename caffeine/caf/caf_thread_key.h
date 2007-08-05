@@ -47,7 +47,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** Defines the key data destruction prototype */
@@ -288,7 +288,7 @@ void pth_kpool_remove_by_id (pth_kpool_t *pool, int id);
 int pth_kpool_remove_callback (void *k);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

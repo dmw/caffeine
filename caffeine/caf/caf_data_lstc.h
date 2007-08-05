@@ -41,7 +41,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 	/** Computes de list structure size */
@@ -427,7 +427,7 @@ int lstc_dump_ptr (FILE *out, lstcn_t *lst);
 int lstc_dump_str_cb (FILE *o, void *data);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

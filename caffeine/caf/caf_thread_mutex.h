@@ -45,7 +45,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** Defines the pth_mutex_t structure size */
@@ -239,7 +239,7 @@ int pth_mtx_lock (pth_mutex_t *mtx);
 int pth_mtx_unlock (pth_mutex_t *mtx);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

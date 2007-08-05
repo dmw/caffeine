@@ -43,7 +43,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** Defines the Thread Once routine prototype */
@@ -111,7 +111,7 @@ void pth_once_delete (pth_once_t *onc);
 int pth_once_call (pth_once_t *call);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

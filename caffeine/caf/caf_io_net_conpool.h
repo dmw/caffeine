@@ -40,7 +40,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #include <caf/caf_io_net.h>
@@ -66,7 +66,7 @@ int caf_conpool_finalize (caf_conpool_t *svc);
 int caf_conpool_reopen (caf_conpool_t *svc);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

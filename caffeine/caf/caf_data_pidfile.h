@@ -45,7 +45,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #define PIDFILE_NOPID               -1
@@ -135,7 +135,7 @@ pid_t pidfile_getpgid (const char *path);
 int pidfile_kill (const char *path, int sig);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

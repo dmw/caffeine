@@ -40,7 +40,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 typedef struct regex_pcre_s regex_pcre_t;
@@ -66,7 +66,7 @@ int regex_pcre_pool_delete (regex_pcre_pool_t *p);
 int regex_pcre_pool_match (regex_pcre_pool_t *p, const char *sub);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

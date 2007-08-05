@@ -50,7 +50,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #define CAF_SEM_SVR4_SZ                 (sizeof (caf_sem_svr4_t))
@@ -95,7 +95,7 @@ caf_sembuf_svr4_t *caf_sembuf_svr4_new (caf_sem_svr4_t *r, const short op,
 int caf_sembuf_svr4_delete (caf_sembuf_svr4_t *b);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

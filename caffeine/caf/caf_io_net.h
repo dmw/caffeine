@@ -40,7 +40,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #define CAF_CONNECTION_SZ               (sizeof (caf_conn_t))
@@ -90,7 +90,7 @@ int caf_conn_listen (caf_conn_t *c, int bl);
 int caf_conn_accept (caf_conn_t *c);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

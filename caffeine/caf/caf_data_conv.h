@@ -42,7 +42,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 /**
@@ -146,7 +146,7 @@ long double *str2ldoublep(char *num);
 long double str2ldouble(char *num);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

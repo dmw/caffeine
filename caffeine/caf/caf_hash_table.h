@@ -44,7 +44,7 @@
 #include <caf/caf_data_lstdlc.h>
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #define CAF_HASH_SZ                 (sizeof (caf_hash_t))
@@ -89,7 +89,7 @@ int caf_hash_table_set (caf_hash_table_t *table, const void *key,
 void caf_hash_table_dump (FILE *out, caf_hash_table_t *table);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

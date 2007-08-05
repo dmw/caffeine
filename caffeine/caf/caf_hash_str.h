@@ -42,7 +42,7 @@
 #include <sys/types.h>
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #define CAF_HASH_STR_FUNCTION(f)    \
@@ -60,7 +60,7 @@ u_int32_t caf_shash_bp (const char *str, const u_int32_t len);
 u_int32_t caf_shash_fnv (const char *str, const u_int32_t len);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

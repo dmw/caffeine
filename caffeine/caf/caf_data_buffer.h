@@ -26,6 +26,7 @@
 #define CAF_DATA_BUFFER_H 1
 
 #include <sys/types.h>
+#include <caf/caf_tool_macro.h>
 #include <caf/caf_data_lstdl.h>
 
 /**
@@ -54,7 +55,7 @@
  *
  */
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 #ifndef CAF_BUFF_SZ
@@ -371,7 +372,7 @@ cbuffer_t *cbuf_head_cut (cbuffer_t *src, size_t sz);
 cbuffer_t *cbuf_tail_cut (cbuffer_t *src, size_t sz);
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */

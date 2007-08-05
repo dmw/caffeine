@@ -58,7 +58,7 @@
 #endif /* !IO_EVENT_USE_KEVENT */
 
 #ifdef __cplusplus
-extern "C" {
+CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 /**
@@ -194,7 +194,7 @@ int CALL_EVT_F(io_evt_iswrite) (io_evt_t *e);
 #define caf_io_evt_iswrite          CALL_EVT_F(io_evt_iswrite)
 
 #ifdef __cplusplus
-};
+CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */
