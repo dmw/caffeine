@@ -210,6 +210,26 @@ lstdl_node_delete_by_data (lstdl_t *lst, void *n, CAF_LSTDLNODE_CBDEL(del)) {
 
 
 int
+lstdl_empty_list (lstdl_t *lst) {
+	if (lst != (lstdl_t *)NULL) {
+		return ((lst->tail == lst->head && lst->tail == (lstdln_t *)NULL)
+		        ? CAF_OK : CAF_ERROR);
+	}
+	return CAF_ERROR;
+}
+
+
+int
+lstdl_oneitem_list (lstdl_t *lst) {
+	if (lst != (lstdl_t *)NULL) {
+		return ((lst->tail == lst->head && lst->tail != (lstdln_t *)NULL)
+		        ? CAF_OK : CAF_ERROR);
+	}
+	return CAF_ERROR;
+}
+
+
+int
 lstdl_length (lstdl_t *lst) {
 	int c;
 	lstdln_t *cur;
@@ -431,8 +451,9 @@ lstdl_dump (FILE *out, lstdl_t *lst, CAF_LSTDLNODE_CBDUMP(dmp)) {
 	if (lst != (lstdl_t *)NULL) {
 		cur = lst->head;
 		dmp(out, cur->data);
-		while ((cur = cur->next) != (lstdln_t *)NULL) {
+		while (cur != (lstdln_t *)NULL) {
 			dmp(out, cur->data);
+			cur = cur->next;
 		}
 	}
 }

@@ -330,14 +330,16 @@ cbuf_join (lstdl_t *lst) {
 			while (c != lst->tail && c != (lstdln_t *)NULL) {
 				current = (cbuffer_t *)c->data;
 				if (current != (cbuffer_t *)NULL) {
-					buffer = cbuf_paste (buffer, current, idx, 0, current->sz);
+					buffer = cbuf_paste (buffer, current, idx, 0,
+										 current->sz);
 					idx += current->sz;
 				}
 				c = c->next;
 			}
 			current = (cbuffer_t *)lst->tail->data;
 			if (current != (cbuffer_t *)NULL) {
-				buffer = cbuf_paste (buffer, current, idx, 0, current->sz);
+				buffer = cbuf_paste (buffer, current, idx, 0,
+									 current->sz);
 				idx += current->sz;
 			}
 		}
@@ -363,7 +365,8 @@ cbuf_replace (cbuffer_t *src, void *srch, void *repl, size_t srchsz,
 		while (idx_current < btop) {
 			if (idx_over <= btop) {
 				if (memcmp ((void *)idx_current, srch, srchsz) == 0) {
-					current = cbuf_extract (src, idx_tail, idx_tail + srchsz);
+					current = cbuf_extract (src, idx_tail,
+											idx_tail + srchsz);
 					if (current != (cbuffer_t *)NULL) {
 						lstdl_push (lst, (void *)idx_current);
 						cbuf_delete (current);

@@ -80,7 +80,8 @@ int
 lstdlc_delete (lstdlc_t *lst, CAF_LSTDLCNODE_CBDEL(del)) {
 	lstdlcn_t *cur, *destroy;
 	if (lst != (lstdlc_t *)NULL) {
-		if (lst->head != (lstdlcn_t *)NULL && lst->tail != (lstdlcn_t *)NULL) {
+		if (lst->head != (lstdlcn_t *)NULL
+			&& lst->tail != (lstdlcn_t *)NULL) {
 			if (lstdlc_empty_list (lst) == CAF_OK) {
 				xfree (lst);
 				return CAF_OK;
@@ -121,7 +122,8 @@ int
 lstdlc_delete_nocb (lstdlc_t *lst) {
 	lstdlcn_t *cur, *destroy;
 	if (lst != (lstdlc_t *)NULL) {
-		if (lst->head != (lstdlcn_t *)NULL && lst->tail != (lstdlcn_t *)NULL) {
+		if (lst->head != (lstdlcn_t *)NULL
+			&& lst->tail != (lstdlcn_t *)NULL) {
 			if (lstdlc_empty_list (lst) == CAF_OK) {
 				xfree (lst);
 				return CAF_OK;
@@ -212,7 +214,8 @@ lstdlc_node_delete (lstdlc_t *lst, lstdlcn_t *n, CAF_LSTDLCNODE_CBDEL(del)) {
 
 
 int
-lstdlc_node_delete_by_data (lstdlc_t *lst, void *n, CAF_LSTDLCNODE_CBDEL(del)) {
+lstdlc_node_delete_by_data (lstdlc_t *lst, void *n,
+							CAF_LSTDLCNODE_CBDEL(del)) {
 	lstdlcn_t *nr;
 	lstdlcn_t *prev;
 	lstdlcn_t *next;
@@ -299,7 +302,8 @@ lstdlc_length (lstdlc_t *lst) {
 	int c;
 	lstdlcn_t *cur;
 	if (lst != (lstdlc_t *)NULL) {
-		if (lst->head != (lstdlcn_t *)NULL && lst->tail != (lstdlcn_t *)NULL) {
+		if (lst->head != (lstdlcn_t *)NULL
+			&& lst->tail != (lstdlcn_t *)NULL) {
 			cur = lst->head;
 			c = 0;
 			do {
@@ -594,8 +598,8 @@ void
 lstdlc_dump (FILE *out, lstdlc_t *lst, CAF_LSTDLCNODE_CBDUMP(dmp)) {
 	lstdlcn_t *cur;
 	if (lst != (lstdlc_t *)NULL) {
-		if ((lstdlc_empty_list (lst) == CAF_OK)
-		        || (lstdlc_oneitem_list (lst) == CAF_OK)) {
+		if ((lstdlc_empty_list (lst) != CAF_OK)
+			&& (lstdlc_oneitem_list (lst) == CAF_OK)) {
 			dmp(out, lst->head->data);
 		} else {
 			cur = lst->head;
@@ -613,15 +617,17 @@ lstdlc_dump_ptr (FILE *out, lstdlc_t *lst) {
 	int c = 0, a = 0;
 	lstdlcn_t *cur;
 	if (lst != (lstdlc_t *)NULL && out != (FILE *)NULL) {
-		cur = lst->head;
-		do {
-			c++;
+		if ((lstdlc_empty_list (lst)) != CAF_OK) {
+			cur = lst->head;
+			do {
+				c++;
+				a += fprintf (out, "%d: %p < %p > %p : %p\n", c, (void *)cur->prev,
+							  (void *)cur, (void *)cur->next, cur->data);
+			} while ((cur = cur->next) != lst->tail);
+			cur = lst->tail;
 			a += fprintf (out, "%d: %p < %p > %p : %p\n", c, (void *)cur->prev,
-			              (void *)cur, (void *)cur->next, cur->data);
-		} while ((cur = cur->next) != lst->tail);
-		cur = lst->tail;
-		a += fprintf (out, "%d: %p < %p > %p : %p\n", c, (void *)cur->prev,
-		              (void *)cur, (void *)cur->next, cur->data);
+						  (void *)cur, (void *)cur->next, cur->data);
+		}
 	}
 	return a;
 }

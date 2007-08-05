@@ -351,10 +351,12 @@ void
 lstc_dump (FILE *out, lstcn_t *lst, CAF_LSTCNODE_CBDUMP(dmp)) {
 	lstcn_t *cur = lst;
 	if (lst != (lstcn_t *)NULL) {
-		do {
-			dmp(out, cur->data);
-			cur = cur->next;
-		} while (cur != lst);
+		if ((lstc_empty_list (lst)) != CAF_OK) {
+			do {
+				dmp(out, cur->data);
+				cur = cur->next;
+			} while (cur != lst);
+		}
 	}
 }
 
@@ -364,14 +366,16 @@ lstc_dump_ptr (FILE *out, lstcn_t *lst) {
 	int c = 0, a = 0;
 	lstcn_t *cur;
 	if (lst != (lstcn_t *)NULL && out != (FILE *)NULL) {
-		c = 1;
-		cur = lst;
-		a += fprintf (out, "%d: %p < %p > %p\n", c, (void *)cur->prev,
-		              (void *)cur, (void *)cur->next);
-		while ((cur = cur->next) != lst) {
-			c++;
+		if ((lstc_empty_list (lst)) != CAF_OK) {
+			c = 1;
+			cur = lst;
 			a += fprintf (out, "%d: %p < %p > %p\n", c, (void *)cur->prev,
-			              (void *)cur, (void *)cur->next);
+						  (void *)cur, (void *)cur->next);
+			while ((cur = cur->next) != lst) {
+				c++;
+				a += fprintf (out, "%d: %p < %p > %p\n", c, (void *)cur->prev,
+							  (void *)cur, (void *)cur->next);
+			}
 		}
 	}
 	return a;

@@ -42,11 +42,11 @@ static struct caf_unit_size_map_s {
 	size_t sz;
 }
 caf_unit_size_map_v[] = {
-                            { CAF_UNIT_OCTET, sizeof(u_int8_t) },
-                            { CAF_UNIT_WORD, sizeof(u_int16_t) },
-                            { CAF_UNIT_DWORD, sizeof(u_int32_t) },
-                            { CAF_UNIT_QWORD, sizeof(u_int64_t) }
-                        };
+	{ CAF_UNIT_OCTET, sizeof(u_int8_t) },
+	{ CAF_UNIT_WORD, sizeof(u_int16_t) },
+	{ CAF_UNIT_DWORD, sizeof(u_int32_t) },
+	{ CAF_UNIT_QWORD, sizeof(u_int64_t) }
+};
 
 
 static size_t
@@ -248,7 +248,8 @@ caf_packet_addunitstr (caf_packet_t *r, int id, size_t length, void *u_start,
 
 
 int
-caf_packet_addunitpstr (caf_packet_t *r, int id, size_t length, void *u_start) {
+caf_packet_addunitpstr (caf_packet_t *r, int id, size_t length,
+						void *u_start) {
 	caf_unit_t *u = (caf_unit_t *)NULL;
 	if (r != (caf_packet_t *)NULL) {
 		if (r->pack != (caf_pack_t *)NULL) {
