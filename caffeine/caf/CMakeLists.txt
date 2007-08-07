@@ -31,6 +31,7 @@ include_directories (
 ### sources
 set (CAFFEINE_HEADERS
     caf.h
+    caf_data_base64.h
     caf_data_bits.h
     caf_data_buffer.h
     caf_data_conv.h

@@ -30,6 +30,7 @@ include_directories (
 
 ### sources
 set (CAFFEINE_SRCS
+    caf_data_base64.c
     caf_data_bits.c
     caf_data_buffer.c
     caf_data_packer.c
@@ -70,6 +71,7 @@ set (CAFFEINE_SRCS
 ### sources
 set (CAFFEINE_HEADERS
     ../caf/caf.h
+    ../caf/caf_data_base64.h
     ../caf/caf_data_bits.h
     ../caf/caf_data_buffer.h
     ../caf/caf_data_conv.h
