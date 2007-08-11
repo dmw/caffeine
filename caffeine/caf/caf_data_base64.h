@@ -47,6 +47,8 @@ CAF_BEGIN_C_EXTERNS
 
 cbuffer_t *caf_base64_encode(cbuffer_t *in);
 cbuffer_t *caf_base64_decode(cbuffer_t *in);
+cbuffer_t *caf_base64_encode_stream(cbuffer_t *in);
+cbuffer_t *caf_base64_decode_stream(cbuffer_t *in);
 caf_io_file_t *caf_base64_encode_file(const char *oname, const caf_io_file_t *in);
 caf_io_file_t *caf_base64_decode_file(const char *oname, const caf_io_file_t *in);
 
