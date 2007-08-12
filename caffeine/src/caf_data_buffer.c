@@ -61,6 +61,12 @@ cbuf_create (size_t sz) {
 			buf->sz = sz;
 			buf->iosz = 0;
 			buf->data = (void *)xmalloc (sz);
+			if (buf->data != (void *)NULL) {
+				return buf;
+			} else {
+				xfree (buf);
+				return (void *)NULL;
+			}
 		} else {
 			buf->sz = 0;
 			buf->iosz = 0;

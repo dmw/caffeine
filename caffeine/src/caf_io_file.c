@@ -52,7 +52,7 @@ io_fopen (const char *path, const int flg, const mode_t md, int fs) {
 				r->fd = open (path, flg);
 			}
 			if (r->fd >= 0) {
-				if (r->ustat >= 0) {
+				if (fs == CAF_OK) {
 					r->flags = flg;
 					r->mode = md;
 					r->path = strdup (path);
@@ -147,7 +147,7 @@ io_read (caf_io_file_t *r, cbuffer_t *b) {
 ssize_t
 io_write (caf_io_file_t *r, cbuffer_t *b) {
 	ssize_t sz = 0;
-	if (r != (caf_io_file_t *)NULL && b != (cbuffer_t *)NULL && sz > 0) {
+	if (r != (caf_io_file_t *)NULL && b != (cbuffer_t *)NULL) {
 		sz = write (r->fd, b->data, b->iosz);
 		b->iosz = sz;
 	}

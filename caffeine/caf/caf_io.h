@@ -29,7 +29,7 @@
  * @ingroup       caf
  */
 
-#include <caf/caf_io_core.h>
+#include <caf/caf_io_file.h>
 #include <caf/caf_io_tail.h>
 
 #endif /* !CAF_IO_H */
