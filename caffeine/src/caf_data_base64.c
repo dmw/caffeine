@@ -196,20 +196,26 @@ caf_base64_decode (cbuffer_t *inb) {
 
 
 cbuffer_t *
-caf_base64_encode_stream (cbuffer_t *inb, cbuffer_t *padb, int padc) {
+caf_base64_encode_stream (cbuffer_t *inb, size_t spos, size_t ssz,
+						  cbuffer_t *padb, int padc) {
 	cbuffer_t *nb = (cbuffer_t *)NULL;
-	size_t g = 0, nsz = 0, s = 0;
+	size_t g = 0, nsz = 0, fsz = 0, rpos = 0;
+	int col = 0;
 	octet_d o1 = 0, o2 = 0, o3 = 0;
 	octet_d o4 = 0, o5 = 0, o6 = 0, o7 = 0;
 	octet_d *cp = (octet_d *)NULL;
 	octet_d *dp = (octet_d *)NULL;
-	octet_d *da;
 	if (inb != (cbuffer_t *)NULL) {
 		if (inb->iosz > 0) {
 			if (padb != (cbuffer_t *)NULL && padc > 0) {
+				/* total buffer */
+				fsz = CAF_B64_ENCODED_SZ(ssz);
+				fsz += CAF_B64_PAD_SZ(ssz, padb->sz, padc);
+				/* current buffer */
 				nsz = CAF_B64_ENCODED_SZ(inb->iosz);
 				nsz += CAF_B64_PAD_SZ(nsz, padb->sz, padc);
 			} else {
+				fsz = CAF_B64_ENCODED_SZ(ssz);
 				nsz = CAF_B64_ENCODED_SZ(inb->iosz);
 			}
 			nb = cbuf_create (nsz);
@@ -220,11 +226,17 @@ caf_base64_encode_stream (cbuffer_t *inb, cbuffer_t *padb, int padc) {
 				while (((padc % 4) != 0) && padc != 0) {
 					padc++;
 				}
-				for (g = 0, s = 0; g < (size_t)inb->iosz; g += 3, s += 4) {
+				col = 1;
+				for (g = 0; g < (size_t)inb->iosz; g += 3) {
 					/* chars */
+					o1 = 0; o2 = 0; o3 = 0;
 					o1 = cp[0];
-					o2 = cp[1];
-					o3 = cp[2];
+					if ((g + 1) < (size_t)inb->iosz) {
+						o2 = cp[1];
+					}
+					if ((g + 2) < (size_t)inb->iosz) {
+						o3 = cp[2];
+					}
 					/* bits */
 					o4 = o1 >> 2;
 					o5 = ((o1 & 0x03) << 4) | (o2 >> 4);
@@ -233,28 +245,29 @@ caf_base64_encode_stream (cbuffer_t *inb, cbuffer_t *padb, int padc) {
 					/* encoding */
 					dp[0] = s_byte_encode64 (o4);
 					dp[1] = s_byte_encode64 (o5);
-					if ((g + 1) < (size_t)inb->iosz
-						|| (inb->iosz % 3) != 0) {
+					rpos = spos + g;
+					if ((g + 1) < (size_t)inb->iosz) {
 						dp[2] = s_byte_encode64 (o6);
 					} else {
 						dp[2] = B64_PAD_CHAR;
 					}
-					if ((g + 2) < (size_t)inb->iosz
-						|| (inb->iosz % 3) != 0) {
+					if ((g + 2) < (size_t)inb->iosz) {
 						dp[3] = s_byte_encode64 (o7);
 					} else {
-						dp[3] = s_byte_encode64 (o7);
+						dp[3] = B64_PAD_CHAR;
 					}
 					/* offset */
 					dp += 4;
 					/* padding */
 					if (padb != (cbuffer_t *)NULL
 						&& padc > 0
-						&& (s % padc) == 0) {
+						&& (col / padc) == 1) {
 						xmemcpy (dp, padb->data, padb->sz);
 						dp = (void *)((size_t)dp + padb->sz);
+						col = 1;
 					}
 					cp = (octet_d *)((size_t)inb->data + g);
+					col += 4;
 				}
 				nb->iosz = nsz;
 			}
@@ -265,7 +278,7 @@ caf_base64_encode_stream (cbuffer_t *inb, cbuffer_t *padb, int padc) {
 
 
 cbuffer_t *
-caf_base64_decode_stream (cbuffer_t *inb) {
+caf_base64_decode_stream (cbuffer_t *inb, size_t spos, size_t ssz) {
 	cbuffer_t *nb1 = (cbuffer_t *)NULL;
 	cbuffer_t *nb2 = (cbuffer_t *)NULL;
 	size_t b64c = 0;
@@ -329,20 +342,22 @@ caf_base64_decode_stream (cbuffer_t *inb) {
 
 
 caf_io_file_t *
-caf_base64_encode_file (caf_io_file_t *outf, const caf_io_file_t *inf,
+caf_base64_encode_file (caf_io_file_t *outf, caf_io_file_t *inf,
 						cbuffer_t *padb, int padc) {
 	caf_io_file_t *wf = (caf_io_file_t *)NULL;
 	cbuffer_t *inb = (cbuffer_t *)NULL;
 	cbuffer_t *outb = (cbuffer_t *)NULL;
+	size_t spos = 0;
 	if (outf != (caf_io_file_t *)NULL && inf != (caf_io_file_t *)NULL) {
 		if ((io_restat ((caf_io_file_t *)inf)) == CAF_OK) {
 			inb = cbuf_create (CAF_B64_INPUT_STREAM_SZ);
 			if (inb != (cbuffer_t *)NULL) {
 				cbuf_clean (inb);
-				io_restat (outf);
 				io_flseek (outf, 0, SEEK_SET);
 				while ((io_read ((caf_io_file_t *)inf, inb)) > 0) {
-					outb = caf_base64_encode_stream (inb, padb, padc);
+					outb = caf_base64_encode_stream (inb, spos,
+													 inf->sd.st_size, padb,
+													 padc);
 					if (outb != (cbuffer_t *)NULL) {
 						printf ("OK outb()\n");
 						if ((io_write (outf, outb)) > 0) {
@@ -356,6 +371,8 @@ caf_base64_encode_file (caf_io_file_t *outf, const caf_io_file_t *inf,
 						outb = (cbuffer_t *)NULL;
 						return (caf_io_file_t *)NULL;
 					}
+					spos += (size_t)inb->iosz;
+					io_restat (inf);
 				}
 			}
 		}
@@ -365,17 +382,19 @@ caf_base64_encode_file (caf_io_file_t *outf, const caf_io_file_t *inf,
 
 
 caf_io_file_t *
-caf_base64_decode_file (caf_io_file_t *outf, const caf_io_file_t *inf) {
+caf_base64_decode_file (caf_io_file_t *outf, caf_io_file_t *inf) {
 	caf_io_file_t *wf = (caf_io_file_t *)NULL;
 	cbuffer_t *inb = (cbuffer_t *)NULL;
 	cbuffer_t *outb = (cbuffer_t *)NULL;
+	size_t spos = 0;
 	if (outf != (caf_io_file_t *)NULL && inf != (caf_io_file_t *)NULL) {
 		if ((io_restat ((caf_io_file_t *)inf)) == CAF_OK) {		
 			inb = cbuf_create (CAF_B64_OUTPUT_STREAM_SZ);
 			if (inb != (cbuffer_t *)NULL) {
 				cbuf_clean (inb);
-				if ((io_read ((caf_io_file_t *)inf, inb)) > 0) {
-					outb = caf_base64_decode_stream (inb);
+				while ((io_read ((caf_io_file_t *)inf, inb)) > 0) {
+					outb = caf_base64_decode_stream (inb, spos,
+													 inf->sd.st_size);
 					if (outb != (cbuffer_t *)NULL) {
 						if ((io_write (outf, outb)) > 0) {
 							wf = outf;
@@ -385,6 +404,8 @@ caf_base64_decode_file (caf_io_file_t *outf, const caf_io_file_t *inf) {
 						cbuf_delete (outb);
 						return (caf_io_file_t *)NULL;
 					}
+					spos += (size_t)inb->iosz;
+					io_restat (inf);
 				}
 			}
 		}

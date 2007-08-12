@@ -45,15 +45,22 @@
 CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
-cbuffer_t *caf_base64_encode (cbuffer_t *in);
-cbuffer_t *caf_base64_decode (cbuffer_t *in);
-cbuffer_t *caf_base64_encode_stream (cbuffer_t *in);
-cbuffer_t *caf_base64_decode_stream (cbuffer_t *in);
+
+cbuffer_t *caf_base64_encode (cbuffer_t *inb, cbuffer_t *padb,
+							  int padc);
+cbuffer_t *caf_base64_decode (cbuffer_t *inb);
+
+cbuffer_t *caf_base64_encode_stream (cbuffer_t *inb, size_t spos,
+									 size_t ssz, cbuffer_t *padb,
+									 int padc);
+cbuffer_t *caf_base64_decode_stream (cbuffer_t *inb, size_t ssz);
+
 caf_io_file_t *caf_base64_encode_file (caf_io_file_t *outf,
-									   const caf_io_file_t *inf,
+									   caf_io_file_t *inf,
 									   cbuffer_t *padb, int padc);
+
 caf_io_file_t *caf_base64_decode_file (caf_io_file_t *outf,
-									   const caf_io_file_t *inf);
+									   caf_io_file_t *inf);
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS
