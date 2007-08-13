@@ -46,14 +46,32 @@
 CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
+/** Caffeine DSM size */
 #define CAF_DSM_SZ              (sizeof (caf_dsm_t))
+/** Caffeine DSM State size */
 #define CAF_DSM_STATE_SZ        (sizeof (caf_dsm_state_t))
+/** Caffeine DSM Return size */
 #define CAF_DSM_RETURN_SZ       (sizeof (caf_dsm_return_t))
+/** Caffeine DSM Runner size */
 #define CAF_DSM_RUNNER_SZ       (sizeof (caf_dsm_runner_t))
+/** Caffeine DSM Callback */
 #define CAD_DSM_CALL(call)      \
         caf_dsm_return_t *(*call)(void *s_data, caf_dsm_return_t *s_return)
 
+/**
+ *
+ * @brief    Caffeine DSM storage type.
+ * The type of a DSM storage structure.
+ * @see      caf_dsm_s
+ */
 typedef struct caf_dsm_s caf_dsm_t;
+/**
+ *
+ * @brief    Caffeine DSM structure
+ * DSM structure, contains id, cycle flag, and machine
+ * states list pointer.
+ * @see      cbuffer_t
+ */
 struct caf_dsm_s {
 	int m_id;
 	int m_cycle;

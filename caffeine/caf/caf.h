@@ -43,9 +43,20 @@
 CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
+/**
+ * @brief	Common Return Type under Caffeine
+ *
+ * This is the common return type under caffine, has two types of
+ * errors, some functions return a number under -1 o upper to 0
+ * both cases means an error. Only zero means success on common
+ * operations.
+ */
 typedef enum {
+	/** Error values under 0 */
 	CAF_ERROR_SUB = -1,
+	/** Success values are zero */
 	CAF_OK = 0,
+	/** Error values over 0 */
 	CAF_ERROR = 1
 } caf_return_t;
 

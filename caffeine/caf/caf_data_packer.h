@@ -139,7 +139,8 @@ typedef struct caf_unit_value_s caf_unit_value_t;
 /**
  *
  * @brief    Packet Unit Structure
- * Packet unit structure, defines an unit value for a packet definition.
+ * Packet unit structure, defines an unit value for a packet
+ * definition.
  * @see      caf_unit_value_t
  */
 struct caf_unit_value_s {
@@ -351,7 +352,7 @@ int caf_packet_delete (caf_packet_t *r);
 
 /**
  *
- * @brief    Adds an Unit to the give pack
+ * @brief    Adds an Unit to the given pack
  *
  * Deallocates the memory for the given packet, and deletes the given units.
  *
@@ -364,6 +365,18 @@ int caf_packet_delete (caf_packet_t *r);
 int caf_packet_addunit (caf_packet_t *r, int id, caf_unit_type_t type,
 						size_t length);
 
+/**
+ *
+ * @brief    Adds a string unit to the given pack
+ *
+ * Adds an string unit to the given packet, 
+ *
+ * @param[in]    id         Pack Id
+ * @param[in]    name       Pack Name
+ * @return       caf_pack_t *       a new allocated empty pack.
+ *
+ * @see      caf_pack_t
+ */
 int caf_packet_addunitstr (caf_packet_t *r, int id, size_t length,
 						   void *u_start, void *u_end, size_t su_sz,
 						   size_t eu_sz);
