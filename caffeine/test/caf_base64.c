@@ -110,7 +110,6 @@ main (int argc, char **argv) {
 				if ((caf_base64_decode_file (outf, inf)) != outf) {
 					printf ("%s: error decoding %s\n", argv[0], infn);
 				} else {
-					
 					printf ("%s: decoding success on %s\n", argv[0], infn);
 				}
 				io_fclose (outf);

@@ -265,7 +265,8 @@ caf_base64_encode_stream (cbuffer_t *inb, size_t spos, size_t ssz,
 					/* padding */
 					if (padb != (cbuffer_t *)NULL
 						&& padc > 0
-						&& (((g + spos) % (padc / 4 * 3)) == 0)) {
+						&& (((g + spos) % (padc / 4 * 3)) == 0)
+						&& g > 0) {
 						xmemcpy (dp, padb->data, padb->sz);
 						dp = (void *)((size_t)dp + padb->sz);
 						col = 1;
@@ -281,50 +282,80 @@ caf_base64_encode_stream (cbuffer_t *inb, size_t spos, size_t ssz,
 
 
 cbuffer_t *
-caf_base64_decode_stream (cbuffer_t *inb) {
+caf_base64_decode_stream (cbuffer_t *inb, cbuffer_t *cres) {
 	cbuffer_t *nb1 = (cbuffer_t *)NULL;
 	cbuffer_t *nb2 = (cbuffer_t *)NULL;
-	size_t b64c = 0;
+	size_t b64c = 0, b64l = 0, b64res = 0;
 	size_t sc = 0, dc = 0;
 	octet_d c1, c2, c3, c4;
 	octet_d d1, d2, d3, d4;
 	octet_d x1, x2, x3;
 	octet_d *c = (octet_d *)NULL, *d = (octet_d *)NULL;
 	if (inb != (cbuffer_t *)NULL) {
-		printf ("input buffer %p\n", (void *)inb);
 		if (inb->iosz > 0) {
-			printf ("input buffer size %d\n", inb->iosz);
 			b64c = s_base64_buffer_stream_chars (inb);
+			if (cres != (cbuffer_t *)NULL) {
+				b64c += s_base64_buffer_stream_chars (cres);
+			}
 			if (b64c > 0) {
-				printf ("input buffer base64 chars %d\n", b64c);
 				nb1 = cbuf_create (b64c);
 				if (nb1 != (cbuffer_t *)NULL) {
-					printf ("destination buffer (base64 chars) %p\n", (void *)nb1);
 					cbuf_clean (nb1);
 					sc = 0;
 					dc = 0;
+					if (cres != (cbuffer_t *)NULL) {
+						while (sc <= (size_t)cres->iosz) {
+							d = (octet_d *)((size_t)nb1->data + dc);
+							c = (octet_d *)((size_t)cres->data + sc);
+							if ((s_is_base64 (*c)) == CAF_OK) {
+								printf ("char %c\n", *c);
+								*d = *c;
+								dc++;
+							}
+							sc++;
+						}
+					}
+					sc = 0;
 					while (sc <= (size_t)inb->iosz) {
 						d = (octet_d *)((size_t)nb1->data + dc);
 						c = (octet_d *)((size_t)inb->data + sc);
-						if (s_is_base64 (*c))
+						if ((s_is_base64 (*c)) == CAF_OK) {
 							*d = *c;
+							dc++;
+						}
 						sc++;
-						dc++;
 					}
-					cbuf_delete (nb1);
 					dc = (b64c / 4) * 3;
 					nb2 = cbuf_create (dc);
 					if (nb2 != (cbuffer_t *)NULL) {
 						cbuf_clean (nb2);
-						printf ("destination buffer (decoded chars) %p\n", (void *)nb2);
+						nb2->iosz = nb2->sz;
+						b64res = (nb2->sz % 4);
+						if (b64res != 0) {
+							printf ("b64res: %d\n", b64res);
+							cbuf_clean (cres);
+							cres->iosz = b64res;
+							b64l = nb2->sz - b64res;
+							cbuf_import (cres, (void *)((size_t)nb2->data + b64l), b64res);
+						} else {
+							b64l = nb2->sz;
+						}
 						dc = 0;
-						for (sc = 0; sc <= nb1->sz; sc += 4) {
+						for (sc = 0; sc < b64l; sc += 4) {
 							c = (octet_d *)((size_t)nb1->data + sc);
 							d = (octet_d *)((size_t)nb2->data + dc);
+							c1 = c2 = c3 = c4 = B64_A_CHAR;
 							c1 = c[0];
-							c2 = c[1];
-							c3 = c[2];
-							c4 = c[3];
+							if ((sc + 1) < b64l) {
+								c2 = c[1];
+							}
+							if ((sc + 2) < b64l) {
+								c3 = c[2];
+							}
+							if ((sc + 3) < b64l) {
+								c4 = c[3];
+							}
+							d1 = d2 = d3 = d4 = 0;
 							d1 = s_byte_decode64 (c1);
 							d2 = s_byte_decode64 (c2);
 							d3 = s_byte_decode64 (c3);
@@ -333,15 +364,14 @@ caf_base64_decode_stream (cbuffer_t *inb) {
 							d[0] = x1;
 							if (c3 != B64_PAD_CHAR) {
 								x2 = ((d2 & 0x0f) << 4) | (d3 >> 2);
-								d[1] = x1;
+								d[1] = x2;
 							}
 							if (c4 != B64_PAD_CHAR) {
 								x3 = ((d3 & 0x03) << 6) | d4;
-								d[2] = x1;
+								d[2] = x3;
 							}
 							dc += 3;
 						}
-						nb2->iosz = nb2->sz;
 					}
 					cbuf_delete (nb1);
 				}
@@ -395,25 +425,32 @@ caf_base64_decode_file (caf_io_file_t *outf, caf_io_file_t *inf) {
 	caf_io_file_t *wf = (caf_io_file_t *)NULL;
 	cbuffer_t *inb = (cbuffer_t *)NULL;
 	cbuffer_t *outb = (cbuffer_t *)NULL;
+	cbuffer_t *cache = (cbuffer_t *)NULL;
 	size_t spos = 0;
+	ssize_t wr = 0;
 	if (outf != (caf_io_file_t *)NULL && inf != (caf_io_file_t *)NULL) {
 		if ((io_restat ((caf_io_file_t *)inf)) == CAF_OK) {		
-			inb = cbuf_create (CAF_B64_OUTPUT_STREAM_SZ);
+			inb  = cbuf_create (CAF_B64_OUTPUT_STREAM_SZ);
 			if (inb != (cbuffer_t *)NULL) {
 				cbuf_clean (inb);
-				while ((io_read ((caf_io_file_t *)inf, inb)) > 0) {
-					outb = caf_base64_decode_stream (inb);
+				cache = cbuf_create (5);
+				cbuf_clean (cache);
+				while ((io_read (inf, inb)) > 0) {
+					outb = caf_base64_decode_stream (inb, cache);
+					printf ("%p cache\n", (void *)cache);
 					if (outb != (cbuffer_t *)NULL) {
-						if ((io_write (outf, outb)) > 0) {
+						if ((wr = io_write (outf, outb)) > 0) {
 							wf = outf;
-							cbuf_delete (outb);
 						}
+						cbuf_delete (outb);
 					} else {
+						cbuf_delete (cache);
 						return (caf_io_file_t *)NULL;
 					}
 					spos += (size_t)inb->iosz;
 					io_restat (inf);
 				}
+				cbuf_delete (cache);
 			}
 		}
 	}
@@ -485,7 +522,7 @@ static octet_d
 s_byte_decode64 (octet_d c) {
 	if (c >= B64_A_CHAR && c <= B64_Z_CHAR)
 		return c - B64_A_CHAR;
-	if (c >= B64_a_CHAR && c <= B64_z_CHAR)
+	if (c >= B64_a_CHAR && c <= B64_z_CHAR)//@}
 		return c - B64_a_CHAR + 26;
 	if (c >= B64_0_CHAR && c <= B64_9_CHAR)
 		return c - B64_0_CHAR + 52;

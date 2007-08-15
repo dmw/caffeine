@@ -417,6 +417,30 @@ cbuf_replace (cbuffer_t *src, void *srch, void *repl, size_t srchsz,
 }
 
 
+cbuffer_t *
+cbuf_append (cbuffer_t *head, cbuffer_t *tail)
+{
+	size_t tsz = 0;
+	cbuffer_t *r = (cbuffer_t *)NULL;
+	if (head != (cbuffer_t *)NULL && tail != (cbuffer_t *)NULL) {
+		if (head->iosz > 0 && tail->iosz > 0) {
+			tsz = head->iosz + tail->iosz;
+			r = (cbuffer_t *)xmalloc (tsz);
+			cbuf_clean (r);
+			xmemcpy (r->data, head->data, head->iosz);
+			xmemcpy ((void *)((size_t)(r->data) + head->iosz), tail->data, tail->iosz);
+		} else {
+			tsz = head->sz + tail->sz;
+			r = (cbuffer_t *)xmalloc (tsz);
+			cbuf_clean (r);
+			xmemcpy (r->data, head->data, head->sz);
+			xmemcpy ((void *)((size_t)(r->data) + head->sz), tail->data, tail->sz);
+		}
+	}
+	return r;
+}
+
+
 lstdl_t *
 cbuf_search (cbuffer_t *src, void *srch, size_t srchsz) {
 	lstdl_t *lst;
