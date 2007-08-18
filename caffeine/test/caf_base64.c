@@ -37,90 +37,92 @@
 
 
 int
-main (int argc, char **argv) {
+main (void) {
 
-	cbuffer_t padding;
-	padding.iosz = 0;
-	padding.sz = 1;
-	padding.data = "\n";
+	const char input_string[] = "Hello Encoding/Decoding World!";
+	char *cache = (char *)NULL;
 
-	char msg[] =
-		"%s usage:\n"
-		"%s <operation> <input-file> <output-file>\n"
-		"operations:\n"
-		"		-encode\n"
-		"		-decode\n";
+	cbuffer_t *in_single = (cbuffer_t *)NULL;
+	cbuffer_t *in_encode = (cbuffer_t *)NULL;
+	cbuffer_t *out_decode = (cbuffer_t *)NULL;
 
-	char msgdo[] =
-		"%s: using operation %s over %s\n";
+	in_single = cbuf_create ((size_t)(strlen (input_string) + 1));
 
-	char *nout = (char *)NULL;
+	if (in_single != (cbuffer_t *)NULL) {
 
-	caf_io_file_t *inf = (caf_io_file_t *)NULL;
-	caf_io_file_t *outf = (caf_io_file_t *)NULL;
+		printf ("in_single: %p\n", (void *)in_single);
 
-	char *op = (char *)NULL;
-	char *infn = (char *)NULL;
-	char *outfn = (char *)NULL;
+		cbuf_clean (in_single);
+		cbuf_import (in_single, input_string, strlen (input_string));
 
-	size_t sz = 0;
-
-	if (argc < 4) {
-		printf (msg, argv[0], argv[0]);
-		exit (EXIT_FAILURE);
-	}
-
-	op = argv[1];
-	infn = argv[2];
-	outfn = argv[3];
-
-	printf (msgdo, argv[0], op, infn);
-
-	inf = io_fopen (infn, O_RDONLY, 0644, CAF_OK);
-	if (inf != (caf_io_file_t *)NULL) {
-		outf = io_fopen (outfn, O_CREAT | O_RDWR | O_TRUNC, 0644, CAF_OK);
-		if (outf != (caf_io_file_t *)NULL) {
-			printf ("%s: open %s (%p) and %s (%p)\n", argv[0],
-					infn, (void *)inf, outfn, (void *)outf);
-			if ((caf_base64_encode_file (outf, inf, &padding, 64))
-				!= outf) {
-				printf ("%s: error encoding %s\n", argv[0], infn);
-			} else {
-				printf ("%s: encoding success on %s\n", argv[0], infn);
+		// BASE16 ENCODING/DECODING
+		in_encode = caf_base16_encode (in_single);
+		if (in_encode != (cbuffer_t *)NULL) {
+			// display encoding
+			cache = (char *)xmalloc (in_encode->sz + 1);
+			memset (cache, 0, in_encode->sz + 1);
+			memcpy (cache, in_encode->data, in_encode->sz);
+			printf ("caf_base16_encode: %s\n", cache);
+			xfree (cache);
+			// decoding and display decoding
+			out_decode = caf_base16_decode (in_encode);
+			if (out_decode != (cbuffer_t *)NULL) {
+				cache = (char *)xmalloc (out_decode->sz + 1);
+				memset (cache, 0, out_decode->sz + 1);
+				memcpy (cache, out_decode->data, out_decode->sz);
+				printf ("caf_base16_decode: %s\n", cache);
+				cbuf_delete (out_decode);
+				xfree (cache);
 			}
-			io_fclose (outf);
-		} else {
-			printf ("%s: error opening %s\n", argv[0], outfn);
+			cbuf_delete (in_encode);
 		}
-		io_fclose (inf);
-	} else {
-		printf ("%s: error opening %s\n", argv[0], infn);
-	}
 
-	sz = strlen(outfn) + strlen(".new") + 1;
-	nout = (char *)xmalloc (sz);
-	if (nout != (char *)NULL) {
-		memset (nout, 0, sz);
-		memcpy (nout, outfn, strlen(outfn));
-		nout = strcat (nout, ".new");
-		inf = io_fopen (outfn, O_RDONLY, 0644, CAF_OK);
-		if (inf != (caf_io_file_t *)NULL) {
-			outf = io_fopen (nout, O_CREAT | O_RDWR | O_TRUNC, 0644, CAF_OK);
-			if (outf != (caf_io_file_t *)NULL) {
-				if ((caf_base64_decode_file (outf, inf)) != outf) {
-					printf ("%s: error decoding %s\n", argv[0], infn);
-				} else {
-					printf ("%s: decoding success on %s\n", argv[0], infn);
-				}
-				io_fclose (outf);
-			} else {
-				printf ("%s: error opening %s\n", argv[0], nout);
+		// BASE32 ENCODING/DECODING
+		in_encode = caf_base32_encode (in_single);
+		if (in_encode != (cbuffer_t *)NULL) {
+			// display encoding
+			cache = (char *)xmalloc (in_encode->sz + 1);
+			memset (cache, 0, in_encode->sz + 1);
+			memcpy (cache, in_encode->data, in_encode->sz);
+			printf ("caf_base32_encode: %s\n", cache);
+			xfree (cache);
+			// decoding and display decoding
+			out_decode = caf_base32_decode (in_encode);
+			if (out_decode != (cbuffer_t *)NULL) {
+				cache = (char *)xmalloc (out_decode->sz + 1);
+				memset (cache, 0, out_decode->sz + 1);
+				memcpy (cache, out_decode->data, out_decode->sz);
+				printf ("caf_base32_decode: %s\n", cache);
+				cbuf_delete (out_decode);
+				xfree (cache);
 			}
-			io_fclose (inf);
-		} else {
-			printf ("%s: error opening %s\n", argv[0], outfn);
+			cbuf_delete (in_encode);
 		}
-		xfree (nout);
+
+		// BASE64 ENCODING/DECODING
+		in_encode = caf_base64_encode (in_single);
+		if (in_encode != (cbuffer_t *)NULL) {
+			// display encoding
+			cache = (char *)xmalloc (in_encode->sz + 1);
+			memset (cache, 0, in_encode->sz + 1);
+			memcpy (cache, in_encode->data, in_encode->sz);
+			printf ("caf_base64_encode: %s\n", cache);
+			xfree (cache);
+			// decoding and display decoding
+			out_decode = caf_base64_decode (in_encode);
+			if (out_decode != (cbuffer_t *)NULL) {
+				cache = (char *)xmalloc (out_decode->sz + 1);
+				memset (cache, 0, out_decode->sz + 1);
+				memcpy (cache, out_decode->data, out_decode->sz);
+				printf ("caf_base64_decode: %s\n", cache);
+				cbuf_delete (out_decode);
+				xfree (cache);
+			}
+			cbuf_delete (in_encode);
+		}
+
+		cbuf_delete (in_single);
+
 	}
 
 	exit (EXIT_SUCCESS);

@@ -150,7 +150,6 @@ io_read (caf_io_file_t *r, cbuffer_t *b) {
 ssize_t
 io_write (caf_io_file_t *r, cbuffer_t *b) {
 	ssize_t sz = -1;
-	int err = 0;
 	if (r != (caf_io_file_t *)NULL && b != (cbuffer_t *)NULL) {
 		if ((b->iosz > 0 || b->sz > 0) && r->fd >= 0) {
 			sz = write (r->fd, b->data, b->iosz > 0 ? (size_t)b->iosz : (size_t)b->sz);
