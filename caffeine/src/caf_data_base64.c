@@ -59,13 +59,22 @@ static cbuffer_t *s_base_encode (cbuffer_t *buf, const char *codes,
 static cbuffer_t *s_base_decode (cbuffer_t *buf, const char *codes,
 								 const int bits);
 
+static cbuffer_t *s_base_encode_stream (cbuffer_t *buf, const char *codes,
+										const int bits, size_t qn,
+										cbuffer_t *cache);
 
+static cbuffer_t *s_base_decode_stream (cbuffer_t *buf, const char *codes,
+										const int bits, cbuffer_t *cache);
+
+/* === normal encoding/decoding === */
+/* --- base 16 --- */
 cbuffer_t *
 caf_base16_encode (cbuffer_t *in) {
 	const int bits = 4;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
-		out = s_base_encode (in, s_base16_alphabet, bits, CAF_B64_NOUSE_QN);
+		out = s_base_encode (in, s_base16_alphabet, bits,
+							 CAF_B64_NOUSE_QN);
 	}
 	return out;
 }
@@ -82,12 +91,14 @@ caf_base16_decode (cbuffer_t *in) {
 }
 
 
+/* --- base 32 --- */
 cbuffer_t *
 caf_base32_encode (cbuffer_t *in) {
 	const int bits = 5;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
-		out = s_base_encode (in, s_base32_alphabet, bits, CAF_B64_NOUSE_QN);
+		out = s_base_encode (in, s_base32_alphabet, bits,
+							 CAF_B64_NOUSE_QN);
 	}
 	return out;
 }
@@ -116,12 +127,14 @@ caf_base32_encode_complete (cbuffer_t *in) {
 }
 
 
+/* --- base 64 --- */
 cbuffer_t *
 caf_base64_encode (cbuffer_t *in) {
 	const int bits = 6;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
-		out = s_base_encode (in, s_base64_alphabet, bits, CAF_B64_NOUSE_QN);
+		out = s_base_encode (in, s_base64_alphabet, bits,
+							 CAF_B64_NOUSE_QN);
 	}
 	return out;
 }
@@ -155,7 +168,8 @@ caf_base64_encode_url (cbuffer_t *in) {
 	const int bits = 6;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
-		out = s_base_encode (in, s_base64_alphabet, bits, CAF_B64_NOUSE_QN);
+		out = s_base_encode (in, s_base64_alphabet, bits,
+							 CAF_B64_NOUSE_QN);
 	}
 	return out;
 }
@@ -172,6 +186,104 @@ caf_base64_decode_url (cbuffer_t *in) {
 }
 
 
+/* === streaming encoding/decoding === */
+/* --- base 16 --- */
+cbuffer_t *
+caf_base16_encode_stream (cbuffer_t *in, cbuffer_t *cache) {
+	const int bits = 4;
+	cbuffer_t *out = (cbuffer_t *)NULL;
+	if (in != (cbuffer_t *)NULL) {
+		out = s_base_encode_stream (in, s_base16_alphabet, bits,
+									CAF_B64_NOUSE_QN, cache);
+	}
+	return out;
+}
+
+
+cbuffer_t *
+caf_base16_decode_stream (cbuffer_t *in, cbuffer_t *cache) {
+	const int bits = 4;
+	cbuffer_t *out = (cbuffer_t *)NULL;
+	if (in != (cbuffer_t *)NULL) {
+		out = s_base_decode_stream (in, s_base16_alphabet, bits, cache);
+	}
+	return out;
+}
+
+
+/* --- base 32 --- */
+cbuffer_t *
+caf_base32_encode_stream (cbuffer_t *in, cbuffer_t *cache) {
+	const int bits = 5;
+	cbuffer_t *out = (cbuffer_t *)NULL;
+	if (in != (cbuffer_t *)NULL) {
+		out = s_base_encode_stream (in, s_base32_alphabet, bits,
+									CAF_B64_NOUSE_QN, cache);
+	}
+	return out;
+}
+
+
+cbuffer_t *
+caf_base32_decode_cache (cbuffer_t *in, cbuffer_t *cache) {
+	const int bits = 5;
+	cbuffer_t *out = (cbuffer_t *)NULL;
+	if (in != (cbuffer_t *)NULL) {
+		out = s_base_decode_stream (in, s_base32_alphabet, bits, cache);
+	}
+	return out;
+}
+
+
+cbuffer_t *
+caf_base32_encode_complete_stream (cbuffer_t *in, cbuffer_t *cache) {
+	const int bits = 5;
+	size_t qn = 40 / 5;
+	cbuffer_t *out = (cbuffer_t *)NULL;
+	if (in != (cbuffer_t *)NULL) {
+		out = s_base_encode_stream (in, s_base32_alphabet, bits, qn, cache);
+	}
+	return out;
+}
+
+
+/* --- base 64 --- */
+cbuffer_t *
+caf_base64_encode_stream (cbuffer_t *in, cbuffer_t *cache) {
+	const int bits = 6;
+	cbuffer_t *out = (cbuffer_t *)NULL;
+	if (in != (cbuffer_t *)NULL) {
+		out = s_base_encode_stream (in, s_base64_alphabet, bits,
+									CAF_B64_NOUSE_QN, cache);
+	}
+	return out;
+}
+
+
+cbuffer_t *
+caf_base64_decode_stream (cbuffer_t *in, cbuffer_t *cache) {
+	const int bits = 6;
+	cbuffer_t *out = (cbuffer_t *)NULL;
+	if (in != (cbuffer_t *)NULL) {
+		out = s_base_decode_stream (in, s_base64_alphabet, bits, cache);
+	}
+	return out;
+}
+
+
+cbuffer_t *
+caf_base64_encode_complete_stream (cbuffer_t *in, cbuffer_t *cache) {
+	const int bits = 6;
+	size_t qn = 24 / 6;
+	cbuffer_t *out = (cbuffer_t *)NULL;
+	if (in != (cbuffer_t *)NULL) {
+		out = s_base_encode_stream (in, s_base64_alphabet, bits, qn, cache);
+	}
+	return out;
+}
+
+
+/* === encoding/decoding functions === */
 static cbuffer_t *
 s_base_encode (cbuffer_t *buf, const char *codes, const int bits, size_t qn) {
 	int b8 = 0, i8 = 0;
@@ -183,7 +295,7 @@ s_base_encode (cbuffer_t *buf, const char *codes, const int bits, size_t qn) {
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (buf != (cbuffer_t *)NULL && codes != (const char *)NULL
 		&& bits > 0) {
-		t_in = buf->iosz > 0 ? buf->iosz : buf->sz;
+		t_in = (size_t)buf->iosz > 0 ? (size_t)buf->iosz : buf->sz;
 		t_out = t_in << 3;
 		if ((t_out % (size_t)bits) > 0) {
 			t_out = (t_out / bits) + 1;
@@ -244,7 +356,7 @@ s_base_decode (cbuffer_t *buf, const char *codes, const int bits) {
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (buf != (cbuffer_t *)NULL && codes != (const char *)NULL
 		&& bits > 0) {
-		t_in = buf->iosz > 0 ? buf->iosz : buf->sz;
+		t_in = (size_t)buf->iosz > 0 ? (size_t)buf->iosz : buf->sz;
 		t_out = (t_in * bits) >> 3;
 		out = cbuf_create (t_out);
 		out->iosz = out->sz;
@@ -273,6 +385,93 @@ s_base_decode (cbuffer_t *buf, const char *codes, const int bits) {
 		}
 	}
 
+	return out;
+}
+
+
+static cbuffer_t *
+s_base_encode_stream (cbuffer_t *buf, const char *codes,
+					  const int bits, size_t qn,
+					  cbuffer_t *cache) {
+	cbuffer_t *nb = (cbuffer_t *)NULL;
+	cbuffer_t *out = (cbuffer_t *)NULL;
+	size_t cpos_cache = 0, cpos_buf = 0, tsz = 0, ncsz = 0;
+	if (buf != (cbuffer_t *)NULL && codes != (const char *)NULL
+		&& bits > 0 && cache != (cbuffer_t *)NULL && tsz > 0) {
+		cpos_cache = (size_t)cache->iosz > 0 ? (size_t)cache->iosz : cache->sz;
+		cpos_buf = (size_t)buf->iosz > 0 ? (size_t)buf->iosz : buf->sz;
+		tsz = cpos_cache + cpos_buf;
+		ncsz = tsz % 3;
+		if (ncsz > 0) {
+			nb = cbuf_create (tsz - ncsz);
+			cbuf_clean (nb);
+			if (cpos_cache > 0) {
+				cbuf_paste (nb, cache, 0, 0, cpos_cache);
+				cbuf_paste (nb, buf, 0, cpos_cache, ((tsz - ncsz)
+													 - cpos_cache));
+			} else {
+				cbuf_paste (nb, buf, 0, 0, tsz - ncsz);
+			}
+			cbuf_clean (cache);
+			cbuf_paste (cache, buf, 0, ((tsz - ncsz) - cpos_cache), ncsz);
+			out = s_base_encode (nb, codes, bits, qn);
+			cbuf_delete (nb);
+		} else {
+			nb = cbuf_create (tsz);
+			cbuf_clean (nb);
+			if (cpos_cache > 0) {
+				cbuf_paste (nb, cache, 0, 0, cpos_cache);
+				cbuf_paste (nb, buf, 0, cpos_cache, (tsz - cpos_cache));
+			} else {
+				cbuf_paste (nb, buf, 0, 0, tsz);
+			}
+			out = s_base_encode (nb, codes, bits, qn);
+			cbuf_delete (nb);
+		}
+	}
+	return out;
+}
+
+
+static cbuffer_t *
+s_base_decode_stream (cbuffer_t *buf, const char *codes,
+					  const int bits, cbuffer_t *cache) {
+	cbuffer_t *nb = (cbuffer_t *)NULL;
+	cbuffer_t *out = (cbuffer_t *)NULL;
+	size_t cpos_cache = 0, cpos_buf = 0, tsz = 0, ncsz = 0;
+	if (buf != (cbuffer_t *)NULL && codes != (const char *)NULL
+		&& bits > 0 && cache != (cbuffer_t *)NULL && tsz > 0) {
+		cpos_cache = (size_t)cache->iosz > 0 ? (size_t)cache->iosz : cache->sz;
+		cpos_buf = (size_t)buf->iosz > 0 ? (size_t)buf->iosz : buf->sz;
+		tsz = cpos_cache + cpos_buf;
+		ncsz = tsz % 4;
+		if (ncsz > 0) {
+			nb = cbuf_create (tsz - ncsz);
+			cbuf_clean (nb);
+			if (cpos_cache > 0) {
+				cbuf_paste (nb, cache, 0, 0, cpos_cache);
+				cbuf_paste (nb, buf, 0, cpos_cache, ((tsz - ncsz)
+													 - cpos_cache));
+			} else {
+				cbuf_paste (nb, buf, 0, 0, tsz - ncsz);
+			}
+			cbuf_clean (cache);
+			cbuf_paste (cache, buf, 0, ((tsz - ncsz) - cpos_cache), ncsz);
+			out = s_base_decode (nb, codes, bits);
+			cbuf_delete (nb);
+		} else {
+			nb = cbuf_create (tsz);
+			cbuf_clean (nb);
+			if (cpos_cache > 0) {
+				cbuf_paste (nb, cache, 0, 0, cpos_cache);
+				cbuf_paste (nb, buf, 0, cpos_cache, (tsz - cpos_cache));
+			} else {
+				cbuf_paste (nb, buf, 0, 0, tsz);
+			}
+			out = s_base_decode (nb, codes, bits);
+			cbuf_delete (nb);
+		}
+	}
 	return out;
 }
 

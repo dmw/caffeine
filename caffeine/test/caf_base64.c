@@ -55,7 +55,7 @@ main (void) {
 		cbuf_clean (in_single);
 		cbuf_import (in_single, input_string, strlen (input_string));
 
-		// BASE16 ENCODING/DECODING
+		// base16 encoding/decoding
 		in_encode = caf_base16_encode (in_single);
 		if (in_encode != (cbuffer_t *)NULL) {
 			// display encoding
@@ -77,7 +77,7 @@ main (void) {
 			cbuf_delete (in_encode);
 		}
 
-		// BASE32 ENCODING/DECODING
+		// base32 encoding/decoding
 		in_encode = caf_base32_encode (in_single);
 		if (in_encode != (cbuffer_t *)NULL) {
 			// display encoding
@@ -99,7 +99,7 @@ main (void) {
 			cbuf_delete (in_encode);
 		}
 
-		// BASE64 ENCODING/DECODING
+		// base64 encoding/decoding
 		in_encode = caf_base64_encode (in_single);
 		if (in_encode != (cbuffer_t *)NULL) {
 			// display encoding
