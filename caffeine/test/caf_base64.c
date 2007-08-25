@@ -39,7 +39,7 @@
 int
 main (void) {
 
-	const char input_string[] = "Hello Encoding/Decoding World!";
+	const char input_string[] = "Hello Encoding/Decoding World!!!";
 	char *cache = (char *)NULL;
 
 	cbuffer_t *in_single = (cbuffer_t *)NULL;

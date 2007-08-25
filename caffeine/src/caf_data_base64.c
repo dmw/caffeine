@@ -42,6 +42,10 @@ static char Id[] = "$Id$";
 #define CAF_B64_OUTPUT_STREAM_SZ		512
 #define CAF_B64_NOUSE_QN				0
 
+#define CAF_B16_BITS					4
+#define CAF_B32_BITS					5
+#define CAF_B64_BITS					6
+
 #ifndef octet_d
 #define octet_d					unsigned char
 #endif /* !octet_d */
@@ -70,7 +74,7 @@ static cbuffer_t *s_base_decode_stream (cbuffer_t *buf, const char *codes,
 /* --- base 16 --- */
 cbuffer_t *
 caf_base16_encode (cbuffer_t *in) {
-	const int bits = 4;
+	const int bits = CAF_B16_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_encode (in, s_base16_alphabet, bits,
@@ -82,7 +86,7 @@ caf_base16_encode (cbuffer_t *in) {
 
 cbuffer_t *
 caf_base16_decode (cbuffer_t *in) {
-	const int bits = 4;
+	const int bits = CAF_B16_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_decode (in, s_base16_alphabet, bits);
@@ -94,7 +98,7 @@ caf_base16_decode (cbuffer_t *in) {
 /* --- base 32 --- */
 cbuffer_t *
 caf_base32_encode (cbuffer_t *in) {
-	const int bits = 5;
+	const int bits = CAF_B32_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_encode (in, s_base32_alphabet, bits,
@@ -106,7 +110,7 @@ caf_base32_encode (cbuffer_t *in) {
 
 cbuffer_t *
 caf_base32_decode (cbuffer_t *in) {
-	const int bits = 5;
+	const int bits = CAF_B32_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_decode (in, s_base32_alphabet, bits);
@@ -117,8 +121,8 @@ caf_base32_decode (cbuffer_t *in) {
 
 cbuffer_t *
 caf_base32_encode_complete (cbuffer_t *in) {
-	const int bits = 5;
-	size_t qn = 40 / 5;
+	const int bits = CAF_B32_BITS;
+	size_t qn = 40 / CAF_B32_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_encode (in, s_base32_alphabet, bits, qn);
@@ -130,7 +134,7 @@ caf_base32_encode_complete (cbuffer_t *in) {
 /* --- base 64 --- */
 cbuffer_t *
 caf_base64_encode (cbuffer_t *in) {
-	const int bits = 6;
+	const int bits = CAF_B64_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_encode (in, s_base64_alphabet, bits,
@@ -142,7 +146,7 @@ caf_base64_encode (cbuffer_t *in) {
 
 cbuffer_t *
 caf_base64_decode (cbuffer_t *in) {
-	const int bits = 6;
+	const int bits = CAF_B64_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_decode (in, s_base64_alphabet, bits);
@@ -153,8 +157,8 @@ caf_base64_decode (cbuffer_t *in) {
 
 cbuffer_t *
 caf_base64_encode_complete (cbuffer_t *in) {
-	const int bits = 6;
-	size_t qn = 24 / 6;
+	const int bits = CAF_B64_BITS;
+	size_t qn = 24 / CAF_B64_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_encode (in, s_base64_alphabet, bits, qn);
@@ -177,7 +181,7 @@ caf_base64_encode_url (cbuffer_t *in) {
 
 cbuffer_t *
 caf_base64_decode_url (cbuffer_t *in) {
-	const int bits = 6;
+	const int bits = CAF_B64_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_decode (in, s_base64_alphabet, bits);
@@ -190,7 +194,7 @@ caf_base64_decode_url (cbuffer_t *in) {
 /* --- base 16 --- */
 cbuffer_t *
 caf_base16_encode_stream (cbuffer_t *in, cbuffer_t *cache) {
-	const int bits = 4;
+	const int bits = CAF_B16_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_encode_stream (in, s_base16_alphabet, bits,
@@ -202,7 +206,7 @@ caf_base16_encode_stream (cbuffer_t *in, cbuffer_t *cache) {
 
 cbuffer_t *
 caf_base16_decode_stream (cbuffer_t *in, cbuffer_t *cache) {
-	const int bits = 4;
+	const int bits = CAF_B16_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_decode_stream (in, s_base16_alphabet, bits, cache);
@@ -214,7 +218,7 @@ caf_base16_decode_stream (cbuffer_t *in, cbuffer_t *cache) {
 /* --- base 32 --- */
 cbuffer_t *
 caf_base32_encode_stream (cbuffer_t *in, cbuffer_t *cache) {
-	const int bits = 5;
+	const int bits = CAF_B32_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_encode_stream (in, s_base32_alphabet, bits,
@@ -226,7 +230,7 @@ caf_base32_encode_stream (cbuffer_t *in, cbuffer_t *cache) {
 
 cbuffer_t *
 caf_base32_decode_cache (cbuffer_t *in, cbuffer_t *cache) {
-	const int bits = 5;
+	const int bits = CAF_B32_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_decode_stream (in, s_base32_alphabet, bits, cache);
@@ -237,8 +241,8 @@ caf_base32_decode_cache (cbuffer_t *in, cbuffer_t *cache) {
 
 cbuffer_t *
 caf_base32_encode_complete_stream (cbuffer_t *in, cbuffer_t *cache) {
-	const int bits = 5;
-	size_t qn = 40 / 5;
+	const int bits = CAF_B32_BITS;
+	size_t qn = 40 / CAF_B32_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_encode_stream (in, s_base32_alphabet, bits, qn, cache);
@@ -250,7 +254,7 @@ caf_base32_encode_complete_stream (cbuffer_t *in, cbuffer_t *cache) {
 /* --- base 64 --- */
 cbuffer_t *
 caf_base64_encode_stream (cbuffer_t *in, cbuffer_t *cache) {
-	const int bits = 6;
+	const int bits = CAF_B64_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_encode_stream (in, s_base64_alphabet, bits,
@@ -262,7 +266,7 @@ caf_base64_encode_stream (cbuffer_t *in, cbuffer_t *cache) {
 
 cbuffer_t *
 caf_base64_decode_stream (cbuffer_t *in, cbuffer_t *cache) {
-	const int bits = 6;
+	const int bits = CAF_B64_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_decode_stream (in, s_base64_alphabet, bits, cache);
@@ -273,8 +277,8 @@ caf_base64_decode_stream (cbuffer_t *in, cbuffer_t *cache) {
 
 cbuffer_t *
 caf_base64_encode_complete_stream (cbuffer_t *in, cbuffer_t *cache) {
-	const int bits = 6;
-	size_t qn = 24 / 6;
+	const int bits = CAF_B64_BITS;
+	size_t qn = 24 / CAF_B64_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = s_base_encode_stream (in, s_base64_alphabet, bits, qn, cache);
@@ -316,7 +320,7 @@ s_base_encode (cbuffer_t *buf, const char *codes, const int bits, size_t qn) {
 			out->iosz = out->sz;
 			p_in = (octet_d *)buf->data;
 			p_out = (octet_d *)out->data;
-			for (c = 0; c < (size_t)t_out; c++) {
+			for (c = 1; c <= t_in; c++) {
 				b8 <<= 8;
 				b8 |= *p_in;
 				i8 += 8;
@@ -329,7 +333,7 @@ s_base_encode (cbuffer_t *buf, const char *codes, const int bits, size_t qn) {
 				}
 			}
 			if (i8 > 0) {
-				*p_out = codes[(b8 << (bits - b8))];
+				*p_out = codes[(b8 << (bits - i8))];
 				p_out++;
 			}
 			if (ind > 0) {
@@ -369,7 +373,7 @@ s_base_decode (cbuffer_t *buf, const char *codes, const int bits) {
 			e_codes[((int)((octet_d)(codes[cnt])))] = cnt;
 		}
 		cnt = 0;
-		for (i = 1; i <= t_in; i++) {
+		for (i = 0; i < t_in; i++) {
 			if (e_codes[((int)(*p_in))] > 0) {
 				b8 <<= bits;
 				b8 |= e_codes[((int)(*p_in))];
