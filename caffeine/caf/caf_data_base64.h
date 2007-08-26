@@ -29,30 +29,20 @@
 CAF_START_C_EXTERNS
 #endif /* !__cplusplus */
 
-cbuffer_t *caf_base16_encode (cbuffer_t *in);
-cbuffer_t *caf_base16_decode (cbuffer_t *in);
+cbuffer_t *caf_base32_encode(cbuffer_t *in);
+cbuffer_t *caf_base32_decode(cbuffer_t *in);
 
-cbuffer_t *caf_base32_encode (cbuffer_t *in);
-cbuffer_t *caf_base32_decode (cbuffer_t *in);
-cbuffer_t *caf_base32_encode_complete (cbuffer_t *in);
+cbuffer_t *caf_base64_encode(cbuffer_t *in);
+cbuffer_t *caf_base64_decode(cbuffer_t *in);
 
-cbuffer_t *caf_base64_encode (cbuffer_t *in);
-cbuffer_t *caf_base64_decode (cbuffer_t *in);
-cbuffer_t *caf_base64_encode_complete (cbuffer_t *in);
+cbuffer_t *caf_base64_encode_url(cbuffer_t *in);
+cbuffer_t *caf_base64_decode_url(cbuffer_t *in);
 
-cbuffer_t *caf_base64_encode_url (cbuffer_t *in);
-cbuffer_t *caf_base64_decode_url (cbuffer_t *in);
+cbuffer_t *caf_base32_encode_stream(cbuffer_t *in, cbuffer_t *cache);
+cbuffer_t *caf_base32_decode_stream(cbuffer_t *in, cbuffer_t *cache);
 
-cbuffer_t *caf_base16_encode_stream (cbuffer_t *in);
-cbuffer_t *caf_base16_decode_stream (cbuffer_t *in);
-
-cbuffer_t *caf_base32_encode_stream (cbuffer_t *in);
-cbuffer_t *caf_base32_decode_stream (cbuffer_t *in);
-cbuffer_t *caf_base32_encode_complete_stream (cbuffer_t *in);
-
-cbuffer_t *caf_base64_encode_stream (cbuffer_t *in);
-cbuffer_t *caf_base64_decode_stream (cbuffer_t *in);
-cbuffer_t *caf_base64_encode_complete_stream (cbuffer_t *in);
+cbuffer_t *caf_base64_encode_stream(cbuffer_t *in, cbuffer_t *cache);
+cbuffer_t *caf_base64_decode_stream(cbuffer_t *in, cbuffer_t *cache);
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS
@@ -61,3 +51,4 @@ CAF_END_C_EXTERNS
 /** }@ */
 #endif /* !CAF_DATA_BASE64_H */
 /* caf_data_base64.h ends here */
+
