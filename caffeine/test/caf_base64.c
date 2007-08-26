@@ -50,6 +50,8 @@ main (void) {
 
 	if (in_single != (cbuffer_t *)NULL) {
 
+		printf ("input string: %s (len:%d)\n", input_string,
+				strlen (input_string));
 		printf ("in_single: %p\n", (void *)in_single);
 
 		cbuf_clean (in_single);
@@ -70,7 +72,8 @@ main (void) {
 				cache = (char *)xmalloc (out_decode->sz + 1);
 				memset (cache, 0, out_decode->sz + 1);
 				memcpy (cache, out_decode->data, out_decode->sz);
-				printf ("caf_base16_decode: %s\n", cache);
+				printf ("caf_base16_decode: %s (len:%d; blen:%d)\n", cache,
+						strlen (cache), (int)out_decode->sz);
 				cbuf_delete (out_decode);
 				xfree (cache);
 			}
@@ -92,7 +95,8 @@ main (void) {
 				cache = (char *)xmalloc (out_decode->sz + 1);
 				memset (cache, 0, out_decode->sz + 1);
 				memcpy (cache, out_decode->data, out_decode->sz);
-				printf ("caf_base32_decode: %s\n", cache);
+				printf ("caf_base32_decode: %s (len:%d; blen:%d)\n", cache,
+						strlen (cache), (int)out_decode->sz);
 				cbuf_delete (out_decode);
 				xfree (cache);
 			}
@@ -114,7 +118,8 @@ main (void) {
 				cache = (char *)xmalloc (out_decode->sz + 1);
 				memset (cache, 0, out_decode->sz + 1);
 				memcpy (cache, out_decode->data, out_decode->sz);
-				printf ("caf_base64_decode: %s\n", cache);
+				printf ("caf_base64_decode: %s (len:%d; blen:%d)\n", cache,
+						strlen (cache), (int)out_decode->sz);
 				cbuf_delete (out_decode);
 				xfree (cache);
 			}
