@@ -74,30 +74,6 @@ static cbuffer_t *s_base_decode_stream (cbuffer_t *buf, const char *codes,
 										const int bits, cbuffer_t *cache);
 
 /* === normal encoding/decoding === */
-/* --- base 16 --- */
-cbuffer_t *
-caf_base16_encode (cbuffer_t *in) {
-	const int bits = CAF_B16_BITS;
-	cbuffer_t *out = (cbuffer_t *)NULL;
-	if (in != (cbuffer_t *)NULL) {
-		out = s_base_encode (in, s_base16_alphabet, bits,
-							 CAF_B64_NOUSE_QN);
-	}
-	return out;
-}
-
-
-cbuffer_t *
-caf_base16_decode (cbuffer_t *in) {
-	const int bits = CAF_B16_BITS;
-	cbuffer_t *out = (cbuffer_t *)NULL;
-	if (in != (cbuffer_t *)NULL) {
-		out = s_base_decode (in, s_base16_alphabet, bits);
-	}
-	return out;
-}
-
-
 /* --- base 32 --- */
 cbuffer_t *
 caf_base32_encode (cbuffer_t *in) {
@@ -170,30 +146,6 @@ caf_base64_decode_url (cbuffer_t *in) {
 
 
 /* === streaming encoding/decoding === */
-/* --- base 16 --- */
-cbuffer_t *
-caf_base16_encode_stream (cbuffer_t *in, cbuffer_t *cache) {
-	const int bits = CAF_B16_BITS;
-	cbuffer_t *out = (cbuffer_t *)NULL;
-	if (in != (cbuffer_t *)NULL) {
-		out = s_base_encode_stream (in, s_base16_alphabet, bits,
-									CAF_B64_NOUSE_QN, cache);
-	}
-	return out;
-}
-
-
-cbuffer_t *
-caf_base16_decode_stream (cbuffer_t *in, cbuffer_t *cache) {
-	const int bits = CAF_B16_BITS;
-	cbuffer_t *out = (cbuffer_t *)NULL;
-	if (in != (cbuffer_t *)NULL) {
-		out = s_base_decode_stream (in, s_base16_alphabet, bits, cache);
-	}
-	return out;
-}
-
-
 /* --- base 32 --- */
 cbuffer_t *
 caf_base32_encode_stream (cbuffer_t *in, cbuffer_t *cache) {
@@ -319,7 +271,7 @@ s_base_decode (cbuffer_t *buf, const char *codes, const int bits) {
 		t_out = (t_in * bits) >> 3;
 		out = cbuf_create (t_out);
 		cbuf_clean (out);
-		out->iosz = out->sz;
+		out->iosz = 0;
 		p_in = (octet_d *)buf->data;
 		p_out = (octet_d *)out->data;
 		b8 = 0;
@@ -337,6 +289,7 @@ s_base_decode (cbuffer_t *buf, const char *codes, const int bits) {
 				while (i8 >= 8) {
 					i8 -= 8;
 					*p_out = b8 >> i8;
+					out->iosz++;
 					p_out++;
 					cnt++;
 				}
