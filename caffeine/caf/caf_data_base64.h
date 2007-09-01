@@ -25,24 +25,26 @@
 #ifndef CAF_DATA_BASE64_H
 #define CAF_DATA_BASE64_H 1
 
+#include <caf/caf_io_file.h>
+
 #ifdef __cplusplus
 CAF_START_C_EXTERNS
 #endif /* !__cplusplus */
 
 cbuffer_t *caf_base32_encode(cbuffer_t *in);
 cbuffer_t *caf_base32_decode(cbuffer_t *in);
-
 cbuffer_t *caf_base64_encode(cbuffer_t *in);
 cbuffer_t *caf_base64_decode(cbuffer_t *in);
-
 cbuffer_t *caf_base64_encode_url(cbuffer_t *in);
 cbuffer_t *caf_base64_decode_url(cbuffer_t *in);
-
 cbuffer_t *caf_base32_encode_stream(cbuffer_t *in, cbuffer_t *cache);
 cbuffer_t *caf_base32_decode_stream(cbuffer_t *in, cbuffer_t *cache);
-
 cbuffer_t *caf_base64_encode_stream(cbuffer_t *in, cbuffer_t *cache);
 cbuffer_t *caf_base64_decode_stream(cbuffer_t *in, cbuffer_t *cache);
+caf_io_file_t *caf_base32_encode_file(caf_io_file_t *inf, caf_io_file_t *outf);
+caf_io_file_t *caf_base32_decode_file(caf_io_file_t *inf, caf_io_file_t *outf);
+caf_io_file_t *caf_base64_encode_file(caf_io_file_t *inf, caf_io_file_t *outf);
+caf_io_file_t *caf_base64_decode_file(caf_io_file_t *inf, caf_io_file_t *outf);
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS
@@ -51,4 +53,3 @@ CAF_END_C_EXTERNS
 /** }@ */
 #endif /* !CAF_DATA_BASE64_H */
 /* caf_data_base64.h ends here */
-

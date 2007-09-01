@@ -106,7 +106,7 @@ main (void) {
 
 	}
 
-	exit (EXIT_SUCCESS);
+	return 0;
 }
 
 

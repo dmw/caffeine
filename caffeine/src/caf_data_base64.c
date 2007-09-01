@@ -46,6 +46,8 @@ static char Id[] = "$Id$";
 #define CAF_B32_BITS					5
 #define CAF_B64_BITS					6
 
+#define CAF_BASE_CACHE_SZ				12
+
 #ifndef octet_d
 #define octet_d					unsigned char
 #endif /* !octet_d */
@@ -57,7 +59,8 @@ static char Id[] = "$Id$";
 
 static const char s_base16_alphabet[] = "0123456789ABCDEF";
 static const char s_base32_alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-static const char s_base64_alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+static const char s_base64_alphabet[] =
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 
 static cbuffer_t *s_base_encode (cbuffer_t *buf, const char *codes,
@@ -72,6 +75,20 @@ static cbuffer_t *s_base_encode_stream (cbuffer_t *buf, const char *codes,
 
 static cbuffer_t *s_base_decode_stream (cbuffer_t *buf, const char *codes,
 										const int bits, cbuffer_t *cache);
+
+static cbuffer_t *s_base_decode_stream (cbuffer_t *buf, const char *codes,
+										const int bits, cbuffer_t *cache);
+
+
+static caf_io_file_t *s_base_encode_file (caf_io_file_t *inf,
+										  caf_io_file_t *outf,
+										  const char *alpha,
+										  int bits, size_t qn);
+
+static caf_io_file_t *s_base_decode_file (caf_io_file_t *inf,
+										  caf_io_file_t *outf,
+										  const char *alpha, int bits);
+
 
 /* === normal encoding/decoding === */
 /* --- base 32 --- */
@@ -194,6 +211,51 @@ caf_base64_decode_stream (cbuffer_t *in, cbuffer_t *cache) {
 }
 
 
+/* === encoding/decoding files === */
+/* --- base 32 --- */
+caf_io_file_t *
+caf_base32_encode_file (caf_io_file_t *inf, caf_io_file_t *outf) {
+	caf_io_file_t *r = (caf_io_file_t *)NULL;
+	size_t qn = 40 / CAF_B32_BITS;
+	if (inf != (caf_io_file_t *)NULL && outf != (caf_io_file_t *)NULL) {
+		r = s_base_encode_file (inf, outf, s_base32_alphabet, CAF_B32_BITS, qn);
+	}
+	return r;
+}
+
+
+caf_io_file_t *
+caf_base32_decode_file (caf_io_file_t *inf, caf_io_file_t *outf) {
+	caf_io_file_t *r = (caf_io_file_t *)NULL;
+	if (inf != (caf_io_file_t *)NULL && outf != (caf_io_file_t *)NULL) {
+		r = s_base_decode_file (inf, outf, s_base32_alphabet, CAF_B32_BITS);
+	}
+	return r;
+}
+
+
+/* --- base 64 --- */
+caf_io_file_t *
+caf_base64_encode_file (caf_io_file_t *inf, caf_io_file_t *outf) {
+	caf_io_file_t *r = (caf_io_file_t *)NULL;
+	size_t qn = 24 / CAF_B64_BITS;
+	if (inf != (caf_io_file_t *)NULL && outf != (caf_io_file_t *)NULL) {
+		r = s_base_encode_file (inf, outf, s_base64_alphabet, CAF_B64_BITS, qn);
+	}
+	return r;
+}
+
+
+caf_io_file_t *
+caf_base64_decode_file (caf_io_file_t *inf, caf_io_file_t *outf) {
+	caf_io_file_t *r = (caf_io_file_t *)NULL;
+	if (inf != (caf_io_file_t *)NULL && outf != (caf_io_file_t *)NULL) {
+		r = s_base_decode_file (inf, outf, s_base64_alphabet, CAF_B64_BITS);
+	}
+	return r;
+}
+
+
 /* === encoding/decoding functions === */
 static cbuffer_t *
 s_base_encode (cbuffer_t *buf, const char *codes, const int bits, size_t qn) {
@@ -304,14 +366,13 @@ s_base_decode (cbuffer_t *buf, const char *codes, const int bits) {
 
 static cbuffer_t *
 s_base_encode_stream (cbuffer_t *buf, const char *codes,
-					  const int bits, size_t qn,
-					  cbuffer_t *cache) {
+					  const int bits, size_t qn, cbuffer_t *cache) {
 	cbuffer_t *nb = (cbuffer_t *)NULL;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	size_t cpos_cache = 0, cpos_buf = 0, tsz = 0, ncsz = 0;
 	if (buf != (cbuffer_t *)NULL && codes != (const char *)NULL
-		&& bits > 0 && cache != (cbuffer_t *)NULL && tsz > 0) {
-		cpos_cache = (size_t)cache->iosz > 0 ? (size_t)cache->iosz : cache->sz;
+		&& bits > 0 && cache != (cbuffer_t *)NULL) {
+		cpos_cache = (size_t)cache->iosz > 0 ? (size_t)cache->iosz : 0;
 		cpos_buf = (size_t)buf->iosz > 0 ? (size_t)buf->iosz : buf->sz;
 		tsz = cpos_cache + cpos_buf;
 		ncsz = tsz % 3;
@@ -353,7 +414,7 @@ s_base_decode_stream (cbuffer_t *buf, const char *codes,
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	size_t cpos_cache = 0, cpos_buf = 0, tsz = 0, ncsz = 0;
 	if (buf != (cbuffer_t *)NULL && codes != (const char *)NULL
-		&& bits > 0 && cache != (cbuffer_t *)NULL && tsz > 0) {
+		&& bits > 0 && cache != (cbuffer_t *)NULL) {
 		cpos_cache = (size_t)cache->iosz > 0 ? (size_t)cache->iosz : cache->sz;
 		cpos_buf = (size_t)buf->iosz > 0 ? (size_t)buf->iosz : buf->sz;
 		tsz = cpos_cache + cpos_buf;
@@ -386,6 +447,93 @@ s_base_decode_stream (cbuffer_t *buf, const char *codes,
 		}
 	}
 	return out;
+}
+
+
+static caf_io_file_t *
+s_base_encode_file (caf_io_file_t *inf, caf_io_file_t *outf,
+					const char *alpha, int bits, size_t qn) {
+	caf_io_file_t *r = (caf_io_file_t *)NULL;
+	cbuffer_t *cache = (cbuffer_t *)NULL;
+	cbuffer_t *inb = (cbuffer_t *)NULL;
+	cbuffer_t *outb = (cbuffer_t *)NULL;
+	int encoded = 0;
+	if (inf != (caf_io_file_t *)NULL) {
+		printf ("inf: %p\n", (void *)inf);
+		if ((io_restat (inf)) == CAF_OK && (io_restat (outf)) == CAF_OK) {
+			cache = cbuf_create (CAF_BASE_CACHE_SZ);
+			if (cache == (cbuffer_t *)NULL) {
+				return r;
+			}
+			printf ("cache: %p\n", (void *)cache);
+			inb = cbuf_create (CAF_B64_INPUT_STREAM_SZ);
+			if (inb == (cbuffer_t *)NULL) {
+				cbuf_delete (cache);
+				return r;
+			}
+			printf ("inb: %p\n", (void *)inb);
+			cbuf_clean (cache);
+			cbuf_clean (inb);
+			while ((io_read (inf, inb)) > 0) {
+				printf ("read: %d\n", inb->iosz);
+				outb = s_base_encode_stream (inb, alpha, bits, qn, cache);
+				if (outb != (cbuffer_t *)NULL) {
+					printf ("outb: %p (%d)\n", (void *)outb, outb->iosz);
+					if ((io_write (outf, outb)) > 0) {
+						encoded = 1;
+					}
+					cbuf_delete (outb);
+				}
+			}
+			cbuf_delete (cache);
+			cbuf_delete (inb);
+			if (encoded > 0) {
+				r = outf;
+			}
+		}
+	}
+	return r;
+}
+
+
+static caf_io_file_t *
+s_base_decode_file (caf_io_file_t *inf, caf_io_file_t *outf,
+					const char *alpha, int bits) {
+	caf_io_file_t *r = (caf_io_file_t *)NULL;
+	cbuffer_t *cache = (cbuffer_t *)NULL;
+	cbuffer_t *inb = (cbuffer_t *)NULL;
+	cbuffer_t *outb = (cbuffer_t *)NULL;
+	int encoded = 0;
+	if (inf != (caf_io_file_t *)NULL) {
+		if ((io_restat (inf)) == CAF_OK && (io_restat (outf)) == CAF_OK) {
+			cache = cbuf_create (CAF_BASE_CACHE_SZ);
+			if (cache == (cbuffer_t *)NULL) {
+				return r;
+			}
+			inb = cbuf_create (CAF_B64_INPUT_STREAM_SZ);
+			if (inb == (cbuffer_t *)NULL) {
+				cbuf_delete (cache);
+				return r;
+			}
+			cbuf_clean (cache);
+			cbuf_clean (inb);
+			while ((io_read (inf, inb)) > 0) {
+				outb = s_base_decode_stream (inb, alpha, bits, cache);
+				if (outb != (cbuffer_t *)NULL) {
+					if ((io_write (outf, outb)) > 0) {
+						encoded = 1;
+					}
+					cbuf_delete (outb);
+				}
+			}
+			cbuf_delete (cache);
+			cbuf_delete (inb);
+			if (encoded > 0) {
+				r = outf;
+			}
+		}
+	}
+	return r;
 }
 
 
