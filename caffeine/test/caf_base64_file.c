@@ -65,6 +65,15 @@ main (void) {
 			}
 			io_fclose (outf);
 		}
+		io_flseek (inf, 0, SEEK_SET);
+		outf = io_fopen ("caf_tail.b16", O_WRONLY | O_CREAT | O_TRUNC, 0644, CAF_OK);
+		if (outf != (caf_io_file_t *)NULL) {
+			r = caf_base16_encode_file (inf, outf);
+			if (r != (caf_io_file_t *)NULL) {
+				printf ("success on caf_tail.c to base16 encoding\n");
+			}
+			io_fclose (outf);
+		}
 		io_fclose (inf);
 	}
 
@@ -90,6 +99,20 @@ main (void) {
 			r = caf_base32_decode_file (inf, outf);
 			if (r != (caf_io_file_t *)NULL) {
 				printf ("success on caf_tail.c to base32 decoding\n");
+			}
+			io_fclose (outf);
+		}
+		io_fclose (inf);
+	}
+
+	inf = io_fopen ("caf_tail.b16", O_RDONLY, 0644, CAF_OK);
+	if (inf != (caf_io_file_t *)NULL) {
+		io_flseek (inf, 0, SEEK_SET);
+		outf = io_fopen ("caf_tail.b16.c", O_WRONLY | O_CREAT | O_TRUNC, 0644, CAF_OK);
+		if (outf != (caf_io_file_t *)NULL) {
+			r = caf_base16_decode_file (inf, outf);
+			if (r != (caf_io_file_t *)NULL) {
+				printf ("success on caf_tail.c to base16 decoding\n");
 			}
 			io_fclose (outf);
 		}
