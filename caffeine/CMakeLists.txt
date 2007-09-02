@@ -1,4 +1,5 @@
 ### -*- mode: cmake; indent-tabs-mode: t; tab-width: 4; cmake-tab-width: 4; -*-
+### $Id$
 ### project
 PROJECT(caffeine C)
 SUBDIRS(

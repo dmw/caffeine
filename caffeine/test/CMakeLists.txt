@@ -1,5 +1,6 @@
 ### -*- mode: cmake; indent-tabs-mode: t; tab-width: 4; cmake-tab-width: 4; -*-
-### proyecto
+### $Id$
+### project
 project(caffeine C)
 
 ### macro inclusions
