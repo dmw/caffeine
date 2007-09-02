@@ -1,9 +1,10 @@
-### proyecto
+### -*- mode: cmake; indent-tabs-mode: t; tab-width: 4; cmake-tab-width: 4; -*-
+### project
 PROJECT(caffeine C)
 SUBDIRS(
-    caf
-    src
-    test)
+	caf
+	src
+	test)
 
 include(FindDoxygen)
 
@@ -15,7 +16,7 @@ if (EXISTS "${DOXYGEN}")
 endif (EXISTS "${DOXYGEN}")
 
 set (ADDITIONAL_MAKE_CLEAN_FILES
-        cmake_install.cmake
-        CMakeFiles
-        CMakeCache.txt)
+    cmake_install.cmake
+    CMakeFiles
+    CMakeCache.txt)
 

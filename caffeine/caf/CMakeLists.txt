@@ -1,3 +1,4 @@
+### -*- mode: cmake; indent-tabs-mode: t; tab-width: 4; cmake-tab-width: 4; -*-
 ### proyecto
 project(caffeine C)
 
@@ -9,24 +10,24 @@ include(FindThreads)
 
 ### extra includes
 set (MAKE_EXTRA_INCLUDE_FILES
-        "sys/types.h")
+    "sys/types.h")
 
 link_directories (
-        /usr/lib
-        /usr/local/lib
-        /usr/X11R6/lib
-        .
-        ..
-)
+    /usr/lib
+    /usr/local/lib
+    /usr/X11R6/lib
+    .
+    ..
+	)
 
 ### includes
 include_directories (
-        /usr/include
-        /usr/local/include
-        /usr/X11R6/include
-        .
-        ..
-)
+    /usr/include
+    /usr/local/include
+    /usr/X11R6/include
+    .
+    ..
+	)
 
 ### sources
 set (CAFFEINE_HEADERS
@@ -76,7 +77,7 @@ set (CAFFEINE_HEADERS
     caf_thread_pool.h
     caf_thread_rwlock.h
     caf_tool_macro.h
-)
+	)
 
 ### operating systems
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -90,16 +91,16 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|NetBSD|OpenBSD")
 set (
     SOURCE_FILES
     ${CAFFEINE_HEADERS}
-)
+	)
 
 ### options
 option (CAFFEINE_DEBUG
-        "Build Caffeine Using Debug"
-        ON)
+    "Build Caffeine Using Debug"
+    ON)
 
 ### source headers
 set_source_files_properties (
-        ${CAFFEINE_HEADERS}
-        PROPERTIES
-        HEADER_FILE_ONLY 1)
+    ${CAFFEINE_HEADERS}
+    PROPERTIES
+    HEADER_FILE_ONLY 1)
 
