@@ -29,5 +29,7 @@
 #error strange compiler behavoir: sizeof(void *) != sizeof(size_t)
 #endif /* SIZE_T_SZ == VOID_P_SZ */
 
+#define COMPILING_CAFFEINE                      1
+
 #endif /* _CONFIG_H */
 /* config.h ends here */

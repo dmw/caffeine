@@ -31,31 +31,72 @@
 CAF_START_C_EXTERNS
 #endif /* !__cplusplus */
 
+#ifndef COMPILING_CAFFEINE
+extern const char *caf_base16_alphabet;
+extern const char *caf_base32_alphabet;
+extern const char *caf_base64_alphabet;
+#endif
+
 size_t base_encode_chunk_sz(int bits);
+
 size_t base_decode_chunk_sz(int bits);
+
 size_t base_encode_buffer_sz(int bits);
+
 size_t base_decode_buffer_sz(int bits);
 
 cbuffer_t *caf_base16_encode(cbuffer_t *in);
+
 cbuffer_t *caf_base16_decode(cbuffer_t *in);
 
 cbuffer_t *caf_base32_encode(cbuffer_t *in);
+
 cbuffer_t *caf_base32_decode(cbuffer_t *in);
 
 cbuffer_t *caf_base64_encode(cbuffer_t *in);
+
 cbuffer_t *caf_base64_decode(cbuffer_t *in);
 
 cbuffer_t *caf_base64_encode_url(cbuffer_t *in);
+
 cbuffer_t *caf_base64_decode_url(cbuffer_t *in);
 
-caf_io_file_t *caf_base16_encode_file(caf_io_file_t *inf, caf_io_file_t *outf);
-caf_io_file_t *caf_base16_decode_file(caf_io_file_t *inf, caf_io_file_t *outf);
+caf_io_file_t *caf_base16_encode_file(caf_io_file_t *inf,
+									  caf_io_file_t *outf);
 
-caf_io_file_t *caf_base32_encode_file(caf_io_file_t *inf, caf_io_file_t *outf);
-caf_io_file_t *caf_base32_decode_file(caf_io_file_t *inf, caf_io_file_t *outf);
+caf_io_file_t *caf_base16_decode_file(caf_io_file_t *inf,
+									  caf_io_file_t *outf);
 
-caf_io_file_t *caf_base64_encode_file(caf_io_file_t *inf, caf_io_file_t *outf);
-caf_io_file_t *caf_base64_decode_file(caf_io_file_t *inf, caf_io_file_t *outf);
+caf_io_file_t *caf_base32_encode_file(caf_io_file_t *inf,
+									  caf_io_file_t *outf);
+
+caf_io_file_t *caf_base32_decode_file(caf_io_file_t *inf,
+									  caf_io_file_t *outf);
+
+caf_io_file_t *caf_base64_encode_file(caf_io_file_t *inf,
+									  caf_io_file_t *outf);
+
+caf_io_file_t *caf_base64_decode_file(caf_io_file_t *inf,
+									  caf_io_file_t *outf);
+
+cbuffer_t *caf_base_encode(cbuffer_t *buf, const char *codes,
+						   const int bits, size_t qn);
+
+cbuffer_t *caf_base_decode(cbuffer_t *buf, const char *codes,
+						   const int bits);
+
+cbuffer_t *caf_base_encode_stream(cbuffer_t *buf, const char *codes,
+								  const int bits, size_t qn,
+								  cbuffer_t *cache);
+
+cbuffer_t *caf_base_decode_stream(cbuffer_t *buf, const char *codes,
+								  const int bits, cbuffer_t *cache);
+
+caf_io_file_t *caf_base_encode_file(caf_io_file_t *inf, caf_io_file_t *outf,
+									const char *alpha, int bits, size_t qn);
+
+caf_io_file_t *caf_base_decode_file(caf_io_file_t *inf, caf_io_file_t *outf,
+									const char *alpha, int bits);
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS
