@@ -248,8 +248,7 @@ cbuf_paste (cbuffer_t *dst, const cbuffer_t *src, const size_t from_dst,
 	size_t diff_src = 0, diff_dst = 0;
 	void *from_ptr = (void *)NULL, *to_ptr = (void *)NULL;
 	if (dst != (cbuffer_t *)NULL && src != (cbuffer_t *)NULL) {
-		if ((int)from_dst < 0 ||
-		        ((int)to_src < 0 || (int)from_src < 0)) {
+		if ((int)from_dst < 0 || ((int)to_src < 0 || (int)from_src < 0)) {
 			return (cbuffer_t *)NULL;
 		} else {
 			diff_dst = dst->sz - from_dst;

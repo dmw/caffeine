@@ -106,6 +106,30 @@ main (void) {
 
 	}
 
+	printf ("base 64 chunk size: in=%d, out=%d\n",
+			base_encode_chunk_sz (6),
+			base_decode_chunk_sz (6));
+
+	printf ("base 32 chunk size: in=%d, out=%d\n",
+			base_encode_chunk_sz (5),
+			base_decode_chunk_sz (5));
+
+	printf ("base 16 chunk size: in=%d, out=%d\n",
+			base_encode_chunk_sz (4),
+			base_decode_chunk_sz (4));
+
+	printf ("base 64 buffer size: in=%d, out=%d\n",
+			base_encode_buffer_sz (6),
+			base_decode_buffer_sz (6));
+
+	printf ("base 32 buffer size: in=%d, out=%d\n",
+			base_encode_buffer_sz (5),
+			base_decode_buffer_sz (5));
+
+	printf ("base 16 buffer size: in=%d, out=%d\n",
+			base_encode_buffer_sz (4),
+			base_decode_buffer_sz (4));
+
 	return 0;
 }
 
