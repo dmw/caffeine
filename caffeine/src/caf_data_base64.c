@@ -68,6 +68,11 @@ const char caf_base64_alphabet[] =
 				"abcdefghijklmnopqrstuvwxyz"
 				"0123456789+/";
 
+const char caf_base64_alphabet_url[] =
+				"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+				"abcdefghijklmnopqrstuvwxyz"
+				"0123456789-_";
+
 /* === common operations === */
 size_t
 base_encode_chunk_sz (int bits) {
@@ -200,7 +205,7 @@ caf_base64_encode_url (cbuffer_t *in) {
 	const int bits = 6;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
-		out = caf_base_encode (in, caf_base64_alphabet, bits,
+		out = caf_base_encode (in, caf_base64_alphabet_url, bits,
 							 CAF_B64_NOUSE_QN);
 	}
 	return out;
@@ -212,7 +217,7 @@ caf_base64_decode_url (cbuffer_t *in) {
 	const int bits = CAF_B64_BITS;
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
-		out = caf_base_decode (in, caf_base64_alphabet, bits);
+		out = caf_base_decode (in, caf_base64_alphabet_url, bits);
 	}
 	return out;
 }

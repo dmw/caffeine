@@ -35,6 +35,7 @@ CAF_START_C_EXTERNS
 extern const char *caf_base16_alphabet;
 extern const char *caf_base32_alphabet;
 extern const char *caf_base64_alphabet;
+extern const char *caf_base64_alphabet_url;
 #endif
 
 size_t base_encode_chunk_sz(int bits);
