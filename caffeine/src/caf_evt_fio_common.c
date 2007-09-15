@@ -2,24 +2,24 @@
 /* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 noexpandtab: */
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
-    Caffeine - C Application Framework
-    Copyright (C) 2006 Daniel Molina Wegener
+  Caffeine - C Application Framework
+  Copyright (C) 2006 Daniel Molina Wegener
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-    MA 02110-1301 USA
- */
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+  MA 02110-1301 USA
+*/
 #ifndef lint
 static char Id[] = "$Id$";
 #endif /* !lint */
@@ -44,50 +44,50 @@ static char Id[] = "$Id$";
 
 
 static caf_evt_fio_event_mapping_t fio_evt_mapping[] = {
-            /* read events */
-            {
-                EVT_IO_READ_IDX,
+	/* read events */
+	{
+		EVT_IO_READ_IDX,
 #ifdef BSD_SYSTEM
-                EVFILT_READ,
+		EVFILT_READ,
 #else
-                0,
+		0,
 #endif /* !BSD_SYSTEM */
 #ifdef LINUX_SYSTEM
-                IN_ACCESS
+		IN_ACCESS
 #else
-                0
+		0
 #endif /* !LINUX_SYSTEM */
-            },
-            /* write events */
-            {
-                EVT_IO_WRITE_IDX,
+	},
+	/* write events */
+	{
+		EVT_IO_WRITE_IDX,
 #ifdef BSD_SYSTEM
-                EVFILT_WRITE,
+		EVFILT_WRITE,
 #else
-                0,
+		0,
 #endif /* !BSD_SYSTEM */
 #ifdef LINUX_SYSTEM
-                IN_CREATE | IN_CLOSE_WRITE | IN_CLOSE_NOWRITE
+		IN_CREATE | IN_CLOSE_WRITE | IN_CLOSE_NOWRITE
 #else
-                0
+		0
 #endif /* !ILINUX_SYSTEM */
-            },
-            /* vnode events */
-            {
-                EVT_IO_VNODE_IDX,
+	},
+	/* vnode events */
+	{
+		EVT_IO_VNODE_IDX,
 #ifdef BSD_SYSTEM
-                EVFILT_VNODE,
+		EVFILT_VNODE,
 #else
-                0,
+		0,
 #endif /* !BSD_SYSTEM */
 #ifdef LINUX_SYSTEM
-                IN_ATTRIB | IN_DELETE | IN_DELETE_SELF | IN_MOVE_SELF | IN_MOVED_FROM
-                | IN_MOVED_TO
+		IN_ATTRIB | IN_DELETE | IN_DELETE_SELF | IN_MOVE_SELF | IN_MOVED_FROM
+		| IN_MOVED_TO
 #else
-                0
+		0
 #endif /* !ILINUX_SYSTEM */
-            }
-        };
+	}
+};
 
 
 int

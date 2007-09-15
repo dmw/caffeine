@@ -2,24 +2,24 @@
 /* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 noexpandtab: */
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
-    Caffeine - C Application Framework
-    Copyright (C) 2006 Daniel Molina Wegener
+  Caffeine - C Application Framework
+  Copyright (C) 2006 Daniel Molina Wegener
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-    MA 02110-1301 USA
- */
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+  MA 02110-1301 USA
+*/
 
 
 #include <stdlib.h>
@@ -147,103 +147,103 @@ delete_runner () {
 
 
 static caf_dsm_return_t *
-                     call_1 (void *s_data, caf_dsm_return_t *s_return) {
-	                     int *ld1;
-	                     caf_dsm_return_t *r = (caf_dsm_return_t *)xmalloc (CAF_DSM_RETURN_SZ);
-	                     if (r != (caf_dsm_return_t *)NULL && s_data != (void *)NULL) {
-		                     s_return = r;
-		                     ld1 = (int *)s_data;
-		                     *ld1 = 1;
-		                     r->r_data = s_data;
-		                     r->r_return = s_data;
-		                     r->r_control = CAF_DSM_CONTROL_FORWARD;
-		                     printf ("call_1 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
-		                     printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
-		                             (void *)&(r->r_control), r->r_data, r->r_return);
-	                     }
-	                     return r;
-                     }
+call_1 (void *s_data, caf_dsm_return_t *s_return) {
+	int *ld1;
+	caf_dsm_return_t *r = (caf_dsm_return_t *)xmalloc (CAF_DSM_RETURN_SZ);
+	if (r != (caf_dsm_return_t *)NULL && s_data != (void *)NULL) {
+		s_return = r;
+		ld1 = (int *)s_data;
+		*ld1 = 1;
+		r->r_data = s_data;
+		r->r_return = s_data;
+		r->r_control = CAF_DSM_CONTROL_FORWARD;
+		printf ("call_1 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
+		printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
+				(void *)&(r->r_control), r->r_data, r->r_return);
+	}
+	return r;
+}
 
 
-                     static caf_dsm_return_t *
-                                          call_2 (void *s_data, caf_dsm_return_t *s_return) {
-	                                          int *ld1;
-	                                          caf_dsm_return_t *r = s_return;
-	                                          if (s_data != (void *)NULL && s_return != (void *)NULL) {
-		                                          ld1 = (int *)s_data;
-		                                          *ld1 = 2;
-		                                          r->r_data = (void *)ld1;
-		                                          r->r_return = (void *)ld1;
-		                                          r->r_control = CAF_DSM_CONTROL_FORWARD;
-		                                          printf ("call_2 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
-		                                          printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
-		                                                  (void *)&(r->r_control), r->r_data, r->r_return);
-	                                          }
-	                                          return r;
-                                          }
+static caf_dsm_return_t *
+call_2 (void *s_data, caf_dsm_return_t *s_return) {
+	int *ld1;
+	caf_dsm_return_t *r = s_return;
+	if (s_data != (void *)NULL && s_return != (void *)NULL) {
+		ld1 = (int *)s_data;
+		*ld1 = 2;
+		r->r_data = (void *)ld1;
+		r->r_return = (void *)ld1;
+		r->r_control = CAF_DSM_CONTROL_FORWARD;
+		printf ("call_2 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
+		printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
+				(void *)&(r->r_control), r->r_data, r->r_return);
+	}
+	return r;
+}
 
 
-                                          static caf_dsm_return_t *
-                                                               call_3 (void *s_data, caf_dsm_return_t *s_return) {
-	                                                               int *ld1;
-	                                                               caf_dsm_return_t *r = s_return;
-	                                                               if (s_data != (void *)NULL && s_return != (void *)NULL) {
-		                                                               ld1 = (int *)s_data;
-		                                                               if (*ld1 == 4) {
-			                                                               r->r_control = CAF_DSM_CONTROL_FORWARD;
-			                                                               (*ld1) = 5;
-		                                                               } else {
-			                                                               r->r_control = CAF_DSM_CONTROL_FORWARD;
-			                                                               (*ld1) = 3;
-		                                                               }
-		                                                               r->r_data = (void *)ld1;
-		                                                               r->r_return = (void *)ld1;
-		                                                               printf ("call_3 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
-		                                                               printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
-		                                                                       (void *)&(r->r_control), r->r_data, r->r_return);
-	                                                               }
-	                                                               return r;
-                                                               }
+static caf_dsm_return_t *
+call_3 (void *s_data, caf_dsm_return_t *s_return) {
+	int *ld1;
+	caf_dsm_return_t *r = s_return;
+	if (s_data != (void *)NULL && s_return != (void *)NULL) {
+		ld1 = (int *)s_data;
+		if (*ld1 == 4) {
+			r->r_control = CAF_DSM_CONTROL_FORWARD;
+			(*ld1) = 5;
+		} else {
+			r->r_control = CAF_DSM_CONTROL_FORWARD;
+			(*ld1) = 3;
+		}
+		r->r_data = (void *)ld1;
+		r->r_return = (void *)ld1;
+		printf ("call_3 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
+		printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
+				(void *)&(r->r_control), r->r_data, r->r_return);
+	}
+	return r;
+}
 
 
-                                                               static caf_dsm_return_t *
-                                                                                    call_4 (void *s_data, caf_dsm_return_t *s_return) {
-	                                                                                    int *ld1;
-	                                                                                    caf_dsm_return_t *r = s_return;
-	                                                                                    if (s_data != (void *)NULL && s_return != (void *)NULL) {
-		                                                                                    ld1 = (int *)s_data;
-		                                                                                    if (*ld1 == 3) {
-			                                                                                    r->r_control = CAF_DSM_CONTROL_BACKWARD;
-			                                                                                    (*ld1) = 4;
-		                                                                                    } else {
-			                                                                                    r->r_control = CAF_DSM_CONTROL_FORWARD;
-			                                                                                    (*ld1) = 6;
-		                                                                                    }
-		                                                                                    r->r_data = (void *)ld1;
-		                                                                                    r->r_return = (void *)ld1;
-		                                                                                    printf ("call_4 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
-		                                                                                    printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
-		                                                                                            (void *)&(r->r_control), r->r_data, r->r_return);
-	                                                                                    }
-	                                                                                    return r;
-                                                                                    }
+static caf_dsm_return_t *
+call_4 (void *s_data, caf_dsm_return_t *s_return) {
+	int *ld1;
+	caf_dsm_return_t *r = s_return;
+	if (s_data != (void *)NULL && s_return != (void *)NULL) {
+		ld1 = (int *)s_data;
+		if (*ld1 == 3) {
+			r->r_control = CAF_DSM_CONTROL_BACKWARD;
+			(*ld1) = 4;
+		} else {
+			r->r_control = CAF_DSM_CONTROL_FORWARD;
+			(*ld1) = 6;
+		}
+		r->r_data = (void *)ld1;
+		r->r_return = (void *)ld1;
+		printf ("call_4 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
+		printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
+				(void *)&(r->r_control), r->r_data, r->r_return);
+	}
+	return r;
+}
 
 
-                                                                                    static caf_dsm_return_t *
-                                                                                                         call_5 (void *s_data, caf_dsm_return_t *s_return) {
-	                                                                                                         int *ld1;
-	                                                                                                         caf_dsm_return_t *r = s_return;
-	                                                                                                         if (s_data != (void *)NULL && s_return != (void *)NULL) {
-		                                                                                                         ld1 = (int *)s_data;
-		                                                                                                         (*ld1) = 7;
-		                                                                                                         r->r_data = (void *)ld1;
-		                                                                                                         r->r_return = (void *)ld1;
-		                                                                                                         r->r_control = CAF_DSM_CONTROL_FORWARD;
-		                                                                                                         printf ("call_5 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
-		                                                                                                         printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
-		                                                                                                                 (void *)&(r->r_control), r->r_data, r->r_return);
-	                                                                                                         }
-	                                                                                                         return r;
-                                                                                                         }
+static caf_dsm_return_t *
+call_5 (void *s_data, caf_dsm_return_t *s_return) {
+	int *ld1;
+	caf_dsm_return_t *r = s_return;
+	if (s_data != (void *)NULL && s_return != (void *)NULL) {
+		ld1 = (int *)s_data;
+		(*ld1) = 7;
+		r->r_data = (void *)ld1;
+		r->r_return = (void *)ld1;
+		r->r_control = CAF_DSM_CONTROL_FORWARD;
+		printf ("call_5 (): %d [%p == %p]\n", *ld1, (void *)ld1, s_data);
+		printf ("\treturns:\n\tcontrol = %p;\n\tdata = %p;\n\treturn: %p;\n",
+				(void *)&(r->r_control), r->r_data, r->r_return);
+	}
+	return r;
+}
 
-                                                                                                         /* caf_dsm.c ends here */
+/* caf_dsm.c ends here */

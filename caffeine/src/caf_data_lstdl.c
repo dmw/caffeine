@@ -2,24 +2,24 @@
 /* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 noexpandtab: */
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
-    Caffeine - C Application Framework
-    Copyright (C) 2006 Daniel Molina Wegener
+  Caffeine - C Application Framework
+  Copyright (C) 2006 Daniel Molina Wegener
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-    MA 02110-1301 USA
- */
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+  MA 02110-1301 USA
+*/
 #ifndef lint
 static char Id[] = "$Id$";
 #endif /* !lint */
@@ -148,7 +148,7 @@ lstdl_node_delete (lstdl_t *lst, lstdln_t *n, CAF_LSTDLNODE_CBDEL(del)) {
 							prev = nr->prev;
 							next = nr->next;
 							if (prev != (lstdln_t *)NULL &&
-							        next != (lstdln_t *)NULL) {
+								next != (lstdln_t *)NULL) {
 								prev->next = next;
 								next->prev = prev;
 							} else if (prev != (lstdln_t *)NULL &&
@@ -186,7 +186,7 @@ lstdl_node_delete_by_data (lstdl_t *lst, void *n, CAF_LSTDLNODE_CBDEL(del)) {
 							prev = nr->prev;
 							next = nr->next;
 							if (prev != (lstdln_t *)NULL &&
-							        next != (lstdln_t *)NULL) {
+								next != (lstdln_t *)NULL) {
 								prev->next = next;
 								next->prev = prev;
 							} else if (prev != (lstdln_t *)NULL &&
@@ -253,7 +253,7 @@ lstdl_push (lstdl_t *lst, void *data) {
 		xnew = (lstdln_t *)xmalloc (CAF_LSTDLNODE_SZ);
 		if (xnew != (lstdln_t *)NULL) {
 			if (lst->tail != (lstdln_t *)NULL &&
-			        lst->head != (lstdln_t *)NULL) {
+				lst->head != (lstdln_t *)NULL) {
 				tail = lst->tail;
 				tail->next = xnew;
 				xnew->prev = tail;

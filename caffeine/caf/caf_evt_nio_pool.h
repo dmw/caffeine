@@ -2,26 +2,26 @@
 /* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 noexpandtab: */
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
-    Caffeine - C Application Framework
-    Copyright (C) 2006 Daniel Molina Wegener
+  Caffeine - C Application Framework
+  Copyright (C) 2006 Daniel Molina Wegener
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-    MA 02110-1301 USA
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+  MA 02110-1301 USA
 
-    $Id$
- */
+  $Id$
+*/
 #ifndef CAF_EVT_NIO_POOL_H
 #define CAF_EVT_NIO_POOL_H 1
 /**
@@ -151,7 +151,7 @@ struct io_evt_pool_s {
 #define CALL_EVT_FP(p,s)             p##_select_##s
 #define EVT_FP_T                     io_evt_pool_select_t
 #else
-	/* Fallback to poll(2) */
+/* Fallback to poll(2) */
 #define CALL_EVT_FP(p,s)             p##_poll_##s
 #define EVT_FP_T                     io_evt_pool_poll_t
 #endif /* !IO_EVENT_USE_* */

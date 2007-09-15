@@ -2,24 +2,24 @@
 /* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 noexpandtab: */
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
-    Caffeine - C Application Framework
-    Copyright (C) 2006 Daniel Molina Wegener
+  Caffeine - C Application Framework
+  Copyright (C) 2006 Daniel Molina Wegener
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-    MA 02110-1301 USA
- */
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+  MA 02110-1301 USA
+*/
 #ifndef lint
 static char Id[] = "$Id$";
 #endif /* !lint */
@@ -41,8 +41,8 @@ static char Id[] = "$Id$";
 
 cafvarspace_t *
 cafvarspace_new (id, name)
-int id;
-char *name;
+	int id;
+	char *name;
 {
 	cafvarspace_t *vs = (cafvarspace_t *)NULL;
 	if (name != (char *)NULL && id > 0) {
@@ -60,7 +60,7 @@ char *name;
 
 void
 cafvarspace_delete (vs)
-cafvarspace_t *vs;
+	cafvarspace_t *vs;
 {
 	if (vs != (cafvarspace_t *)NULL) {
 		vs->id = (int)NULL;
@@ -76,9 +76,9 @@ cafvarspace_t *vs;
 
 cafvar_t *
 cafvar_new (name, value, type)
-char *name;
-void *value;
-int type;
+	char *name;
+	void *value;
+	int type;
 {
 	cafvar_t *var;
 	if (name != (char *)NULL && value != (char *)NULL && type > 0) {
@@ -89,19 +89,19 @@ int type;
 				var->value = (void *)NULL;
 				switch (type) {
 					/*
-					#define    CAFV_NATIVE_BYTE           unsigned int:8
-					#define    CAFV_NATIVE_CHAR           char
-					#define    CAFV_NATIVE_UCHAR          unsigned char
-					#define    CAFV_NATIVE_WCHAR          w_char_t
-					#define    CAFV_NATIVE_WUCHAR         unsigned w_char_t
-					#define    CAFV_NATIVE_SHORT          short
-					#define    CAFV_NATIVE_INT            int
-					#define    CAFV_NATIVE_UINT           unsigned int
-					#define    CAFV_NATIVE_LONG           long
-					#define    CAFV_NATIVE_ULONG          unsigned long
-					#define    CAFV_NATIVE_FLOAT          float
-					#define    CAFV_NATIVE_DOUBLE         double
-					#define    CAFV_NATIVE_STRING         char *
+					  #define    CAFV_NATIVE_BYTE           unsigned int:8
+					  #define    CAFV_NATIVE_CHAR           char
+					  #define    CAFV_NATIVE_UCHAR          unsigned char
+					  #define    CAFV_NATIVE_WCHAR          w_char_t
+					  #define    CAFV_NATIVE_WUCHAR         unsigned w_char_t
+					  #define    CAFV_NATIVE_SHORT          short
+					  #define    CAFV_NATIVE_INT            int
+					  #define    CAFV_NATIVE_UINT           unsigned int
+					  #define    CAFV_NATIVE_LONG           long
+					  #define    CAFV_NATIVE_ULONG          unsigned long
+					  #define    CAFV_NATIVE_FLOAT          float
+					  #define    CAFV_NATIVE_DOUBLE         double
+					  #define    CAFV_NATIVE_STRING         char *
 					*/
 				case CAVF_BOOLEAN:
 					var->value = xmalloc(sizeof(CAFV_NATIVE_BOOLEAN));
@@ -149,7 +149,7 @@ int type;
 
 int
 cafvar_delete (var)
-cafvar_t *var;
+	cafvar_t *var;
 {
 	if (var != (cafvar_t *)NULL) {
 		if (var->name != (char *)NULL) {
@@ -170,7 +170,7 @@ cafvar_t *var;
 
 int
 cafvar_destroycb (data)
-void *data;
+	void *data;
 {
 	cafvar_t *var;
 	if (data != (cafvar_t *)NULL) {
@@ -184,8 +184,8 @@ void *data;
 
 void
 cafvar_dump (out, var)
-FILE *out;
-void *var;
+	FILE *out;
+	void *var;
 {
 	cafvar_t *n;
 	if (var != (void *)NULL && out != (FILE *)NULL) {
@@ -243,7 +243,7 @@ cafvar_finish (void) {
 
 void
 cafvar_dump (out)
-FILE *out;
+	FILE *out;
 {
 	caflst_dump(out, _cafvar_list, _cafvar_dump);
 }
@@ -251,9 +251,9 @@ FILE *out;
 
 int
 cafvar_add (name, value, type)
-char *name;
-char *value;
-int type;
+	char *name;
+	char *value;
+	int type;
 {
 	cafvar_t *var;
 	var = _cafvar_new(name, value, type);
@@ -267,7 +267,7 @@ int type;
 
 cafvar_t *
 cafvar_get (name)
-char *name;
+	char *name;
 {
 	caflstn_t *n;
 	cafvar_t *var;
@@ -285,7 +285,7 @@ char *name;
 
 void *
 cafvar_getvalue (name)
-char *name;
+	char *name;
 {
 	cafvar_t *var;
 	var = cafvar_get(name);
@@ -298,8 +298,8 @@ char *name;
 
 void *
 cafvar_setvalue (name, value)
-char *name;
-char *value;
+	char *name;
+	char *value;
 {
 	cafvar_t *var;
 	var = cafvar_get(name);

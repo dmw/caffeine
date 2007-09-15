@@ -2,24 +2,24 @@
 /* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 noexpandtab: */
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
-    Caffeine - C Application Framework
-    Copyright (C) 2006 Daniel Molina Wegener
+  Caffeine - C Application Framework
+  Copyright (C) 2006 Daniel Molina Wegener
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-    MA 02110-1301 USA
- */
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+  MA 02110-1301 USA
+*/
 #ifndef lint
 static char Id[] = "$Id$";
 #endif /* !lint */
@@ -48,7 +48,7 @@ caf_hash_new (const void *key, const size_t ksz, const void *data,
               CAF_HASH_STR_FUNCTION(f2)) {
 	caf_hash_t *r = (caf_hash_t *)NULL;
 	if (key != (const void *)NULL && ksz > 0 && data != (const void *)NULL
-	        && f1 != NULL && f2 != NULL) {
+		&& f1 != NULL && f2 != NULL) {
 		r = (caf_hash_t *)xmalloc (CAF_HASH_SZ);
 		if (r != (caf_hash_t *)NULL) {
 			r->hash1 = f1 ((const char *)key, ksz);
@@ -114,7 +114,7 @@ int
 caf_hash_table_delete (caf_hash_table_t *table) {
 	if (table != (caf_hash_table_t *)NULL) {
 		if ((lstdlc_delete (table->hashes, caf_hash_delete_callback)) ==
-		        CAF_OK) {
+			CAF_OK) {
 			xfree (table);
 			return CAF_OK;
 		}
@@ -129,7 +129,7 @@ caf_hash_table_add (caf_hash_table_t *table, const void *key,
 	caf_hash_t *hash;
 	caf_hash_t *hash_new;
 	if (table != (caf_hash_table_t *)NULL && key != (const void *)NULL &&
-	        ksz > 0 && data != (const void *)NULL) {
+		ksz > 0 && data != (const void *)NULL) {
 		hash_new = caf_hash_new_nodata (key, ksz, table->f1, table->f2);
 		hash = (caf_hash_t *)lstdlc_search (table->hashes, (void *)hash_new,
 		                                    caf_hash_search_callback);
@@ -160,7 +160,7 @@ caf_hash_table_remove (caf_hash_table_t *table, const void *key,
 	caf_hash_t *hash;
 	caf_hash_t *hash_new;
 	if (table != (caf_hash_table_t *)NULL && key != (const void *)NULL &&
-	        ksz > 0) {
+		ksz > 0) {
 		hash_new = caf_hash_new_nodata (key, ksz, table->f1, table->f2);
 		hash = (caf_hash_t *)lstdlc_search (table->hashes, (void *)hash_new,
 		                                    caf_hash_search_callback);
@@ -181,12 +181,12 @@ caf_hash_table_get (caf_hash_table_t *table, const void *key,
 	caf_hash_t *hash_new;
 	void *r = (void *)NULL;
 	if (table != (caf_hash_table_t *)NULL && key != (const void *)NULL &&
-	        ksz > 0) {
+		ksz > 0) {
 		hash_new = caf_hash_new_nodata (key, ksz, table->f1, table->f2);
 		if ((hash = (caf_hash_t *)lstdlc_search (table->hashes,
-		            (void *)hash_new,
-		            caf_hash_search_callback))
-		        != (caf_hash_t *)NULL) {
+												 (void *)hash_new,
+												 caf_hash_search_callback))
+			!= (caf_hash_t *)NULL) {
 			caf_hash_delete (hash_new);
 			return hash->data;
 		}
@@ -201,12 +201,12 @@ caf_hash_table_set (caf_hash_table_t *table, const void *key,
 	caf_hash_t *hash;
 	caf_hash_t *hash_new;
 	if (table != (caf_hash_table_t *)NULL && key != (const void *)NULL &&
-	        ksz > 0) {
+		ksz > 0) {
 		hash_new = caf_hash_new_nodata (key, ksz, table->f1, table->f2);
 		if ((hash = (caf_hash_t *)lstdlc_search (table->hashes,
-		            (void *)hash_new,
-		            caf_hash_search_callback))
-		        != (caf_hash_t *)NULL) {
+												 (void *)hash_new,
+												 caf_hash_search_callback))
+			!= (caf_hash_t *)NULL) {
 			hash->data = (void *)data;
 			hash->key = (void *)key;
 			hash->key_sz = ksz;
@@ -257,7 +257,7 @@ static int
 caf_hash_dump (FILE *out, void *data) {
 	caf_hash_t *hash;
 	const char *msg = "[%p] hash1: %15.15u; hash2: %15.15u; key: %30.30s\n"
-	                  "     data: %s\n\n";
+		"     data: %s\n\n";
 	if (data != (void *)NULL) {
 		hash = (caf_hash_t *)data;
 		fprintf (out, msg, hash, hash->hash1, hash->hash2, (char *)hash->key,

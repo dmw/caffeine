@@ -2,24 +2,24 @@
 /* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 noexpandtab: */
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
-    Caffeine - C Application Framework
-    Copyright (C) 2006 Daniel Molina Wegener
+  Caffeine - C Application Framework
+  Copyright (C) 2006 Daniel Molina Wegener
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-    MA 02110-1301 USA
- */
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+  MA 02110-1301 USA
+*/
 #ifndef lint
 static char Id[] = "$Id$";
 #endif /* !lint */
@@ -58,7 +58,7 @@ int
 caf_svcpool_delete (caf_svcpool_t *svc) {
 	if (svc != (caf_svcpool_t *)NULL) {
 		if ((lstdl_delete (svc->svc_lst, caf_svcpool_delete_callback)) ==
-		        CAF_OK) {
+			CAF_OK) {
 			xfree (svc->svc_fds);
 			xfree (svc);
 			return CAF_OK;
@@ -88,7 +88,7 @@ caf_svcpool_init (caf_svcpool_t *svc) {
 			svc->svc_fds = (int *)xmalloc ((size_t)svc->svc_num * sizeof (int));
 			svc->svc_lst = lstdl_create ();
 			if (svc->svc_fds != (int *)NULL &&
-			        svc->svc_lst != (lstdl_t *)NULL) {
+				svc->svc_lst != (lstdl_t *)NULL) {
 				memset (svc->svc_fds, (int)NULL,
 				        (size_t)svc->svc_num * sizeof (int));
 				fds = svc->svc_fds;
@@ -176,7 +176,7 @@ caf_svcpool_reopen (caf_svcpool_t *svc) {
 	caf_conn_t *cc;
 	if (svc != (caf_svcpool_t *)NULL) {
 		if (svc->svc_fds != (int *)NULL && svc->svc_lst != (lstdl_t *)NULL &&
-		        svc->svc_seed != (caf_conn_t *)NULL) {
+			svc->svc_seed != (caf_conn_t *)NULL) {
 			n = svc->svc_lst->head;
 			c = 0;
 			while (n != (lstdln_t *)NULL) {

@@ -2,24 +2,24 @@
 /* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 noexpandtab: */
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
-    Caffeine - C Application Framework
-    Copyright (C) 2006 Daniel Molina Wegener
+  Caffeine - C Application Framework
+  Copyright (C) 2006 Daniel Molina Wegener
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-    MA 02110-1301 USA
- */
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+  MA 02110-1301 USA
+*/
 #ifndef lint
 static char Id[] = "$Id$";
 #endif /* !lint */
@@ -56,7 +56,7 @@ io_evt_pool_kevent_new (int cnt, int tos, int ton) {
 			r->kevent_src = (struct kevent *)xmalloc (r->kevent_sz);
 			r->kevent_dst = (struct kevent *)xmalloc (r->kevent_sz);
 			if (r->kevent_src != (struct kevent *)NULL &&
-			        r->kevent_dst != (struct kevent *)NULL) {
+				r->kevent_dst != (struct kevent *)NULL) {
 				io_evt_pool_kevent_reset (r);
 				r->kfd = kqueue ();
 				if (r->kfd < 0) {
@@ -178,9 +178,9 @@ io_evt_pool_kevent_etype (int fd, io_evt_pool_kevent_t *e) {
 			for (i = 0; i < e->kevent_count; i++) {
 				if ((int)e->kevent_dst[i].ident == fd) {
 					r |= e->kevent_dst[i].filter & EVFILT_READ ?
-					     EVT_IO_READ : 0;
+						EVT_IO_READ : 0;
 					r |= e->kevent_dst[i].filter & EVFILT_WRITE ?
-					     EVT_IO_WRITE : 0;
+						EVT_IO_WRITE : 0;
 					return r;
 				}
 			}

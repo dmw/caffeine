@@ -2,24 +2,24 @@
 /* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 noexpandtab: */
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
-    Caffeine - C Application Framework
-    Copyright (C) 2006 Daniel Molina Wegener
+  Caffeine - C Application Framework
+  Copyright (C) 2006 Daniel Molina Wegener
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-    MA 02110-1301 USA
- */
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+  MA 02110-1301 USA
+*/
 #ifndef lint
 static char Id[] = "$Id$";
 #endif /* !lint */
@@ -55,7 +55,7 @@ io_evt_pool_epoll_new (int cnt, int tos, int ton) {
 			r->epoll = (struct epoll_event *)xmalloc (r->epoll_sz);
 			r->repoll = (struct epoll_event *)xmalloc (r->epoll_sz);
 			if (r->epoll != (struct epoll_event *)NULL &&
-			        r->repoll != (struct epoll_event *)NULL) {
+				r->repoll != (struct epoll_event *)NULL) {
 				memset ((void *)r->epoll, 0, r->epoll_sz);
 				memset ((void *)r->repoll, 0, r->epoll_sz);
 				r->efd = epoll_create (r->epoll_count);
@@ -133,7 +133,7 @@ io_evt_pool_epoll_add (int fd, io_evt_pool_epoll_t *e, int ef) {
 				e->epoll[r].data.fd = fd;
 				e->epoll[r].events = ef;
 				if ((epoll_ctl (e->efd, EPOLL_CTL_ADD, fd, &(e->epoll[r]))) <
-				        0) {
+					0) {
 					e->epoll[r].data.fd = -1;
 					e->epoll[r].events = 0;
 					return CAF_ERROR;

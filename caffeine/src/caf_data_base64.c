@@ -57,21 +57,21 @@ static char Id[] = "$Id$";
 #endif /* !B64_PAD_CHAR */
 
 const char caf_base16_alphabet[] =
-				"0123456789ABCDEF";
+"0123456789ABCDEF";
 
 const char caf_base32_alphabet[] =
-				"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-				"234567";
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+"234567";
 
 const char caf_base64_alphabet[] =
-				"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-				"abcdefghijklmnopqrstuvwxyz"
-				"0123456789+/";
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+"abcdefghijklmnopqrstuvwxyz"
+"0123456789+/";
 
 const char caf_base64_alphabet_url[] =
-				"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-				"abcdefghijklmnopqrstuvwxyz"
-				"0123456789-_";
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+"abcdefghijklmnopqrstuvwxyz"
+"0123456789-_";
 
 /* === common operations === */
 size_t
@@ -206,7 +206,7 @@ caf_base64_encode_url (cbuffer_t *in) {
 	cbuffer_t *out = (cbuffer_t *)NULL;
 	if (in != (cbuffer_t *)NULL) {
 		out = caf_base_encode (in, caf_base64_alphabet_url, bits,
-							 CAF_B64_NOUSE_QN);
+							   CAF_B64_NOUSE_QN);
 	}
 	return out;
 }

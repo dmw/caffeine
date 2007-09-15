@@ -2,24 +2,24 @@
 /* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 noexpandtab: */
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
-    Caffeine - C Application Framework
-    Copyright (C) 2006 Daniel Molina Wegener
+  Caffeine - C Application Framework
+  Copyright (C) 2006 Daniel Molina Wegener
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-    MA 02110-1301 USA
- */
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+  MA 02110-1301 USA
+*/
 #ifndef lint
 static char Id[] = "$Id$";
 #endif /* !lint */
@@ -58,7 +58,7 @@ int
 caf_conpool_delete (caf_conpool_t *con) {
 	if (con != (caf_conpool_t *)NULL) {
 		if ((lstdl_delete (con->con_lst, caf_conpool_delete_callback)) ==
-		        CAF_OK) {
+			CAF_OK) {
 			xfree (con->con_fds);
 			xfree (con);
 			return CAF_OK;
@@ -88,7 +88,7 @@ caf_conpool_init (caf_conpool_t *con) {
 			con->con_fds = (int *)xmalloc ((size_t)con->con_num * sizeof (int));
 			con->con_lst = lstdl_create ();
 			if (con->con_fds != (int *)NULL &&
-			        con->con_lst != (lstdl_t *)NULL) {
+				con->con_lst != (lstdl_t *)NULL) {
 				memset (con->con_fds, (int)NULL,
 				        (size_t)con->con_num * sizeof (int));
 				fds = con->con_fds;
@@ -127,7 +127,7 @@ caf_conpool_connect (caf_conpool_t *con) {
 			con->con_fds = (int *)xmalloc ((size_t)con->con_num * sizeof (int));
 			con->con_lst = lstdl_create ();
 			if (con->con_fds != (int *)NULL &&
-			        con->con_lst != (lstdl_t *)NULL) {
+				con->con_lst != (lstdl_t *)NULL) {
 				n = con->con_lst->head;
 				while (n != (lstdln_t *)NULL) {
 					i = (caf_conn_t *)n->data;
@@ -202,7 +202,7 @@ caf_conpool_reopen (caf_conpool_t *con) {
 	caf_conn_t *cc, *seed, *rn;
 	if (con != (caf_conpool_t *)NULL) {
 		if (con->con_fds != (int *)NULL && con->con_lst != (lstdl_t *)NULL &&
-		        con->con_seed != (caf_conn_t *)NULL) {
+			con->con_seed != (caf_conn_t *)NULL) {
 			seed = con->con_seed;
 			n = con->con_lst->head;
 			c = 0;

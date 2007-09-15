@@ -2,26 +2,26 @@
 /* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 noexpandtab: */
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
-    Caffeine - C Application Framework
-    Copyright (C) 2006 Daniel Molina Wegener
+  Caffeine - C Application Framework
+  Copyright (C) 2006 Daniel Molina Wegener
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-    MA 02110-1301 USA
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+  MA 02110-1301 USA
 
-    $Id$
- */
+  $Id$
+*/
 #ifndef CAF_DATA_LSTC_H
 #define CAF_DATA_LSTC_H 1
 /**
@@ -44,15 +44,15 @@
 CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
-	/** Computes de list structure size */
+/** Computes de list structure size */
 #define CAF_LSTC_SZ                   (sizeof(lstcn_t))
-	/** Declares a deletion callback to use with list nodes */
+/** Declares a deletion callback to use with list nodes */
 #define CAF_LSTCNODE_CBDEL(del)       int (*del)(void *ptr)
-	/** Declares a dump callback to use with list nodes */
+/** Declares a dump callback to use with list nodes */
 #define CAF_LSTCNODE_CBDUMP(dmp)      int (*dmp)(FILE *out, void *ptr)
-	/** Declares a walk callback to use with list nodes */
+/** Declares a walk callback to use with list nodes */
 #define CAF_LSTCNODE_CBWALK(walk)     int (*walk)(void *ptr)
-	/** Declares a search callback to use with list nodes */
+/** Declares a search callback to use with list nodes */
 #define CAF_LSTCNODE_CBSRCH(srch)     int (*srch)(void *ndata, void *data)
 
 /**
@@ -158,7 +158,8 @@ int lstc_node_delete (lstcn_t *lst, lstcn_t *n, CAF_LSTCNODE_CBDEL(del));
  * @see      lstc_t
  * @see      lstcn_t
  */
-int lstc_node_delete_by_data (lstcn_t *lst, void *data, CAF_LSTCNODE_CBDEL(del));
+int lstc_node_delete_by_data (lstcn_t *lst, void *data,
+							  CAF_LSTCNODE_CBDEL(del));
 
 
 /**

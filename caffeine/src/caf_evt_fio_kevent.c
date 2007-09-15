@@ -2,24 +2,24 @@
 /* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 noexpandtab: */
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
-    Caffeine - C Application Framework
-    Copyright (C) 2006 Daniel Molina Wegener
+  Caffeine - C Application Framework
+  Copyright (C) 2006 Daniel Molina Wegener
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-    MA 02110-1301 USA
- */
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+  MA 02110-1301 USA
+*/
 #ifndef lint
 static char Id[] = "$Id$";
 #endif /* !lint */
@@ -61,7 +61,7 @@ caf_fio_evt_new  (caf_io_file_t *f, int type, int to) {
 			xempty (r->ev_store, r->ev_sz);
 			r->ev_timeout = to;
 			if (r->ev_info == (io_evt_kevent_t *)NULL ||
-			        (caf_fio_evt_init (r)) != CAF_OK) {
+				(caf_fio_evt_init (r)) != CAF_OK) {
 				xfree (r);
 				r = (fio_evt_t *)NULL;
 			}
@@ -96,15 +96,15 @@ caf_fio_evt_init (fio_evt_t *e) {
 			if (e->ev_src > -1) {
 				if (e->ev_type & EVT_IO_READ) {
 					/* XXX: we can't handle read events yet
-					EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
-					       KEVENT_FILTER_FLAGS, 0, 0); */
+					   EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
+					   KEVENT_FILTER_FLAGS, 0, 0); */
 				}
 				if (e->ev_type & EVT_IO_WRITE) {
 					EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
 					       KEVENT_WRITE_FLAGS, 0, 0);
 				}
 				if ((kevent (e->ev_src, s, KEVENT_FILTER_COUNT, NULL, 0, NULL))
-				        >= 0) {
+					>= 0) {
 					return CAF_OK;
 				}
 			}
@@ -123,15 +123,15 @@ caf_fio_evt_reinit (fio_evt_t *e) {
 			if (e->ev_src > -1) {
 				if (e->ev_type & EVT_IO_READ) {
 					/* XXX: we can't handle read events yet
-					EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
-					       NOTE_WRITE, 0, 0); */
+					   EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
+					   NOTE_WRITE, 0, 0); */
 				}
 				if (e->ev_type & EVT_IO_WRITE) {
 					EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
 					       NOTE_WRITE, 0, 0);
 				}
 				if ((kevent (e->ev_src, s, KEVENT_FILTER_COUNT, NULL, 0, NULL))
-				        >= 0) {
+					>= 0) {
 					return CAF_OK;
 				}
 			}
@@ -202,7 +202,7 @@ caf_fio_evt_isread (fio_evt_t *e) {
 		s = (io_evt_kevent_t *)e->ev_store;
 		if (s != (io_evt_kevent_t *)NULL) {
 			/* XXX: we can't handle read events yet
-			r = s->fflags & NOTE_WRITE ? CAF_OK : CAF_ERROR; */
+			   r = s->fflags & NOTE_WRITE ? CAF_OK : CAF_ERROR; */
 		}
 	}
 	return r;
