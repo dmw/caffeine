@@ -22,18 +22,14 @@
 
   $Id$
 */
-#ifndef CAF_DATA_STRING_H
-#define CAF_DATA_STRING_H 1
+#ifndef CAF_REGEX_H
+#define CAF_REGEX_H 1
 /**
- * @defgroup      caf_data_string       Strings
+ * @defgroup      caf_regex       Regular Expression
  * @ingroup       caf
  */
 
-#include <caf/caf_data_buffer.h>
-#include <caf/caf_data_pcre.h>
-#include <caf/caf_data_base64.h>
-#include <caf/caf_data_packer.h>
-#include <caf/caf_hash_str.h>
+#include <caf/caf_regex_pcre.h>
 
-#endif /* !CAF_DATA_STRING_H */
-/* caf_data_string.h ends here */
+#endif /* !CAF_REGEX_H */
+/* caf_regex.h ends here */

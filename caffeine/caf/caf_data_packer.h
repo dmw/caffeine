@@ -26,7 +26,7 @@
 #define CAF_DATA_PACKER_H 1
 /**
  * @defgroup      caf_data_packer           Data Packer
- * @ingroup       caf_data
+ * @ingroup       caf_data_string
  * @addtogroup    caf_data_packer
  * @{
  *
@@ -39,10 +39,10 @@
  *
  */
 
-#include "caf/caf.h"
-#include "caf/caf_data_mem.h"
-#include "caf/caf_data_buffer.h"
-#include "caf/caf_data_lstdl.h"
+#include <caf/caf.h>
+#include <caf/caf_data_mem.h>
+#include <caf/caf_data_buffer.h>
+#include <caf/caf_data_lstdl.h>
 
 #ifdef __cplusplus
 CAF_BEGIN_C_EXTERNS
@@ -202,192 +202,269 @@ struct caf_packet_s {
 };
 
 
-/**
+/** 
+ * @brief		Allocates a new unit definition.
+ * 
+ * Allocates a new unit definition, with the given identifier (id),
+ * using the known unit type (type), assuming the unit length (length)
+ * in the string cases, or using buffer pattern startup (u_start) and
+ * the buffer pattern ending (u_end) with starting pattern size (su_sz)
+ * and ending pattern size (eu_sz).
  *
- * @brief    Creates a new Unit.
- *
- * Creates a new Unit definition, you can define units in a pack (packet
- * definition) to use with the automated unpacking functions.
- *
- * @param[in]    id         Unit Id.
- * @param[in]    type       Unit Type (@see caf_unit_type_t).
- * @param[in]    length     the unit length (to use with strings).
- * @param[in]    u_start    unit pattern startup byte string.
- * @param[in]    u_end      unit pattern ending byte string.
- * @param[in]    su_sz      unit pattern startup byte string size.
- * @param[in]    eu_sz      unit pattern ending byte string.
- * @return       caf_unit_t *     the allocated unit.
- *
- * @see      caf_unit_type_t
- * @see      caf_unit_t
- * @see      caf_pack_t
- * @see      caf_packet_t
+ * @param id			unit identifier.
+ * @param type			unit type.
+ * @param length		unit length.
+ * @param u_start		unit startup pattern.
+ * @param u_end			unit ending pattern.
+ * @param su_sz			unit startup pattern size.
+ * @param eu_sz			unit ending pattern size.
+ * 
+ * @return				A new allocated unit.
  */
-caf_unit_t *caf_unit_new (int id, caf_unit_type_t type, size_t length,
+caf_unit_t *caf_unit_new(int id, caf_unit_type_t type, size_t length,
+						 void *u_start, void *u_end, size_t su_sz,
+						 size_t eu_sz);
+
+/** 
+ * @brief		Deallocates the given unit.
+ *
+ * Deallocates the given unit, this interface does not releases the
+ * memory for given startup patterns and ending patterns.
+ *
+ * @param r				unit to deallocate.
+ * 
+ * @return				CAF_OK on success, CAF_ERROR on failure.
+ */
+int caf_unit_delete(caf_unit_t *r);
+
+/** 
+ * @brief		Allocates memory to store the value.
+ *
+ * Allocates memory for the given unit type, with the given size and
+ * the data pointer.
+ * 
+ * @param type			unit type.
+ * @param sz			data size.
+ * @param data			data pointer.
+ * 
+ * @return		A new allocated value pointer.
+ */
+caf_unit_value_t *caf_unit_value_new(caf_unit_type_t type, size_t sz,
+									 void *data);
+
+/** 
+ * @brief		Deallocates the memory of a given unit value.
+ * 
+ * Deallocates the memory for the given unit value and data pointer
+ * in it.
+ * 
+ * @param r				unit value pointer.
+ * 
+ * @return		CAF_OK on success, CAF_ERROR on failure.
+ */
+int caf_unit_value_delete(caf_unit_value_t *r);
+
+/** 
+ * @brief		Default unit deletion callback.
+ *
+ * More complex units could need another deletion callback. By default
+ * this interface is called, but you can specify another callback with
+ * the same prototype.
+ *
+ * @param r				unit to deallocate.
+ * 
+ * @return		CAF_OK on success, CAF_ERROR on failure.
+ */
+int caf_unit_delete_callback(void *r);
+
+/** 
+ * @brief		Allocates a new pack definition.
+ *
+ * Allocates a new pack detinition, creating a new list of units in it
+ * and assigning the given identifier (id) to the pack, also you must
+ * provide a pack name that can be used for debugging purposes.
+ * 
+ * @param id			pack id.
+ * @param name			pack name.
+ * 
+ * @return		A new allocated pack pointer.
+ */
+caf_pack_t *caf_pack_new(int id, const char *name);
+
+/** 
+ * @brief		Deallocates the memory used by the given pack.
+ *
+ * Deallocates the memory used by the given pack. Also deallocates
+ * the pack unit list and the name of the given unit.
+ *
+ * @param r				unit to deallocate.
+ * 
+ * @return		CAF_OK on success, CAF_ERROR on failure.
+ */
+int caf_pack_delete(caf_pack_t *r);
+
+/** 
+ * @brief		Allocates memory for a new packet.
+ *
+ * A packet is a pack definition storage type. A packet stores real
+ * data and the pack definition to parse the packet data. Also, need
+ * the packet identifier (id), the pack identifier (pack_id) and the
+ * pack name (pack_name).
+ * 
+ * @param id			packet id.
+ * @param pack_id		pack id.
+ * @param pack_name		pack name.
+ * 
+ * @return		A new allocated packet pointer.
+ */
+caf_packet_t *caf_packet_new(int id, int pack_id, const char *pack_name);
+
+/** 
+ * @brief		Deallocates the memory of the given packet.
+ *
+ * Deallocates the memory used by the given packet, also deallocates
+ * the pack contained in the packet structure, this means the use of
+ * caf_pack_delete.
+ * 
+ * @param r				packet to deallocate.
+ * 
+ * @return		CAF_OK on success, CAF_ERROR on failure.
+ */
+int caf_packet_delete(caf_packet_t *r);
+
+/** 
+ * @brief		Adds a new unit to the given packet.
+ *
+ * Adds a new unit to the given packet, the packet must be previously
+ * allocated and need the following parameters: a packet (r), an unit
+ * identifier (id), the unit type (type) and the unit length (length).
+ * Adding/Creating units does not means that you pass values to the
+ * packet, the packet is disassembler from a buffer using parse and
+ * translate interfaces.
+ * 
+ * @param r				packet where to add the new unit.
+ * @param id			unit id.
+ * @param type			unit type.
+ * @param length		unit length.
+ * 
+ * @return		CAF_OK on success, CAF_ERROR on failure.
+ */
+int caf_packet_addunit(caf_packet_t *r, int id, caf_unit_type_t type,
+					   size_t length);
+
+/** 
+ * @brief		Adds a string unit to the given packet.
+ * 
+ * Adds a string unit to the given packet, using or not the string
+ * delimitiers or the string size, if the string isn't a delimitied
+ * string. The parameters that this interface needs are the packet
+ * itself (r), the unit identifier (id), the string length (length),
+ * string startup delimitier (u_start), the string end delimitier
+ * (u_end) and both delimitier sizes su_sz and eu_sz respectivelly.
+ * 
+ * @param r				packet to add the string unit.
+ * @param id			unit identifier.
+ * @param length		unit length.
+ * @param u_start		string start pattern.
+ * @param u_end			string end pattern.
+ * @param su_sz			string start pattern size.
+ * @param eu_sz			string end pattern size.
+ * 
+ * @return		CAF_OK on success, CAF_ERROR on failure.
+ */
+int caf_packet_addunitstr(caf_packet_t *r, int id, size_t length,
 						  void *u_start, void *u_end, size_t su_sz,
 						  size_t eu_sz);
 
-
-/**
+/** 
+ * @brief		Adds a pascal string unit to the given packet.
  *
- * @brief    Deletes (deallocates) the given unit.
- *
- * Deletes or deallocates the memory of the given unit pointer.
- *
- * @param[in]    r          The unit to deallocate.
- * @return       int        CAF_OK on success, CAF_ERROR on failure.
- *
- * @see      caf_unit_t
+ * A pascal string is made from a string length unit, that can
+ * be an integer or a byte. The size of the integer value that
+ * holds the string length and the string itself as a continuation
+ * of the string memory block conforms the entire buffer, then
+ * in this interface you specify only the size of the pascal
+ * string length holder. The rest of the buffer (usually a void
+ * pointer) is taken as the string itself. This interface needs
+ * the followin parameters: the packet (r), the unit identifier
+ * (id), the string size holder length (length) and -- if the
+ * string has a startup pattern -- the startup pattern pointer.
+ * 
+ * @param r				the packet where to add the unit.
+ * @param id			the unit identifier
+ * @param length		string size holder length (or size).
+ * @param u_start		string startup pattern
+ * 
+ * @return		CAF_OK on success, CAF_ERROR on failure.
  */
-int caf_unit_delete (caf_unit_t *r);
+int caf_packet_addunitpstr(caf_packet_t *r, int id, size_t length,
+						   void *u_start);
 
-
-/**
- *
- * @brief    Creates a new Unit Value.
- *
- * Allocates (creates) a new unit value, assigning the corresponding unit data.
- *
- * @param[in]    type       Unit value type.
- * @param[in]    sz         Unit value size.
- * @param[in]    data       Unit value data.
- * @return       caf_unit_value_t *         The allocated unit value.
- *
- * @see      caf_unit_type_t
- * @see      caf_unit_t
- * @see      caf_unit_value_t
+/** 
+ * @brief		Gets a string value from the given buffer.
+ * 
+ * Returns the string unit value from the given buffer, assuming
+ * that the unit holds a string and the buffer contains enough data
+ * to satisfy the pascal string unit definition. The parameters are
+ * as follow: the unit definition (u), the buffer where to search
+ * for the string (b) and the buffer size (p).
+ * 
+ * @param u				unit definition.
+ * @param b				input buffer.
+ * @param p				input buffer size.
+ * 
+ * @return		A new allocated unit value, NULL on failure.
  */
-caf_unit_value_t *caf_unit_value_new (caf_unit_type_t type, size_t sz,
-									  void *data);
+caf_unit_value_t *caf_packet_getpstr(caf_unit_t *u, void *b, size_t p);
 
-
-/**
- *
- * @brief    Deletes (deallocates) the given unit value.
- *
- * Deletes or deallocates the memory of the given unit value pointer.
- *
- * @param[in]    r          The unit value to deallocate.
- * @return       int        CAF_OK on success, CAF_ERROR on failure.
- *
- * @see      caf_unit_value_t
+/** 
+ * @brief		Gets a string value from the given buffer.
+ * 
+ * Returns the string unit value from the given buffer, assuming
+ * that the unit holds a string and the buffer contains enough data
+ * to satisfy the unit definition. The parameters are as follow:
+ * the unit definition (u), the buffer where to search for the string
+ * (b) and the buffer size (p).
+ * 
+ * @param u				unit definition.
+ * @param b				input buffer.
+ * @param p				input buffer size.
+ * 
+ * @return		A new allocated unit value, NULL on failure.
  */
-int caf_unit_value_delete (caf_unit_value_t *r);
+caf_unit_value_t *caf_packet_getstr(caf_unit_t *u, void *b, size_t p);
 
-
-/**
+/** 
+ * @brief		Parses a packet from the given input buffer.
  *
- * @brief    Delete callback to use with pack (packet definition) deletion
- *
- * Deletes the given unit definition.
- *
- * @param[in]    r          The unit to deallocate.
- * @return       int        CAF_OK on success, CAF_ERROR on failure.
- *
- * @see      caf_unit_t
+ * Parses a packet from the input given buffer. A packet is defined
+ * by unit definition, and return the unit definition values in the
+ * given packet. Itself, this interface isn't thread safe, but, if
+ * you define a pack separatelly from the packet definition, and
+ * assing that pack to the packet definition, you can make a thread
+ * safe packet.
+ * 
+ * @param r				the packet to parse.
+ * @param buf			the input buffer.
+ * 
+ * @return		CAF_OK on success, CAF_ERROR on failure.
  */
-int caf_unit_delete_callback (void *r);
+int caf_packet_parse(caf_packet_t *r, cbuffer_t *buf);
 
-
-/**
- *
- * @brief    Creates a new empty Pack (packet definition).
- *
- * Creates (allocates) a new empty Pack (packet definition) to use with
- * the pack (packet definition) functions.
- *
- * @param[in]    id         Pack Id
- * @param[in]    name       Pack Name
- * @return       caf_pack_t *       a new allocated empty pack.
- *
- * @see      caf_pack_t
+/** 
+ * @brief		Translates the given packet into a buffer.
+ * 
+ * Translates the given buffer into a packet, ready to be sent
+ * over the network or write a file. This can be usefull with
+ * strong varaying packets protocolos and files.
+ * 
+ * @param r				the packet to translate.
+ * 
+ * @return		The allocated buffer with translated data, NULL on
+ *				failure.
  */
-caf_pack_t *caf_pack_new (int id, const char *name);
+cbuffer_t *caf_packet_translate(caf_packet_t *r);
 
-
-/**
- *
- * @brief    Deletes the given pack (packet definition)
- *
- * Deletes the given pack or packet definition, using the unit delete
- * callback to immediately
- *
- * @param[in]    r          Pack to delete
- * @return       int        CAF_OK on success, CAF_ERROR on failure.
- *
- * @see      caf_pack_t
- */
-int caf_pack_delete (caf_pack_t *r);
-
-
-/**
- *
- * @brief    Creates a new empty Packet.
- *
- * Allocates memory (creates) a new empty packet.
- *
- * @param[in]    id         Pack Id
- * @param[in]    name       Pack Name
- * @return       caf_pack_t *       a new allocated empty pack.
- *
- * @see      caf_pack_t
- */
-caf_packet_t *caf_packet_new (int id, int pack_id, const char *pack_name);
-
-
-/**
- *
- * @brief    Deletes the given Packet
- *
- * Deallocates the memory for the given packet, and deletes the given units.
- *
- * @param[in]    id         Pack Id
- * @param[in]    name       Pack Name
- * @return       caf_pack_t *       a new allocated empty pack.
- *
- * @see      caf_pack_t
- */
-int caf_packet_delete (caf_packet_t *r);
-
-
-/**
- *
- * @brief    Adds an Unit to the given pack
- *
- * Deallocates the memory for the given packet, and deletes the given units.
- *
- * @param[in]    id         Pack Id
- * @param[in]    name       Pack Name
- * @return       caf_pack_t *       a new allocated empty pack.
- *
- * @see      caf_pack_t
- */
-int caf_packet_addunit (caf_packet_t *r, int id, caf_unit_type_t type,
-						size_t length);
-
-/**
- *
- * @brief    Adds a string unit to the given pack
- *
- * Adds an string unit to the given packet, 
- *
- * @param[in]    id         Pack Id
- * @param[in]    name       Pack Name
- * @return       caf_pack_t *       a new allocated empty pack.
- *
- * @see      caf_pack_t
- */
-int caf_packet_addunitstr (caf_packet_t *r, int id, size_t length,
-						   void *u_start, void *u_end, size_t su_sz,
-						   size_t eu_sz);
-
-int caf_packet_parse (caf_packet_t *r, cbuffer_t *buf);
-
-caf_unit_value_t *caf_packet_getstr (caf_unit_t *u, void *b, size_t p);
-
-caf_unit_value_t *caf_packet_getpascalstr (caf_unit_t *u, void *b, size_t p);
-
-cbuffer_t *caf_packet_translate (caf_packet_t *r);
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS

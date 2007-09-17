@@ -31,7 +31,7 @@
 
 #include <caf/caf_process_pool.h>
 #include <caf/caf_data_pidfile.h>
-#include <caf/caf_sem_svr4.h>
+#include <caf/caf_dsm.h>
 
 #endif /* !CAF_PROCESS_H */
 /* caf_process.h ends here */

@@ -26,7 +26,7 @@
 #define CAF_DSM_H 1
 /**
  * @defgroup      caf_dsm             Caffeine Dynamic State Machine
- * @ingroup       caf_data
+ * @ingroup       caf_process
  * @addtogroup    caf_dsm
  * @{
  *

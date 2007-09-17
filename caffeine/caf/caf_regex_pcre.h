@@ -25,9 +25,9 @@
 #ifndef CAF_REGEX_PCRE_H
 #define CAF_REGEX_PCRE_H 1
 /**
- * @defgroup      caf_refex_pcre    PCRE Regular Expressions
- * @ingroup       caf_refex
- * @addtogroup    caf_refex_pcre
+ * @defgroup      caf_regex_pcre    Perl Compatible
+ * @ingroup       caf_regex
+ * @addtogroup    caf_regex_pcre
  * @{
  *
  * @brief     PCRE Regular Expressions

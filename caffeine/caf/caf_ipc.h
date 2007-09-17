@@ -22,18 +22,27 @@
 
   $Id$
 */
-#ifndef CAF_DATA_STRING_H
-#define CAF_DATA_STRING_H 1
+#ifndef CAF_IPC_H
+#define CAF_ICP_H 1
 /**
- * @defgroup      caf_data_string       Strings
+ * @defgroup      caf_ipc				IPC
  * @ingroup       caf
+ * @addtogroup    caf_ipc
+ * @{
+ *
+ * @brief     IPC Management
+ * @date      $Date$
+ * @version   $Revision$
+ * @author    Daniel Molina Wegener <dmw@unete.cl>
+ *
+ * IPC Interfaces
+ *
  */
 
-#include <caf/caf_data_buffer.h>
-#include <caf/caf_data_pcre.h>
-#include <caf/caf_data_base64.h>
-#include <caf/caf_data_packer.h>
-#include <caf/caf_hash_str.h>
+#include <caf/caf_ipc_shm.h>
+#include <caf/caf_ipc_msg.h>
+#include <caf/caf_sem.h>
 
-#endif /* !CAF_DATA_STRING_H */
-/* caf_data_string.h ends here */
+/** }@ */
+#endif /* !CAF_IPC_H */
+/* caf_ipc.h ends here */

@@ -60,6 +60,7 @@ set (CAFFEINE_HEADERS
     caf_io_net_svcpool.h
     caf_io_tail.h
     caf_io_tool.h
+	caf_ipc.h
     caf_ipc_msg.h
     caf_ipc_shm.h
     caf_mem.h
