@@ -22,10 +22,10 @@ tabs means less tokens to parse.
 ---------------------
 * Lowercase functions.
 * Lowercase identifiers.
-* Lowercase constants in files (static variables).
+* Lowercase constants in files and static variables.
 * Uppercase enums.
 * Uppercase macros.
-* Uppercase constants (in headers).
+* Uppercase define constants (in headers).
 
 For core functions, you must use:
 	<module_abbreviation>_<function_name>
