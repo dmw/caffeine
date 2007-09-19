@@ -78,47 +78,152 @@ struct caf_dsm_s {
 	lstdl_t *m_state;
 };
 
+/**
+ * @brief		Caffeine DSM States
+ *
+ * Defines the state identifiers that can have the DSM
+ * state list, the main use is the DSM control.
+ * 
+ * @see		caf_dsm_state_t
+ * @see		caf_dsm_state_s
+ */
 typedef enum {
+	/** Startup state */
 	CAF_DSM_STATE_START = 0000001,
+	/** Normal state */
 	CAF_DSM_STATE_NORMAL = 0000002,
+	/** Error state */
 	CAF_DSM_STATE_ERROR = 0000004,
+	/** Ending state */
 	CAF_DSM_STATE_END = 0000010
 } caf_dsm_state_type_t;
 
+/**
+ * @brief		State return type
+ *
+ * This is the return type for a DSM, as the user defines the
+ * different state interfaces, the return type holds the control
+ * variable (r_control), the parameter data (r_data) and the
+ * return value (r_return).
+ * 
+ * @see			caf_dsm_return_s
+ */
 typedef struct caf_dsm_return_s caf_dsm_return_t;
+/**
+ * @brief		State return type
+ *
+ * This is the return type for a DSM, as the user defines the
+ * different state interfaces, the return type holds the control
+ * variable (r_control), the parameter data (r_data) and the
+ * return value (r_return).
+ * 
+ * @see			caf_dsm_return_t
+ */
 struct caf_dsm_return_s {
+	/** Return Control, @see caf_dsm_state_control_t) */
 	int r_control;
+	/** Return Input Data */
 	void *r_data;
+	/** Return Data */
 	void *r_return;
 };
 
+/** 
+ * @brief		DSM State Holder Typdef
+ *
+ * Holds the structure that contains the DSM state itself.
+ * Has an identifier, a type a normal proceding callback and
+ * an error callback.
+ * 
+ * @see	caf_dsm_state_s
+ */
 typedef struct caf_dsm_state_s caf_dsm_state_t;
+/** 
+ * @brief		DSM State Holder Typdef
+ *
+ * Holds the structure that contains the DSM state itself.
+ * Has an identifier, a type a normal proceding callback and
+ * an error callback.
+ * 
+ * @see	caf_dsm_state_t
+ */
 struct caf_dsm_state_s {
+	/** State identifier, must be unique in a DSM instance */
 	int s_id;
+	/** State type */
 	int s_type;
+	/** Proceding callback */
 	CAD_DSM_CALL(s_call);
+	/** Error callback */
 	CAD_DSM_CALL(s_error);
 };
 
+/**
+ * @brief		DSM State Control Types
+ *
+ * A DSM flow control can go forward, backward, stay or
+ * jump to a error state. This defines the conduit that
+ * follows the DSM.
+ */
 typedef enum {
+	/** Go forward to the next state */
 	CAF_DSM_CONTROL_FORWARD = 0000001,
+	/** Go backward to the previous state */
 	CAF_DSM_CONTROL_BACKWARD = 0000002,
+	/** Stay in the current state */
 	CAF_DSM_CONTROL_STAY = 0000004,
+	/** Jump to an error condition */
 	CAF_DSM_CONTROL_ERROR = 0000010
 } caf_dsm_state_control_t;
 
+/**
+ * @brief		DSM Runner, this makes all DSMs thread safe
+ *
+ * A DSM runner it's a structure that holds the DSM instance
+ * and the current state of it. Also, holds data about the
+ * current call and many items that affects the DSM behavior.
+ * 
+ * @see caf_dsm_runner_s
+ */
 typedef struct caf_dsm_runner_s caf_dsm_runner_t;
+/**
+ * @brief		DSM Runner, this makes all DSMs thread safe
+ *
+ * A DSM runner it's a structure that holds the DSM instance
+ * and the current state of it. Also, holds data about the
+ * current call and many items that affects the DSM behavior.
+ * 
+ * @see caf_dsm_runner_t
+ */
 struct caf_dsm_runner_s {
+	/** Runner identifier */
 	int r_id;
+	/** Runner State Control */
 	int r_control;
+	/** Runner DSM pointer */
 	caf_dsm_t *r_machine;
+	/** Runner State */
 	caf_dsm_state_t *r_state;
+	/** Runner State Callback */
 	CAD_DSM_CALL(r_call);
+	/** State Return Input Data */
 	void *r_data;
+	/** State Return Data */
 	void *r_return;
+	/** Current Node in State List */
 	lstdln_t *l_current;
 };
 
+/** 
+ * @brief		Allocates a new DSM
+ *
+ * Allocates a new DSM (creates a new instance).
+ * 
+ * @param id 
+ * @param cycle 
+ * 
+ * @return 
+ */
 caf_dsm_t *caf_dsm_new (int id, int cycle);
 int caf_dsm_delete (caf_dsm_t *r);
 caf_dsm_state_t *caf_dsm_state_new (int s_id, caf_dsm_state_type_t s_type,
