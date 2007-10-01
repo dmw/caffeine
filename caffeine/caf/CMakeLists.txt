@@ -55,6 +55,7 @@ set (CAFFEINE_HEADERS
     caf_hash_table.h
     caf_io.h
     caf_io_file.h
+    caf_aio_file.h
     caf_io_net.h
     caf_io_net_conpool.h
     caf_io_net_svcpool.h

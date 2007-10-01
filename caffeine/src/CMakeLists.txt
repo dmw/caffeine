@@ -46,6 +46,7 @@ set (CAFFEINE_SRCS
 	caf_hash_str.c
 	caf_hash_table.c
 	caf_io_file.c
+	caf_aio_file.c
 	caf_io_tail.c
 	caf_io_net.c
 	caf_io_net_conpool.c
