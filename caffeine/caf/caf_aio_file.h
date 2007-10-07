@@ -52,6 +52,7 @@ CAF_BEGIN_C_EXTERNS
 
 #define CAF_AIO_PRIORITY			0
 #define CAF_AIO_FILE_SZ				(sizeof (caf_aio_file_t))
+#define CAF_AIO_CTRLB_SZ			(sizeof (struct aiocb))
 #define CAF_CBUF_AIO_EQ(b)			((ssize_t)b->sz == b->iosz)
 #define CAF_AIO_CLEAN(f)			\
 		f->iocb.aio_lio_opcode = LIO_NOP;				\
@@ -69,19 +70,20 @@ struct caf_aio_file_s {
 	cbuffer_t *buf;
 };
 
-caf_aio_file_t *caf_aio_fopen(const char *path, const int flg,
-							  const mode_t md, int fs, size_t bsz);
-int caf_aio_fclose(caf_aio_file_t *r);
-caf_aio_file_t *caf_aio_reopen(caf_aio_file_t *r);
-int caf_aio_restat(caf_aio_file_t *r);
-int caf_aio_fchanged(caf_aio_file_t *r, struct timespec *lmt,
-					 struct timespec *lct);
-int caf_aio_read(caf_aio_file_t *r, cbuffer_t *b);
-int caf_aio_write(caf_aio_file_t *r, cbuffer_t *b);
-int caf_aio_fcntl(caf_aio_file_t *r, int cmd, int *arg);
-int caf_aio_flseek(caf_aio_file_t *r, off_t o, int w);
-int caf_aio_cancel(caf_aio_file_t *r);
-int caf_aio_return(caf_aio_file_t *r);
+
+typedef struct caf_aio_file_lst_s caf_aio_file_lst_t;
+struct caf_aio_file_lst_s {
+	int flags;
+	int ustat;
+	mode_t mode;
+	struct stat sd;
+	struct aiocb *work_iocb;
+	struct aiocb *list_iocb;
+	lstdl_t *io_lst;
+	size_t size_iocb;
+	int count_iocb;
+};
+
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS
