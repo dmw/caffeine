@@ -229,7 +229,7 @@ caf_aio_error (caf_aio_file_t *r) {
 int
 caf_aio_suspend (caf_aio_file_t *r, const struct timespec *to) {
 	struct aiocb *l_iocb[1];
-	if (r != (caf_aio_file_t *)NULL) {
+	if (r != (caf_aio_file_t *)NULL && to != (const struct timespec *)NULL) {
 		l_iocb[0] = &(r->iocb);
 		return aio_suspend ((const struct aiocb * const *)l_iocb, 1, to);
 	}
@@ -237,9 +237,20 @@ caf_aio_suspend (caf_aio_file_t *r, const struct timespec *to) {
 }
 
 
+int
+caf_aio_waitcomplete (caf_aio_file_t *r, struct timespec *to) {
+	struct aiocb *l_iocb[1];
+	if (r != (caf_aio_file_t *)NULL && to != (const struct timespec *)NULL) {
+		l_iocb[0] = &(r->iocb);
+		return aio_waitcomplete ((struct aiocb **)l_iocb, to);
+	}
+	return -1;
+}
+
+
 caf_aio_file_lst_t *
 caf_aio_lst_new (const int flg, const mode_t md, int fs, int count) {
-	size_t tsz;
+	size_t tsz, fdsz;
 	caf_aio_file_lst_t *r = (caf_aio_file_lst_t *)NULL;
 	int c;
 	if (count > 0) {
@@ -250,7 +261,11 @@ caf_aio_lst_new (const int flg, const mode_t md, int fs, int count) {
 			r->flags = flg;
 			r->ustat = fs;
 			r->mode = md;
-			r->io_lst = lstdl_create ();
+			fdsz = (size_t)count * sizeof(int);
+			r->iocb_fds = (int *)xmalloc (fdsz);
+			for (c = 0; c <= count; c++) {
+				r->iocb_fds[c] = -1;
+			}
 		}
 	}
 	return r;
@@ -268,11 +283,87 @@ caf_aio_lst_delete (caf_aio_file_lst_t *r) {
 
 
 int
-caf_aio_lst_open (caf_aio_file_lst_t *r, const char paths[]) {
-	int ofc = 0;
-	if (r != (caf_aio_file_lst_t *)NULL && paths != (char *)NULL) {
+caf_aio_lst_open (caf_aio_file_lst_t *r, const char **paths) {
+	int ofc = 0, c;
+	if (r != (caf_aio_file_lst_t *)NULL && paths != (const char **)NULL) {
+		r->iocb_paths = (char **)paths;
+		for (c = 0; c < r->iocb_count; c++) {
+			if (r->mode != 0) {
+				r->iocb_fds[c] = open (paths[c], r->flags, r->mode);
+			} else {
+				r->iocb_fds[c] = open (paths[c], r->flags);
+			}
+			if (r->iocb_fds[c] >= 0) {
+				ofc++;
+			} else {
+				break;
+			}
+		}
 	}
 	return ofc;
+}
+
+
+int
+caf_aio_lst_close (caf_aio_file_lst_t *r) {
+	int ofc = 0, c;
+	if (r != (caf_aio_file_lst_t *)NULL) {
+		for (c = 0; c < r->iocb_count; c++) {
+			if (r->iocb_fds[c] > -1) {
+				if ((close (r->iocb_fds[c])) == 0) {
+					ofc++;
+				}
+			}
+		}
+	}
+	return ofc;
+}
+
+
+int
+caf_aio_lst_suspend (caf_aio_file_lst_t *r, const struct timespec *to,
+					 int idx) {
+	struct aiocb **p = (struct aiocb **)NULL;
+	if (r != (caf_aio_file_lst_t *)NULL
+		&& to != (const struct timespec *)NULL
+		&& idx >= 0) {
+		if (idx < r->iocb_count) {
+			p = (struct aiocb **)&(r->iocb_list[idx]);
+			return aio_suspend ((const struct aiocb * const *)p,
+								r->iocb_count, to);
+		}
+	}
+	return -1;
+}
+
+
+int
+caf_aio_lst_waitcomplete (caf_aio_file_lst_t *r, struct timespec *to,
+						  int idx) {
+	struct aiocb **p = (struct aiocb **)NULL;
+	if (r != (caf_aio_file_lst_t *)NULL
+		&& to != (const struct timespec *)NULL
+		&& idx >= 0) {
+		if (idx < r->iocb_count) {
+			p = (struct aiocb **)&(r->iocb_list[idx]);
+			return aio_waitcomplete (p, to);
+		}
+	}
+	return -1;
+}
+
+
+int
+caf_aio_lst_operation (caf_aio_file_lst_t *r, struct sigevent *e,
+					   int mode) {
+	struct aiocb **p = (struct aiocb **)NULL;
+	if (r != (caf_aio_file_lst_t *)NULL
+		&& e != (struct sigevent *)NULL) {
+		p = (struct aiocb **)&(r->iocb_list);
+		return lio_listio (mode, (struct aiocb * const *)p, r->iocb_count,
+						   e);
+	}
+	return -1;
 }
 
 

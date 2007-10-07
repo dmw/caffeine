@@ -76,12 +76,13 @@ struct caf_aio_file_lst_s {
 	int flags;
 	int ustat;
 	mode_t mode;
+	size_t iocb_sz;
+	int iocb_count;
+	char **iocb_paths;
+	int *iocb_fds;
 	struct stat sd;
-	struct aiocb *work_iocb;
-	struct aiocb *list_iocb;
-	lstdl_t *io_lst;
-	size_t size_iocb;
-	int count_iocb;
+	struct aiocb *iocb_work;
+	struct aiocb *iocb_list;
 };
 
 
