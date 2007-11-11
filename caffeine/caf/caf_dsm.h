@@ -242,6 +242,6 @@ CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */
-#endif /* !CAF_DATA_BITS_H */
+#endif /* !CAF_DSM_H */
 /* caf_dsm.h ends here */
 

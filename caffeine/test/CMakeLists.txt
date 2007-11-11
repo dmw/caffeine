@@ -109,7 +109,7 @@ set (CFLAGS_DEFAULT
 	"-Wall -Wextra -Wshadow -pedantic -std=c99")
 
 set (CFLAGS_DEBUG
-	"-DCAFFEINE_DEBUG -g3")
+	"-DCAFFEINE_DEBUG -g3 -pg")
 
 option (CAFFEINE_DEBUG
 	"Build Caffeine Using Debug"
@@ -127,7 +127,7 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|NetBSD|OpenBSD")
 ### debug caffeine
 if (CAFFEINE_DEBUG)
 	set (CFLAGS_PROJECT "${CFLAGS_DEFAULT} ${CFLAGS_DEBUG}")
-	set (LINK_FLAGS "${LINK_FLAGS} -pg")
+	set (LINK_FLAGS "${LINK_FLAGS} -g3 -pg")
 else (CAFFEINE_DEBUG)
 	set (CFLAGS_PROJECT "${CFLAGS_DEFAULT}")
 endif (CAFFEINE_DEBUG)
@@ -250,3 +250,27 @@ add_executable (caf_tail ${CAF_IO_TAIL_SRCS})
 add_executable (caf_base64 ${CAF_BASE64_SRCS})
 add_executable (caf_base64_file ${CAF_BASE64_FILE_SRCS})
 
+if (CAFFEINE_DEBUG)
+	set (CAFFEINE_TEST_TARGETS
+		caf_lstdl
+		caf_lstdlc
+		caf_lstc
+		caf_buffer
+		caf_dsm
+		caf_hash_str
+		caf_hashtable
+		caf_tail
+		caf_ppm
+		caf_tpm
+		caf_both_ptm
+		caf_pth_key
+		caf_mutex
+		caf_rwlock
+		caf_tail
+		caf_base64
+		caf_base64_file)
+	set_target_properties (
+		${CAFFEINE_TEST_TARGETS}
+		PROPERTIES
+		LINK_FLAGS ${LINK_FLAGS})
+endif (CAFFEINE_DEBUG)

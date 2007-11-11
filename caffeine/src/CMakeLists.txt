@@ -43,6 +43,7 @@ set (CAFFEINE_SRCS
 	caf_data_mem.c
 	caf_data_pidfile.c
 	caf_dsm.c
+	caf_dso.c
 	caf_hash_str.c
 	caf_hash_table.c
 	caf_io_file.c
@@ -88,6 +89,7 @@ set (CAFFEINE_HEADERS
 	../caf/caf_data_struct.h
 	../caf/caf_data_var.h
 	../caf/caf_dsm.h
+	../caf/caf_dso.h
 	../caf/caf_evt.h
 	../caf/caf_evt_fio.h
 	../caf/caf_evt_nio.h
@@ -126,7 +128,7 @@ set (CFLAGS_DEFAULT
 	"-Wall -Wextra -Wshadow -pedantic -std=c99")
 
 set (CFLAGS_DEBUG
-	"-DCAFFEINE_DEBUG -g3")
+	"-DCAFFEINE_DEBUG -g3 -pg")
 
 ### operating systems
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -258,7 +260,7 @@ find_library (PCRE_LIB
 ### debug caffeine
 if (CAFFEINE_DEBUG)
 	set (CFLAGS_PROJECT "${CFLAGS_DEFAULT} ${CFLAGS_DEBUG}")
-	set (LINK_FLAGS "${LINK_FLAGS} -pg")
+	set (LINK_FLAGS "${LINK_FLAGS} -g3 -pg")
 else (CAFFEINE_DEBUG)
 	set (CFLAGS_PROJECT "${CFLAGS_DEFAULT}")
 endif (CAFFEINE_DEBUG)
@@ -292,7 +294,7 @@ endif (PCRE_LIB AND PCRE_INCLUDE)
 set_source_files_properties (
 	${CAFFEINE_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	COMPILE_FLAGS "${CFLAGS_PROJECT} -DCOMPILING_CAFFEINE=1")
 
 ### source headers
 set_source_files_properties (
@@ -311,3 +313,14 @@ target_link_libraries (caffeine)
 
 ### dependencies
 add_dependencies (caffeine ${CAFFEINE_HEADERS})
+
+### debug information
+if (CAFFEINE_DEBUG)
+	set (CAFFEINE_LIBRARY_TARGETS
+		caffeine)
+	set_target_properties (
+		${CAFFEINE_LIBRARY_TARGETS}
+		PROPERTIES
+		LINK_FLAGS ${LINK_FLAGS})
+endif (CAFFEINE_DEBUG)
+
