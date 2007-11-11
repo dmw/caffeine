@@ -44,4 +44,4 @@
 #endif /* !CAF_END_C_EXTERNS */
 
 #endif /* !CAF_TOOL_MACRO_H */
-/* caf_macro.h ends here */
+/* caf_tool_macro.h ends here */

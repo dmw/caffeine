@@ -39,6 +39,8 @@
  *
  */
 
+#include <dlfcn.h>
+
 #include <caf/caf.h>
 #include <caf/caf_data_lstdl.h>
 
@@ -46,37 +48,192 @@
 CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
+/** sizeof applied to caf_dso_t  */
 #define CAF_DSO_T_SZ				(sizeof(caf_dso_t))
+/** sizeof applied to caf_dso_table_t */
 #define CAF_DSO_TABLE_T_SZ			(sizeof(caf_dso_table_t))
 
+/**
+ * @brief		Caffeine DSO Table
+ *
+ * Caffeine DSO Table contains the symbol table using a Caffeine
+ * hashtable where contains a symbol count and you can access
+ * symbols by using DSO Table interfaces.
+ */
 typedef struct caf_dso_table_s caf_dso_table_t;
+/**
+ * @brief		Caffeine DSO Table Structure
+ *
+ * The table structure for DSOs.
+ */
 struct caf_dso_table_s {
+	/** Table identifier */
 	int id;
+	/** Symbol Count */
 	int count;
+	/** Symbol Table */
 	caf_hash_table_t *symt;
 };
 
+/**
+ * @brief		Caffeine DSO Object
+ *
+ * Caffeine DSO Object contains a complete definition for DSOs
+ * using a DSO Table member to access symbols and the load
+ * routine is called on DSO allocation. You must define the
+ * routine returning a Caffeine Hashtable containing the
+ * symbol table.
+ *
+ * @see caf_dso_s
+ */
 typedef struct caf_dso_s caf_dso_t;
+/**
+ * @brief		Caffeine DSO Object Structure
+ *
+ * Defines the DSO Object structure.
+ *
+ * @see caf_dso_t
+ */
 struct caf_dso_s {
+	/** Oject identifier */
 	int id;
+	/** DSO path */
 	char *path;
+	/** DSO handle */
 	void *handle;
+	/** DSO symbol table */
 	caf_dso_table_t *table;
-	void *(*load) (void);
+	/** DSO load routine, points to @see CAF_DSO_INIT_LOADSYMS */
+	dlfunc_t load;
 };
 
 #ifndef COMPILING_CAFFEINE
+/** Caffeine startup symbol to search for on Caffine DSOs */
 extern const char *CAF_DSO_INIT_LOADSYMS;
 #endif /* !COMPILING_CAFFEINE */
 
-caf_dso_t *caf_dso_open(const char *path, const int mode, const int id);
-int caf_dso_close(caf_dso_t *dso);
-void *caf_dso_sym(caf_dso_t *dso, const char *name);
-caf_dso_table_t *caf_dso_table_new(const int id);
-int caf_dso_table_delete(caf_dso_table_t *dsot);
-int caf_dso_table_add(caf_dso_table_t *dsot, const char *name,
-					  const void *what);
-int caf_dso_table_remove(caf_dso_table_t *dsot, const char *name);
+
+/** 
+ * @brief				Opens a DSO.
+ *
+ * Opens a DSO, calling CAF_DSO_INIT_LOADSYMS_STRING to load the
+ * symbol table from the DSO. It's assumed that the DSO contains
+ * a CAF_DSO_INIT_LOADSYMS_STRING definition and returns a symbol
+ * table in the form of Caffine Hashtable.
+ * 
+ * @param path			Path to the DSO to open.
+ * @param mode			dlopen(3) mode.
+ * @param id			DSO identifier.
+ * 
+ * @return a new allocated caf_dso_t pointer on success, NULL on failure.
+ */
+caf_dso_t *caf_dso_open (const char *path, const int mode, const int id);
+
+/** 
+ * @brief				Close a DSO.
+ *
+ * Close a DSO, deallocating a DSO and unloading DSO symbols. Also
+ * deallocates the Caffeine Hashtable allocated for symbols.
+ * 
+ * @param dso			DSO to deallocate.
+ * 
+ * @return CAF_OK on success and CAF_ERROR on failure.
+ */
+int caf_dso_close (caf_dso_t *dso);
+
+/** 
+ * @brief				Search a symbol using the local hashtable.
+ *
+ * Search a symbol in the local hashtable.
+ * 
+ * @param dso			DSO where to search.
+ * @param name			symbol name.
+ * 
+ * @return a void pointer to the symbol, NULL on failure.
+ */
+void *caf_dso_sym (caf_dso_t *dso, const char *name);
+
+/** 
+ * @brief				Search a symbol using dlsym(3).
+ *
+ * Search a symbol in the DSO handle, using dlsym(3) and
+ * replaces the symbol definition in the local hashtable.
+ * 
+ * @param dso			DSO where to search.
+ * @param name			symbol name.
+ * 
+ * @return a void pointer to the symbol, NULL on failure.
+ */
+void *caf_dso_dlsym (caf_dso_t *dso, const char *name);
+
+/** 
+ * @brief				Search a symbol using dlfunc(3).
+ *
+ * Search a symbol in the DSO handle, using dlfunc(3) and
+ * replaces the symbol definition in the local hashtable.
+ * 
+ * @param dso			DSO where to search.
+ * @param name			symbol name.
+ * 
+ * @return a void pointer to the symbol, NULL on failure.
+ */
+dlfunc_t caf_dso_dlfunc (caf_dso_t *dso, const char *name);
+
+/** 
+ * @brief				Wrapper for dlerror(3).
+ *
+ * Wrapper interface to dlerror(3).
+ * 
+ * @return a pointer to the last dlerror(3) string.
+ */
+const char *caf_dso_dlerror ();
+
+/** 
+ * @brief				Allocates a new DSO Table.
+ *
+ * Allocates a new DSO Table.
+ * 
+ * @return a new allocated caf_dso_table_t pointer.
+ */
+caf_dso_table_t *caf_dso_table_new (const int id);
+
+/** 
+ * @brief				Deallocates the given DSO Table.
+ *
+ * Deallocates the given DSO Table.
+ *
+ * @param dsot			Table to deallocate.
+ * 
+ * @return CAF_OK on success, CAF_ERROR on failure.
+ */
+int caf_dso_table_delete (caf_dso_table_t *dsot);
+
+/** 
+ * @brief				Adds a new symbol to the table.
+ *
+ * Adds the given symbol to the table.
+ *
+ * @param dsot			Symbol table to deallocate
+ * @param name			Symbol name
+ * @param what			Symbol pointer
+ * 
+ * @return CAF_OK on success, CAF_ERROR on failure.
+ */
+int caf_dso_table_add (caf_dso_table_t *dsot, const char *name,
+					   const void *what);
+
+/** 
+ * @brief				Removes a symbol the table.
+ *
+ * Removes the given symbol from the table using the symbol
+ * name.
+ *
+ * @param dsot			Symbol table to deallocate
+ * @param name			Symbol name
+ * 
+ * @return CAF_OK on success, CAF_ERROR on failure.
+ */
+int caf_dso_table_remove (caf_dso_table_t *dsot, const char *name);
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS

@@ -66,4 +66,4 @@ CAF_END_C_EXTERNS
 
 /** }@ */
 #endif /* !CAF_H */
-/* caf_evt_mgr.h ends here */
+/* caf.h ends here */

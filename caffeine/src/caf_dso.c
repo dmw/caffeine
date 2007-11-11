@@ -42,7 +42,7 @@ static char Id[] = "$Id$";
 #include "caf/caf_dso.h"
 
 
-const char CAF_DSO_INIT_LOADSYMS[] = "CAF_DSO_INIT_LOADSYMS";
+const char CAF_DSO_INIT_LOADSYMS[] = "caf_dso_init_loadsyms";
 
 
 caf_dso_t *
@@ -55,10 +55,11 @@ caf_dso_open (const char *path, const int mode, const int id) {
 			r->path = strdup (path);
 			r->handle = dlopen (path, mode);
 			if (r->handle != NULL) {
-				r->load = (void *(*)(void))dlsym (r->handle,
-												  CAF_DSO_INIT_LOADSYMS);
-				if (r->load != (void *(*)(void))NULL) {
-					r->table = (caf_dso_table_t *)r->load ();
+				r->load = (void *(*)(void))dlfunc (r->handle,
+												   CAF_DSO_INIT_LOADSYMS);
+				if (r->load != NULL) {
+					r->table = (caf_dso_table_t *)
+						((void *(*)(void))r->load)();
 				}
 			}
 		}
@@ -96,6 +97,40 @@ caf_dso_sym (caf_dso_t *dso, const char *name) {
 		}
 	}
 	return r;
+}
+
+
+void *
+caf_dso_dlsym (caf_dso_t *dso, const char *name) {
+	void *r = (void *)NULL;
+	if (dso != (caf_dso_t *)NULL && name != (const char *)NULL) {
+		r = dlsym (dso->handle, name);
+		if (r != (void *)NULL) {
+			if ((caf_hash_table_set (dso->table->symt, (const void *)name,
+									 (const size_t)(strlen (name) + 1),
+									 r))
+				!= CAF_OK) {
+				r = (void *)NULL;
+			}
+		}
+	}
+	return r;
+}
+
+
+dlfunc_t
+caf_dso_dlfunc (caf_dso_t *dso, const char *name) {
+	dlfunc_t r = (dlfunc_t)NULL;
+	if (dso != (caf_dso_t *)NULL && name != (const char *)NULL) {
+		r = dlfunc (dso->handle, name);
+	}
+	return r;
+}
+
+
+const char *
+caf_dso_dlerror () {
+	return dlerror();
 }
 
 
