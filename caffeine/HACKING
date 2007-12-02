@@ -36,3 +36,15 @@ tests for you.
   module, means the inclusion of the author name in the AUTHORS file.
 
 
+4. Avoid Compile Warnings
+-------------------------
+
+Caffeine is build under strict compilation flags. Common flags to build
+caffeine are:
+
+-Wall -Wextra -Wshadow -pedantic -std=c99
+
+This means that the code must be 100% C99 (ISO/IEC 9899:1990) compilant.
+Every compile warning related to this standard, must be removed. To build
+Caffeine under debugging configuration, see the BUILDING text file.
+

@@ -1,0 +1,36 @@
+
+
+STEPS FOR BUILDING CAFFEINE
+===========================
+
+Build Tools:
+- CMake
+- PCRE
+
+CMake is a Makefile generator tool writen in C++. To build
+Caffeine manually you must run:
+
+$ cmake .
+$ make
+
+In the bin directory resides a script called cmk.sh, it's
+script that helps in the compilation of caffeine, setting
+verbose output and debug binaries generation, written to
+help in debugging tasks.
+
+To build Caffeine with cmk.sh you must run:
+
+$ cmk.sh -mcb
+
+To clean the proyect output, usually to get a patch:
+
+$ cmk.sh -mc
+
+To import the proyect into kdevelop:
+
+$ cmk.sh -kcb
+
+To clean the project output made by kdevelop:
+
+$ cmk.sh -kc
+
