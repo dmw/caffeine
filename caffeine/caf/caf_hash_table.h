@@ -47,7 +47,9 @@
 CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
+/** Hash structure size @see caf_hash_t */
 #define CAF_HASH_SZ                 (sizeof (caf_hash_t))
+/** Hash table structure size @see caf_hash_table_t */
 #define CAF_HASH_TABLE_SZ           (sizeof (caf_hash_table_t))
 
 typedef struct caf_hash_s caf_hash_t;
