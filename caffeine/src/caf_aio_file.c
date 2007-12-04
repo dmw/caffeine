@@ -24,6 +24,10 @@
 static char Id[] = "$Id$";
 #endif /* !lint */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif /* !HAVE_CONFIG_H */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,7 +38,12 @@ static char Id[] = "$Id$";
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
+
+#ifdef HAVE_AIO_H
 #include <aio.h>
+#else
+#error We need aio.h
+#endif /* !HAVE_AIO_H */
 
 #include "caf/caf.h"
 #include "caf/caf_data_mem.h"
@@ -237,6 +246,7 @@ caf_aio_suspend (caf_aio_file_t *r, const struct timespec *to) {
 }
 
 
+#ifdef HAVE_AIO_WAITCOMPLETE
 int
 caf_aio_waitcomplete (caf_aio_file_t *r, struct timespec *to) {
 	struct aiocb *l_iocb[1];
@@ -246,6 +256,7 @@ caf_aio_waitcomplete (caf_aio_file_t *r, struct timespec *to) {
 	}
 	return -1;
 }
+#endif /* !HAVE_AIO_WAITCOMPLETE */
 
 
 caf_aio_file_lst_t *
@@ -337,6 +348,7 @@ caf_aio_lst_suspend (caf_aio_file_lst_t *r, const struct timespec *to,
 }
 
 
+#ifdef HAVE_AIO_WAIT_COMPLETE
 int
 caf_aio_lst_waitcomplete (caf_aio_file_lst_t *r, struct timespec *to,
 						  int idx) {
@@ -351,6 +363,7 @@ caf_aio_lst_waitcomplete (caf_aio_file_lst_t *r, struct timespec *to,
 	}
 	return -1;
 }
+#endif /* !HAVE_AIO_WAIT_COMPLETE */
 
 
 int

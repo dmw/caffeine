@@ -7,6 +7,7 @@ project(caffeine C)
 include(CheckSymbolExists)
 include(CheckIncludeFiles)
 include(CheckTypeSize)
+include(CheckLibraryExists)
 include(FindThreads)
 
 ### extra includes
@@ -125,7 +126,7 @@ set (CAFFEINE_HEADERS
 
 ### compile flags
 set (CFLAGS_DEFAULT
-	"-Wall -Wextra -Wshadow -pedantic -std=c99")
+	"-Wall -Wextra -Wshadow -pedantic -std=c99 -DHAVE_CONFIG_H=1")
 
 set (CFLAGS_DEBUG
 	"-DCAFFEINE_DEBUG -g3 -pg")
@@ -138,6 +139,26 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 		caf_evt_nio_epoll.c
 		caf_evt_nio_pool_epoll.c
 		caf_evt_fio_inotify.c)
+	check_library_exists (
+		"dl"
+		"dlopen"
+		""
+		HAVE_LIB_DL)
+	check_library_exists (
+		"rt"
+		"aio_read"
+		""
+		HAVE_LIB_RT)
+	if (HAVE_LIB_DL)
+		set (LINK_AGAINST_LIBRARIES
+			"${LINK_AGAINST_LIBRARIES} -ldl")
+	endif (HAVE_LIB_DL)
+	if (HAVE_LIB_RT)
+		set (LINK_AGAINST_LIBRARIES
+			"${LINK_AGAINST_LIBRARIES} -lrt")
+	endif (HAVE_LIB_RT)
+	set (LINK_AGAINST_LIBRARIES
+		"${LINK_AGAINST_LIBRARIES}")
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|NetBSD|OpenBSD")
@@ -201,6 +222,14 @@ check_include_files (
 	"fcntl.h"
 	HAVE_FCNTL_H)
 
+check_include_files (
+	"dlfcn.h"
+	HAVE_DLFCN_H)
+
+check_include_files (
+	"aio.h"
+	HAVE_AIO_H)
+
 ### operating systems
 ### CMAKE_SYSTEM_NAME
 
@@ -221,7 +250,7 @@ if (HAVE_SYS_TYPES_H)
 	if (CADDR_T_SZ)
 	else (CADDR_T_SZ)
 		set (CADDR_T_SZ 0)
-	endif (CADDR_T_SZ)
+	endif (CADDR_T_SZ)	
 
 endif (HAVE_SYS_TYPES_H)
 
@@ -240,6 +269,37 @@ if (SIZE_T_SZ)
 else (SIZE_T_SZ)
 	set (SIZE_T_SZ 0)
 endif (SIZE_T_SZ)
+
+if (HAVE_DLFCN_H)
+	check_symbol_exists (
+		"dlfunc_t"
+		"dlfcn.h"
+		HAVE_DLFUNC_T)
+	if (HAVE_DLFUNC_T)
+	else (HAVE_DLFUNC_T)
+		set (HAVE_DLFUNC_T 0)
+	endif (HAVE_DLFUNC_T)
+
+	check_symbol_exists (
+		"dlfunc"
+		"dlfcn.h"
+		HAVE_DLFUNC)
+	if (HAVE_DLFUNC)
+	else (HAVE_DLFUNC)
+		set (HAVE_DLFUNC 0)
+	endif (HAVE_DLFUNC)
+endif (HAVE_DLFCN_H)
+
+if (HAVE_AIO_H)
+	check_symbol_exists (
+		"aio_waitcomplete"
+		"aio.h"
+		HAVE_AIO_WAITCOMPLETE)
+	if (HAVE_AIO_WAITCOMPLETE)
+	else (HAVE_AIO_WAITCOMPLETE)
+		set (HAVE_AIO_WAITCOMPLETE 0)
+	endif (HAVE_AIO_WAITCOMPLETE)
+endif (HAVE_AIO_H)
 
 ### config header
 configure_file(

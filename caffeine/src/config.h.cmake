@@ -1,8 +1,8 @@
 /* -*- mode: c; c-default-style: "k&r"; indent-tabs-mode: nil; -*- */
 /* vim:set ft=c ff=unix ts=4 sw=4 enc=latin1 expandtab: */
 /* kate: space-indent on; indent-width 4; mixedindent off; indent-mode cstyle; */
-#ifndef _CONFIG_H
-#define _CONFIG_H 1
+#ifndef _CAF_CONFIG_H
+#define _CAF_CONFIG_H 1
 
 #cmakedefine        STDC_HEADERS                1
 
@@ -19,17 +19,24 @@
 
 #cmakedefine        HAVE_FCNTL_H                1
 
+#cmakedefine        HAVE_DLFCN_H                1
+
+#cmakedefine        HAVE_AIO_H                  1
+
 #cmakedefine        CADDR_T_SZ                  ${CADDR_T_SZ}
 #cmakedefine        OFF_T_SZ                    ${OFF_T_SZ}
 
 #cmakedefine        SIZE_T_SZ                   ${SIZE_T_SZ}
 #cmakedefine        VOID_P_SZ                   ${VOID_P_SZ}
 
+#cmakedefine        HAVE_DLFUNC_T               1
+#cmakedefine        HAVE_DLFUNC                 1
+
+#cmakedefine        HAVE_AIO_WAITCOMPLETE       1
+
 #if SIZE_T_SZ != VOID_P_SZ
 #error strange compiler behavoir: sizeof(void *) != sizeof(size_t)
 #endif /* SIZE_T_SZ == VOID_P_SZ */
 
-#define COMPILING_CAFFEINE                      1
-
-#endif /* _CONFIG_H */
+#endif /* _CAF_CONFIG_H */
 /* config.h ends here */

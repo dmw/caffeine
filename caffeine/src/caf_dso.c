@@ -32,7 +32,12 @@ static char Id[] = "$Id$";
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+
+#ifdef HAVE_DLFCN_H
 #include <dlfcn.h>
+#else
+#error We need dlfcn.h
+#endif /* !HAVE_DLFCN_H */
 
 #include "caf/caf.h"
 #include "caf/caf_data_mem.h"
@@ -48,6 +53,10 @@ const char CAF_DSO_INIT_LOADSYMS[] = "caf_dso_init_loadsyms";
 caf_dso_t *
 caf_dso_open (const char *path, const int mode, const int id) {
 	caf_dso_t *r = (caf_dso_t *)NULL;
+#ifndef HAVE_DLFUNC
+	caf_function_t *hlp_func;
+	void *hlp_ptr;
+#endif /* !HAVE_DLFUNC */
 	if (path != (const char *)NULL && id > 0) {
 		r = (caf_dso_t *)xmalloc (CAF_DSO_T_SZ);
 		if (r != (caf_dso_t *)NULL) {
@@ -55,11 +64,19 @@ caf_dso_open (const char *path, const int mode, const int id) {
 			r->path = strdup (path);
 			r->handle = dlopen (path, mode);
 			if (r->handle != NULL) {
-				r->load = (void *(*)(void))dlfunc (r->handle,
-												   CAF_DSO_INIT_LOADSYMS);
+#ifdef HAVE_DLFUNC
+				r->load = dlfunc (r->handle,
+								  CAF_DSO_INIT_LOADSYMS);
+#else
+				memset (&hlp_func, 0, sizeof(hlp_func));
+				memset (&hlp_ptr, 0, sizeof(hlp_ptr));
+				hlp_ptr = dlsym (r->handle,
+								 CAF_DSO_INIT_LOADSYMS);
+				memcpy (&hlp_func, &hlp_ptr, (sizeof(hlp_func)));
+				r->load = hlp_func;
+#endif /* !HAVE_DLFUNC */
 				if (r->load != NULL) {
-					r->table = (caf_dso_table_t *)
-						((void *(*)(void))r->load)();
+					r->table = (caf_dso_table_t *)((void *(*)())r->load)();
 				}
 			}
 		}
@@ -118,11 +135,23 @@ caf_dso_dlsym (caf_dso_t *dso, const char *name) {
 }
 
 
-dlfunc_t
+caf_function_t *
 caf_dso_dlfunc (caf_dso_t *dso, const char *name) {
-	dlfunc_t r = (dlfunc_t)NULL;
+	caf_function_t *r = (caf_function_t *)NULL;
+#ifndef HAVE_DLFUNC
+	caf_function_t *hlp_func;
+	void *hlp_ptr;
+#endif /* !HAVE_DLFUNC */
 	if (dso != (caf_dso_t *)NULL && name != (const char *)NULL) {
+#ifdef HAVE_DLFUNC
 		r = dlfunc (dso->handle, name);
+#else
+		memset (&hlp_func, 0, sizeof(hlp_func));
+		memset (&hlp_ptr, 0, sizeof(hlp_ptr));
+		hlp_ptr = dlsym (dso->handle, name);
+		memcpy (&hlp_func, &hlp_ptr, (sizeof(hlp_func)));
+		r = hlp_func;
+#endif /* !HAVE_DLFUNC */
 	}
 	return r;
 }

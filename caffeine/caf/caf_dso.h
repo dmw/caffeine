@@ -53,6 +53,11 @@ CAF_BEGIN_C_EXTERNS
 /** sizeof applied to caf_dso_table_t */
 #define CAF_DSO_TABLE_T_SZ			(sizeof(caf_dso_table_t))
 
+
+typedef void *(caf_function_t)(void *);
+typedef void *caf_object_t;
+
+
 /**
  * @brief		Caffeine DSO Table
  *
@@ -104,7 +109,7 @@ struct caf_dso_s {
 	/** DSO symbol table */
 	caf_dso_table_t *table;
 	/** DSO load routine, points to @see CAF_DSO_INIT_LOADSYMS */
-	dlfunc_t load;
+	caf_function_t *load;
 };
 
 #ifndef COMPILING_CAFFEINE
@@ -177,7 +182,7 @@ void *caf_dso_dlsym (caf_dso_t *dso, const char *name);
  * 
  * @return a void pointer to the symbol, NULL on failure.
  */
-dlfunc_t caf_dso_dlfunc (caf_dso_t *dso, const char *name);
+caf_function_t *caf_dso_dlfunc (caf_dso_t *dso, const char *name);
 
 /** 
  * @brief				Wrapper for dlerror(3).
