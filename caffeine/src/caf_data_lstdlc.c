@@ -25,8 +25,8 @@ static char Id[] = "$Id: caf_data_lstdl.c 8 2007-05-03 00:50:25Z damowe $";
 #endif /* !lint */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif /* HAVE_CONFIG_H */
+#include "caf/config.h"
+#endif /* !HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>

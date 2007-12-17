@@ -25,7 +25,7 @@ static char Id[] = "$Id$";
 #endif /* !lint */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include "caf/config.h"
 #endif /* HAVE_CONFIG_H */
 
 #include <stdlib.h>
@@ -56,6 +56,9 @@ caf_dso_open (const char *path, const int mode, const int id) {
 #ifndef HAVE_DLFUNC
 	caf_function_t *hlp_func;
 	void *hlp_ptr;
+#else
+	caf_function_t *hlp_func;
+	dlfunc_t hlp_ptr;
 #endif /* !HAVE_DLFUNC */
 	if (path != (const char *)NULL && id > 0) {
 		r = (caf_dso_t *)xmalloc (CAF_DSO_T_SZ);
@@ -65,8 +68,12 @@ caf_dso_open (const char *path, const int mode, const int id) {
 			r->handle = dlopen (path, mode);
 			if (r->handle != NULL) {
 #ifdef HAVE_DLFUNC
-				r->load = dlfunc (r->handle,
+				memset (&hlp_func, 0, sizeof(hlp_func));
+				memset (&hlp_ptr, 0, sizeof(hlp_ptr));
+				hlp_ptr = dlfunc (r->handle,
 								  CAF_DSO_INIT_LOADSYMS);
+				memcpy (&hlp_func, &hlp_ptr, (sizeof(hlp_func)));
+				r->load = hlp_func;
 #else
 				memset (&hlp_func, 0, sizeof(hlp_func));
 				memset (&hlp_ptr, 0, sizeof(hlp_ptr));
@@ -76,7 +83,7 @@ caf_dso_open (const char *path, const int mode, const int id) {
 				r->load = hlp_func;
 #endif /* !HAVE_DLFUNC */
 				if (r->load != NULL) {
-					r->table = (caf_dso_table_t *)((void *(*)())r->load)();
+					r->table = (caf_dso_table_t *)(((caf_function_t)r->load)());
 				}
 			}
 		}
@@ -141,10 +148,18 @@ caf_dso_dlfunc (caf_dso_t *dso, const char *name) {
 #ifndef HAVE_DLFUNC
 	caf_function_t *hlp_func;
 	void *hlp_ptr;
+#else
+	caf_function_t *hlp_func;
+	dlfunc_t hlp_ptr;
 #endif /* !HAVE_DLFUNC */
 	if (dso != (caf_dso_t *)NULL && name != (const char *)NULL) {
 #ifdef HAVE_DLFUNC
-		r = dlfunc (dso->handle, name);
+		memset (&hlp_func, 0, sizeof(hlp_func));
+		memset (&hlp_ptr, 0, sizeof(hlp_ptr));
+		hlp_ptr = dlfunc (dso->handle,
+						  CAF_DSO_INIT_LOADSYMS);
+		memcpy (&hlp_func, &hlp_ptr, (sizeof(hlp_func)));
+		r = hlp_func;
 #else
 		memset (&hlp_func, 0, sizeof(hlp_func));
 		memset (&hlp_ptr, 0, sizeof(hlp_ptr));

@@ -41,6 +41,10 @@
 
 #include <dlfcn.h>
 
+#ifdef HAVE_CONFIG_H
+#include <caf/config.h>
+#endif /* HAVE_CONFIG_H */
+
 #include <caf/caf.h>
 #include <caf/caf_data_lstdl.h>
 
@@ -54,7 +58,7 @@ CAF_BEGIN_C_EXTERNS
 #define CAF_DSO_TABLE_T_SZ			(sizeof(caf_dso_table_t))
 
 
-typedef void *(caf_function_t)(void *);
+typedef void *(*caf_function_t)(void);
 typedef void *caf_object_t;
 
 

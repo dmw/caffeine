@@ -24,6 +24,10 @@
 static char Id[] = "$Id$";
 #endif /* !lint */
 
+#ifdef HAVE_CONFIG_H
+#include "caf/config.h"
+#endif /* !HAVE_CONFIG_H */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

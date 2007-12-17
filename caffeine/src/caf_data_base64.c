@@ -25,14 +25,13 @@ static char Id[] = "$Id$";
 #endif /* !lint */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif /* HAVE_CONFIG_H */
+#include "caf/config.h"
+#endif /* !HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "config.h"
 #include "caf/caf.h"
 #include "caf/caf_tool_macro.h"
 #include "caf/caf_data_mem.h"
@@ -475,7 +474,7 @@ caf_base_decode_stream (cbuffer_t *buf, const char *codes, const int bits,
 			if (cache->iosz > 0) {
 				cbuf_paste (cb, cache, 0, 0, (size_t)cache->iosz);
 				cbuf_paste (cb, buf, (size_t)cache->iosz, 0, nsz);
-				cb->iosz = ((size_t)cache->iosz + nsz);				
+				cb->iosz = ((size_t)cache->iosz + nsz);
 			} else {
 				cbuf_paste (cb, buf, 0, 0, nsz);
 				cb->iosz = nsz;

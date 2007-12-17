@@ -30,6 +30,7 @@
 #cmakedefine        VOID_P_SZ                   ${VOID_P_SZ}
 
 #cmakedefine        HAVE_DLFUNC_T               1
+#cmakedefine        HAVE_DLFUNC_SZ              1
 #cmakedefine        HAVE_DLFUNC                 1
 
 #cmakedefine        HAVE_AIO_WAITCOMPLETE       1

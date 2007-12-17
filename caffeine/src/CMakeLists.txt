@@ -12,7 +12,8 @@ include(FindThreads)
 
 ### extra includes
 set (MAKE_EXTRA_INCLUDE_FILES
-	"sys/types.h")
+	"sys/types.h"
+	"dlfcn.h")
 
 link_directories (
 	/usr/lib
@@ -234,25 +235,21 @@ check_include_files (
 ### CMAKE_SYSTEM_NAME
 
 ### checks in types.h
-if (HAVE_SYS_TYPES_H)
+check_type_size (
+	off_t
+	OFF_T_SZ)
+if (OFF_T_SZ)
+else (OFF_T_SZ)
+	set (OFF_T_SZ 0)
+endif (OFF_T_SZ)
 
-	check_type_size (
-		off_t
-		OFF_T_SZ)
-	if (OFF_T_SZ)
-	else (OFF_T_SZ)
-		set (OFF_T_SZ 0)
-	endif (OFF_T_SZ)
-
-	check_type_size (
-		caddr_t
-		CADDR_T_SZ)
-	if (CADDR_T_SZ)
-	else (CADDR_T_SZ)
-		set (CADDR_T_SZ 0)
-	endif (CADDR_T_SZ)	
-
-endif (HAVE_SYS_TYPES_H)
+check_type_size (
+	caddr_t
+	CADDR_T_SZ)
+if (CADDR_T_SZ)
+else (CADDR_T_SZ)
+	set (CADDR_T_SZ 0)
+endif (CADDR_T_SZ)	
 
 check_type_size (
 	"void *"
@@ -270,41 +267,55 @@ else (SIZE_T_SZ)
 	set (SIZE_T_SZ 0)
 endif (SIZE_T_SZ)
 
-if (HAVE_DLFCN_H)
-	check_symbol_exists (
+try_compile (DLFUNC_T_COMPILES
+    "${CMAKE_BINARY_DIR}"
+    "${PROJECT_SOURCE_DIR}/test/dlfcn.c"
+    OUTPUT_VARIABLE DLFUNC_T_COMPILES_OUT
+    )
+
+check_symbol_exists (
+	"dlfunc_t"
+	"dlfcn.h"
+	HAVE_DLFUNC_T)
+if (HAVE_DLFUNC_T)
+else (HAVE_DLFUNC_T)
+	check_type_size (
 		"dlfunc_t"
-		"dlfcn.h"
-		HAVE_DLFUNC_T)
-	if (HAVE_DLFUNC_T)
-	else (HAVE_DLFUNC_T)
+		HAVE_DLFUNC_SZ)
+	if (HAVE_DLFUNC_SZ)
+		set (HAVE_DLFUNC_T 1)
+	else (HAVE_DLFUNC_SZ)
 		set (HAVE_DLFUNC_T 0)
-	endif (HAVE_DLFUNC_T)
+	endif (HAVE_DLFUNC_SZ)
+endif (HAVE_DLFUNC_T)
 
-	check_symbol_exists (
-		"dlfunc"
-		"dlfcn.h"
-		HAVE_DLFUNC)
-	if (HAVE_DLFUNC)
-	else (HAVE_DLFUNC)
-		set (HAVE_DLFUNC 0)
-	endif (HAVE_DLFUNC)
-endif (HAVE_DLFCN_H)
+if (DLFUNC_T_COMPILES)
+	set (HAVE_DLFUNC_T 1)
+else (DLFUNC_T_COMPILES)
+	set (HAVE_DLFUNC_T 0)
+endif (DLFUNC_T_COMPILES)
 
-if (HAVE_AIO_H)
-	check_symbol_exists (
-		"aio_waitcomplete"
-		"aio.h"
-		HAVE_AIO_WAITCOMPLETE)
-	if (HAVE_AIO_WAITCOMPLETE)
-	else (HAVE_AIO_WAITCOMPLETE)
-		set (HAVE_AIO_WAITCOMPLETE 0)
-	endif (HAVE_AIO_WAITCOMPLETE)
-endif (HAVE_AIO_H)
+check_symbol_exists (
+	"dlfunc"
+	"dlfcn.h"
+	HAVE_DLFUNC)
+if (HAVE_DLFUNC)
+else (HAVE_DLFUNC)
+endif (HAVE_DLFUNC)
+
+check_symbol_exists (
+	"aio_waitcomplete"
+	"aio.h"
+	HAVE_AIO_WAITCOMPLETE)
+if (HAVE_AIO_WAITCOMPLETE)
+else (HAVE_AIO_WAITCOMPLETE)
+	set (HAVE_AIO_WAITCOMPLETE 0)
+endif (HAVE_AIO_WAITCOMPLETE)
 
 ### config header
 configure_file(
-	${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake
-	${CMAKE_CURRENT_SOURCE_DIR}/config.h)
+	"${PROJECT_SOURCE_DIR}/../caf/config.h.cmake"
+	"${PROJECT_SOURCE_DIR}/../caf/config.h")
 
 ### find pcre
 find_path (PCRE_INCLUDE pcre.h
