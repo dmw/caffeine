@@ -83,7 +83,7 @@ caf_dso_open (const char *path, const int mode, const int id) {
 				r->load = hlp_func;
 #endif /* !HAVE_DLFUNC */
 				if (r->load != NULL) {
-					r->table = (caf_dso_table_t *)(((caf_function_t)r->load)());
+					r->table = (caf_dso_table_t *)(((caf_function_t)*r->load)());
 				}
 			}
 		}
