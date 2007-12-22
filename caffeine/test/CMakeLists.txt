@@ -100,9 +100,13 @@ set (CAF_BASE64_SRCS
 set (CAF_BASE64_FILE_SRCS
 	caf_base64_file.c)
 
-### thread mutex test sources
+### tail sources
 set (CAF_IO_TAIL_SRCS
 	caf_tail.c)
+
+### msg sources
+set (CAF_IPCMSG_SRCS
+	caf_ipcmsg.c)
 
 ### compile flags
 set (CFLAGS_DEFAULT
@@ -227,6 +231,11 @@ set_source_files_properties (
 	PROPERTIES
 	COMPILE_FLAGS "${CFLAGS_PROJECT}")
 
+set_source_files_properties (
+	${CAF_IPCMSG_SRCS}
+	PROPERTIES
+	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+
 if (CMAKE_USE_PTHREADS_INIT)
 	LINK_LIBRARIES ("${CMAKE_THREAD_LIBS_INIT}")
 endif (CMAKE_USE_PTHREADS_INIT)
@@ -249,6 +258,7 @@ add_executable (caf_rwlock ${CAF_PTH_RWLOCK_SRCS})
 add_executable (caf_tail ${CAF_IO_TAIL_SRCS})
 add_executable (caf_base64 ${CAF_BASE64_SRCS})
 add_executable (caf_base64_file ${CAF_BASE64_FILE_SRCS})
+add_executable (caf_ipcmsg ${CAF_IPCMSG_SRCS})
 
 if (CAFFEINE_DEBUG)
 	set (CAFFEINE_TEST_TARGETS

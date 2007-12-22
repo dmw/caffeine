@@ -74,6 +74,8 @@ int caf_ipcmsg_delete (caf_msg_t *m);
 int caf_ipcmsg_send (const caf_msg_t *m);
 int caf_ipcmsg_recv (caf_msg_t *m);
 int caf_ipcmsg_get (const caf_msg_t *m, const mode_t perm);
+int caf_ipcmsg_create (const caf_msg_t *m, mode_t perm);
+int caf_ipcmsg_remove (const caf_msg_t *m);
 int caf_ipcmsg_ctrl (const caf_msg_t *m, const int cmd, struct msqid_ds *b);
 
 #ifdef __cplusplus

@@ -46,7 +46,7 @@ caf_msg_t *
 caf_ipcmsg_new (const key_t k, const int flg, const mode_t perm,
 				const int type, const cbuffer_t *msg) {
 	caf_msg_t *r = (caf_msg_t *)NULL;
-	if (msg != (cbuffer_t *)NULL && flg > 0 && type > 0) {
+	if (msg != (cbuffer_t *)NULL) {
 		r = (caf_msg_t *)xmalloc (CAF_MSG_SZ);
 		if (r != (caf_msg_t *)NULL) {
 			r->key = k;
@@ -65,7 +65,6 @@ caf_ipcmsg_new (const key_t k, const int flg, const mode_t perm,
 int
 caf_ipcmsg_delete (caf_msg_t *m) {
 	if (m != (caf_msg_t *)NULL) {
-		cbuf_delete (m->data);
 		xfree (m);
 		return CAF_OK;
 	}
@@ -103,6 +102,24 @@ caf_ipcmsg_get (const caf_msg_t *m, mode_t perm) {
 		} else {
 			return msgget (m->key, m->msgflg | m->perm);
 		}
+	}
+	return CAF_ERROR_SUB;
+}
+
+
+int
+caf_ipcmsg_create (const caf_msg_t *m, mode_t perm) {
+	if (m != (caf_msg_t *)NULL) {
+		return msgget (m->key, IPC_CREAT | perm);
+	}
+	return CAF_ERROR_SUB;
+}
+
+
+int
+caf_ipcmsg_remove (const caf_msg_t *m) {
+	if (m != (caf_msg_t *)NULL) {
+		return caf_ipcmsg_ctrl (m, IPC_RMID, NULL);
 	}
 	return CAF_ERROR_SUB;
 }
