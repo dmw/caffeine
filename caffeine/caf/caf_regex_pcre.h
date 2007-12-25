@@ -43,6 +43,11 @@
 CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
+#include <caf/caf_data_buffer.h>
+
+#define REGEX_PCRE_T_SZ					sizeof(regex_pcre_t)
+#define REGEX_PCRE_POOL_SZ				sizeof(regex_pcre_pool_t)
+
 typedef struct regex_pcre_s regex_pcre_t;
 struct regex_pcre_s {
 	int id;
@@ -52,6 +57,14 @@ struct regex_pcre_s {
 	char *pattern;
 	int erroff;
 	char *errstr;
+};
+
+
+typedef struct regex_pcre_pool_s regex_pcre_pool_t;
+struct regex_pcre_pool_s {
+	int id;
+	char *name;
+	lstdl_t *pool;
 };
 
 

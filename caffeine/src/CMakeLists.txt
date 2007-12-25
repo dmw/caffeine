@@ -68,6 +68,7 @@ set (CAFFEINE_SRCS
 	caf_thread_once.c
 	caf_thread_pool.c
 	caf_thread_rwlock.c
+	caf_regex_pcre.c
 	caf_sem_svr4.c
 	caf_sem_posix.c
 	caf_ipc_msg.c

@@ -38,6 +38,7 @@ static char Id[] = "$Id$";
 #include "caf/caf_data_lstdl.h"
 #include "caf/caf_regex_pcre.h"
 
+#define REGEX_PCRE_OV_SZ				2048
 
 static int regex_pcre_delete_callback (void *re);
 
@@ -53,19 +54,19 @@ regex_pcre_new (const int id, const char *pat, const int opt,
 		if (re != (regex_pcre_t *)NULL) {
 			re->erroff = 0;
 			re->errstr = (char *)NULL;
-			re->code = pcre_compile (pat, opt, &(re->errstr), &(re->erroff),
+			re->code = pcre_compile (pat, opt, (const char **)&(re->errstr), &(re->erroff),
 			                         tbl);
 			if (re->code == (pcre *)NULL) {
 				xfree (re);
 				re = (regex_pcre_t *)NULL;
 			} else {
 				if (study == CAF_OK) {
-					re->study = pcre_study (re->code, 0, &study_error);
+					re->study = pcre_study (re->code, 0, (const char **)&study_error);
 				} else {
 					re->study = (pcre_extra *)NULL;
 				}
 				re->opt = opt;
-				re->pattern = pat;
+				re->pattern = (char *)pat;
 			}
 		}
 	}
@@ -80,7 +81,7 @@ regex_pcre_delete (regex_pcre_t *re) {
 			pcre_free (re->code);
 		}
 		if (re->study != (pcre_extra *)NULL) {
-			pcre_free (re->extra);
+			pcre_free (re->study);
 		}
 		xfree (re);
 		return CAF_OK;
@@ -120,7 +121,8 @@ regex_pcre_subs (regex_pcre_t *re, const char *sub, cbuffer_t *out) {
 	int ov[REGEX_PCRE_OV_SZ];
 	if (re != (regex_pcre_t *)NULL && sub != (char *)NULL &&
 		out != (cbuffer_t *)NULL) {
-		r = regex_pcre_find (re, sub);
+		memset (ov, 0, REGEX_PCRE_OV_SZ);
+		r = regex_pcre_find (re, sub, ov);
 		if (r > 0) {
 			for (c = 0; c < r; c++) {
 				pcre_copy_substring (sub, &r, r, c, (char *)out->data,
@@ -140,6 +142,8 @@ regex_pcre_pool_new (const int id, const char *name) {
 	if (id > 0 && name != (const char *)NULL) {
 		r = (regex_pcre_pool_t *)xmalloc (REGEX_PCRE_POOL_SZ);
 		if (r != (regex_pcre_pool_t *)NULL) {
+			r->id = (int)id;
+			r->name = strdup (name);
 			r->pool = lstdl_create ();
 			if (r->pool == (lstdl_t *)NULL) {
 				xfree (r);
@@ -156,7 +160,8 @@ regex_pcre_pool_delete (regex_pcre_pool_t *p) {
 	if (p != (regex_pcre_pool_t *)NULL) {
 		if (p->pool != (lstdl_t *)NULL) {
 			lstdl_delete (p->pool, regex_pcre_delete_callback);
-			xree (p);
+			xfree (p->name);
+			xfree (p);
 			return CAF_OK;
 		}
 	}
@@ -170,7 +175,7 @@ regex_pcre_pool_match (regex_pcre_pool_t *p, const char *sub) {
 	regex_pcre_t *re;
 	if (p != (regex_pcre_pool_t *)NULL) {
 		if (p->pool != (lstdl_t *)NULL) {
-			n = p->pool->frst;
+			n = p->pool->head;
 			if (n != (lstdln_t *)NULL) {
 				while (n != (lstdln_t *)NULL) {
 					re = (regex_pcre_t *)n->data;

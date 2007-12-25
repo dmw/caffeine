@@ -150,7 +150,7 @@ int
 pth_pool_join (pth_pool_t *pool) {
 	pth_attri_t *attri = (pth_attri_t *)NULL;
 	int rt = 0, ds = 0, final = 0, jn = 0;
-	void *stat = (void *)NULL;
+	void *thread_stat = (void *)NULL;
 	lstdln_t *n;
 	pthread_t *thr;
 	if (pool != (pth_pool_t *)NULL) {
@@ -163,9 +163,9 @@ pth_pool_join (pth_pool_t *pool) {
 					if (n != (lstdln_t *)NULL) {
 						while (n != (lstdln_t *)NULL) {
 							thr = (pthread_t *)n->data;
-							stat = (void *)NULL;
-							rt = pthread_join (*thr, (void **)&stat);
-							if (stat != PTHREAD_CANCELED) {
+							thread_stat = (void *)NULL;
+							rt = pthread_join (*thr, (void **)&thread_stat);
+							if (thread_stat != PTHREAD_CANCELED) {
 								final += rt;
 							}
 							n = n->next;
