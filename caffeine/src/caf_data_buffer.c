@@ -423,17 +423,21 @@ cbuf_append (cbuffer_t *head, cbuffer_t *tail)
 	cbuffer_t *r = (cbuffer_t *)NULL;
 	if (head != (cbuffer_t *)NULL && tail != (cbuffer_t *)NULL) {
 		if (head->iosz > 0 && tail->iosz > 0) {
-			tsz = head->iosz + tail->iosz;
-			r = (cbuffer_t *)xmalloc (tsz);
-			cbuf_clean (r);
-			xmemcpy (r->data, head->data, head->iosz);
-			xmemcpy ((void *)((size_t)(r->data) + head->iosz), tail->data, tail->iosz);
+			tsz = (size_t)head->iosz + (size_t)tail->iosz;
+			r = cbuf_create (tsz);
+			if (r != (cbuffer_t *)NULL) {
+				cbuf_clean (r);
+				xmemcpy (r->data, head->data, head->iosz);
+				xmemcpy ((void *)((size_t)(r->data) + head->iosz), tail->data, tail->iosz);
+			}
 		} else {
 			tsz = head->sz + tail->sz;
-			r = (cbuffer_t *)xmalloc (tsz);
-			cbuf_clean (r);
-			xmemcpy (r->data, head->data, head->sz);
-			xmemcpy ((void *)((size_t)(r->data) + head->sz), tail->data, tail->sz);
+			r = cbuf_create (tsz);
+			if (r != (cbuffer_t *)NULL) {
+				cbuf_clean (r);
+				xmemcpy (r->data, head->data, head->sz);
+				xmemcpy ((void *)((size_t)(r->data) + head->sz), tail->data, tail->sz);
+			}
 		}
 	}
 	return r;

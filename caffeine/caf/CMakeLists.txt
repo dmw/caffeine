@@ -34,7 +34,6 @@ include_directories (
 set (CAFFEINE_HEADERS
     caf.h
     caf_data_base64.h
-    caf_data_bits.h
     caf_data_buffer.h
     caf_data_conv.h
     caf_data_lstc.h
@@ -45,7 +44,6 @@ set (CAFFEINE_HEADERS
     caf_data_pidfile.h
     caf_data_string.h
     caf_data_struct.h
-    caf_data_var.h
     caf_dsm.h
     caf_dso.h
     caf_evt.h

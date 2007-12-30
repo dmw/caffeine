@@ -299,15 +299,15 @@ caf_aio_lst_open (caf_aio_file_lst_t *r, const char **paths) {
 	if (r != (caf_aio_file_lst_t *)NULL && paths != (const char **)NULL) {
 		r->iocb_paths = (char **)paths;
 		for (c = 0; c < r->iocb_count; c++) {
-			if (r->mode != 0) {
-				r->iocb_fds[c] = open (paths[c], r->flags, r->mode);
-			} else {
-				r->iocb_fds[c] = open (paths[c], r->flags);
-			}
-			if (r->iocb_fds[c] >= 0) {
-				ofc++;
-			} else {
-				break;
+			if ((io_can_open(paths[c], r->flags)) == CAF_OK) {
+				if (r->mode != 0) {
+					r->iocb_fds[c] = open (paths[c], r->flags, r->mode);
+				} else {
+					r->iocb_fds[c] = open (paths[c], r->flags);
+				}
+				if (r->iocb_fds[c] >= 0) {
+					ofc++;
+				}
 			}
 		}
 	}

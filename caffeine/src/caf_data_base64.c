@@ -327,7 +327,7 @@ caf_base_encode (cbuffer_t *buf, const char *codes, const int bits, size_t qn) {
 			p_out = (octet_d *)out->data;
 			for (c = 1; c <= t_in; c++) {
 				b8 <<= 8;
-				b8 |= *p_in;
+				b8 |= (int)(*p_in);
 				i8 += 8;
 				p_in++;
 				while (i8 > bits) {
