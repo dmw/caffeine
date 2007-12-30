@@ -57,7 +57,7 @@ pidfile_create (const char *path, pid_t pid) {
 		pid = getpid ();
 	}
 	memset ((void *)pid_str, (int)NULL, 64);
-	sprintf (pid_str, "%d", pid);
+	snprintf (pid_str, (size_t)64, "%d", pid);
 	fd = open (path, O_WRONLY | O_CREAT);
 	if (fd >= 0) {
 		fchmod (fd, 0600);
@@ -74,7 +74,7 @@ pidfile_create (const char *path, pid_t pid) {
 int
 pidfile_destroy (const char *path) {
 	int fd = -1;
-	if (!access (path, F_OK)) {
+	if ((access (path, F_OK)) == 0) {
 		fd = open (path, O_RDONLY);
 		if (fd > 0) {
 			flock (fd, LOCK_UN);
@@ -93,10 +93,10 @@ pidfile_getpid (const char *path) {
 	int fd = 0;
 	int old_errno = 0;
 	ssize_t sz = 0;
-	memset ((void *)pid_str, (int)NULL, 64);
+	memset ((void *)pid_str, (int)NULL, (size_t)64);
 	fd = open (path, O_RDONLY);
 	if (fd > 0) {
-		sz = read (fd, (void *)pid_str, 64);
+		sz = read (fd, (void *)pid_str, (size_t)64);
 		if (sz > 0) {
 			old_errno = errno;
 			errno = 0;
@@ -104,7 +104,7 @@ pidfile_getpid (const char *path) {
 			if (errno == 0) {
 				errno = old_errno;
 				close (fd);
-				return pid;
+				return (pid_t)pid;
 			}
 		}
 		close (fd);
