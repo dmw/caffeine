@@ -101,26 +101,26 @@ fio_evt_events (fio_evt_t *e) {
 		switch (e->ev_use) {
 #ifdef BSD_SYSTEM
 		case IO_EVENTS_KEVENT:
-			if (e->ev_type & EVT_IO_READ) {
+			if ((e->ev_type & EVT_IO_READ) != 0) {
 				evt |= fio_evt_mapping[EVT_IO_READ_IDX].evt_kevent;
 			}
-			if (e->ev_type & EVT_IO_WRITE) {
+			if ((e->ev_type & EVT_IO_WRITE) != 0) {
 				evt |= fio_evt_mapping[EVT_IO_WRITE_IDX].evt_kevent;
 			}
-			if (e->ev_type & EVT_IO_VNODE) {
+			if ((e->ev_type & EVT_IO_VNODE) != 0) {
 				evt |= fio_evt_mapping[EVT_IO_VNODE_IDX].evt_kevent;
 			}
 			return evt;
 #endif /* !BSD_SYSTEM */
 #ifdef LINUX_SYSTEM
 		case IO_EVENTS_INOTIFY:
-			if (e->ev_type & EVT_IO_READ) {
+			if ((e->ev_type & EVT_IO_READ) != 0) {
 				evt |= fio_evt_mapping[EVT_IO_READ_IDX].evt_inotify;
 			}
-			if (e->ev_type & EVT_IO_WRITE) {
+			if ((e->ev_type & EVT_IO_WRITE) != 0) {
 				evt |= fio_evt_mapping[EVT_IO_WRITE_IDX].evt_inotify;
 			}
-			if (e->ev_type & EVT_IO_VNODE) {
+			if ((e->ev_type & EVT_IO_VNODE) != 0) {
 				evt |= fio_evt_mapping[EVT_IO_VNODE_IDX].evt_inotify;
 			}
 			return evt;
@@ -140,26 +140,26 @@ fio_evt_events_use (fio_evt_t *e, fio_evt_use_t use) {
 		switch (e->ev_use) {
 #ifdef BSD_SYSTEM
 		case IO_EVENTS_KEVENT:
-			if (use & EVT_IO_READ) {
+			if ((use & EVT_IO_READ) != 0) {
 				evt |= fio_evt_mapping[EVT_IO_READ_IDX].evt_kevent;
 			}
-			if (use & EVT_IO_WRITE) {
+			if ((use & EVT_IO_WRITE) != 0) {
 				evt |= fio_evt_mapping[EVT_IO_WRITE_IDX].evt_kevent;
 			}
-			if (use & EVT_IO_VNODE) {
+			if ((use & EVT_IO_VNODE) != 0) {
 				evt |= fio_evt_mapping[EVT_IO_VNODE_IDX].evt_kevent;
 			}
 			return evt;
 #endif /* !BSD_SYSTEM */
 #ifdef LINUX_SYSTEM
 		case IO_EVENTS_INOTIFY:
-			if (use & EVT_IO_READ) {
+			if ((use & EVT_IO_READ) != 0) {
 				evt |= fio_evt_mapping[EVT_IO_READ_IDX].evt_inotify;
 			}
-			if (use & EVT_IO_WRITE) {
+			if ((use & EVT_IO_WRITE) != 0) {
 				evt |= fio_evt_mapping[EVT_IO_WRITE_IDX].evt_inotify;
 			}
-			if (use & EVT_IO_VNODE) {
+			if ((use & EVT_IO_VNODE) != 0) {
 				evt |= fio_evt_mapping[EVT_IO_VNODE_IDX].evt_inotify;
 			}
 			return evt;

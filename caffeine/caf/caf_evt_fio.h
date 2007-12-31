@@ -140,7 +140,7 @@ int CALL_EVT_F(fio_evt_delete) (fio_evt_t *e);
 int CALL_EVT_F(fio_evt_init) (fio_evt_t *e);
 int CALL_EVT_F(fio_evt_reinit) (fio_evt_t *e);
 #ifndef LINUX_SYSTEM
-int CALL_EVT_F(fio_evt_add) (fio_evt_t *e, int ev, int flg);
+int CALL_EVT_F(fio_evt_add) (fio_evt_t *e, int ev, unsigned int flg);
 #endif /* !LINUX_SYSTEM */
 int CALL_EVT_F(fio_evt_destroy) (fio_evt_t *e);
 int CALL_EVT_F(fio_evt_handle) (fio_evt_t *e);

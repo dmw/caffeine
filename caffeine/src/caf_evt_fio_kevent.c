@@ -28,6 +28,7 @@ static char Id[] = "$Id$";
 #include "caf/config.h"
 #endif /* !HAVE_CONFIG_H */
 
+#include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -98,12 +99,12 @@ caf_fio_evt_init (fio_evt_t *e) {
 		if (s != (io_evt_kevent_t *)NULL) {
 			e->ev_src = kqueue ();
 			if (e->ev_src > -1) {
-				if (e->ev_type & EVT_IO_READ) {
+				if ((e->ev_type & EVT_IO_READ) != 0) {
 					/* XXX: we can't handle read events yet
 					   EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
 					   KEVENT_FILTER_FLAGS, 0, 0); */
 				}
-				if (e->ev_type & EVT_IO_WRITE) {
+				if ((e->ev_type & EVT_IO_WRITE) != 0) {
 					EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
 					       KEVENT_WRITE_FLAGS, 0, 0);
 				}
@@ -125,12 +126,12 @@ caf_fio_evt_reinit (fio_evt_t *e) {
 		s = (io_evt_kevent_t *)e->ev_info;
 		if (s != (io_evt_kevent_t *)NULL) {
 			if (e->ev_src > -1) {
-				if (e->ev_type & EVT_IO_READ) {
+				if ((e->ev_type & EVT_IO_READ) != 0) {
 					/* XXX: we can't handle read events yet
 					   EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
 					   NOTE_WRITE, 0, 0); */
 				}
-				if (e->ev_type & EVT_IO_WRITE) {
+				if ((e->ev_type & EVT_IO_WRITE) != 0) {
 					EV_SET(s, e->ev_mf->fd, EVFILT_VNODE, KEVENT_FILTER,
 					       NOTE_WRITE, 0, 0);
 				}
@@ -146,7 +147,7 @@ caf_fio_evt_reinit (fio_evt_t *e) {
 
 
 int
-caf_fio_evt_add (fio_evt_t *e, int ev, int flg) {
+caf_fio_evt_add (fio_evt_t *e, int ev, unsigned int flg) {
 	io_evt_kevent_t *s;
 	if (e != (fio_evt_t *)NULL) {
 		s = (io_evt_kevent_t *)e->ev_info;
