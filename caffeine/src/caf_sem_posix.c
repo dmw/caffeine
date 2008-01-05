@@ -143,3 +143,4 @@ caf_sem_posix_unlock (caf_sem_posix_t *r) {
 }
 
 /* caf_sem_posix.c ends here */
+

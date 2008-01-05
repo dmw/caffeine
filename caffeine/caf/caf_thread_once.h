@@ -117,3 +117,4 @@ CAF_END_C_EXTERNS
 /** }@ */
 #endif /* !CAF_THREAD_ONCE_H */
 /* caf_thread_once.h ends here */
+

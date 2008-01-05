@@ -45,6 +45,7 @@ set (CAFFEINE_HEADERS
     caf_data_string.h
     caf_data_struct.h
     caf_dsm.h
+	caf_ssm.h
     caf_dso.h
     caf_evt.h
     caf_evt_fio.h

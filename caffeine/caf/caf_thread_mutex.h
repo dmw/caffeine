@@ -245,3 +245,4 @@ CAF_END_C_EXTERNS
 /** }@ */
 #endif /* !CAF_THREAD_MUTEX_H */
 /* caf_thread_mutex.h ends here */
+

@@ -400,3 +400,4 @@ caf_shash_fnv (const char* str, const u_int len) {
 }
 
 /* caf_hash_str.c ends here */
+

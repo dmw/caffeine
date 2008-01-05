@@ -173,3 +173,4 @@ fio_evt_events_use (fio_evt_t *e, fio_evt_use_t use) {
 
 
 /* caf_evt_io_common.c ends here */
+

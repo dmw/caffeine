@@ -82,7 +82,7 @@ typedef struct caf_aio_file_s caf_aio_file_t;
  * containing all the data needed to operate with the file
  * descriptor.
  *
- * @see caf_aio_file_t 
+ * @see caf_aio_file_t
  */
 struct caf_aio_file_s {
 	/** File descriptor asociated with  */
@@ -116,11 +116,11 @@ typedef struct caf_aio_file_lst_s caf_aio_file_lst_t;
 
 /**
  * @brief AIO Pool Control Structure
- * 
+ *
  * This structure controls the AIO over pools of files
  * to work in batch operation modes, using the proper batch
  * system interfaces to work on AIO files.
- * 
+ *
  * @see caf_aio_file_lst_t
  */
 struct caf_aio_file_lst_s {
@@ -144,10 +144,38 @@ struct caf_aio_file_lst_s {
 	struct aiocb *iocb_list;
 };
 
-
+/**
+ * @brief Opens a file for a AIO
+ *
+ * @param path[in]				file path to open
+ * @param flg[in]				open flags
+ * @param md[in]				file mode on create files
+ * @param fs[in]				retreive file stats (<b>fstat(2)</b>)
+ * @param bsz[in]				file buffer size
+ *
+ * @return caf_aio_file_t *		an allocated aio file type
+ *
+ * @see caf_aio_file_t
+ */
 caf_aio_file_t *caf_aio_fopen (const char *path, const int flg,
 							   const mode_t md, int fs, size_t bsz);
+
+/**
+ * @brief Close an opened file for AIO
+ *
+ * @param r[in]			pointer to the opened file
+ *
+ * @return int			CAF_OK on success, CAF_ERROR on failure
+ */
 int caf_aio_fclose (caf_aio_file_t *r);
+
+/**
+ * @brief
+ *
+ * @param r
+ *
+ * @return
+ */
 caf_aio_file_t *caf_aio_reopen (caf_aio_file_t *r);
 int caf_aio_restat (caf_aio_file_t *r);
 int caf_aio_fchanged (caf_aio_file_t *r, struct timespec *lmt,
@@ -179,3 +207,4 @@ CAF_END_C_EXTERNS
 /** }@ */
 #endif /* !CAF_AIO_CORE_H */
 /* caf_aio_core.h ends here */
+

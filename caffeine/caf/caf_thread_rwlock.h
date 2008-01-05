@@ -219,3 +219,4 @@ CAF_END_C_EXTERNS
 /** }@ */
 #endif /* !CAF_THREAD_RWLOCK_H */
 /* caf_thread_rwlock.h ends here */
+

@@ -199,5 +199,5 @@ caf_io_evt_iswrite (io_evt_t *e) {
 	return r;
 }
 
-
 /* caf_evt_io_select.c ends here */
+

@@ -45,3 +45,4 @@
 
 #endif /* !CAF_TOOL_MACRO_H */
 /* caf_tool_macro.h ends here */
+

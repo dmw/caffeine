@@ -97,3 +97,4 @@ CAF_END_C_EXTERNS
 /** }@ */
 #endif /* !CAF_HASH_TABLE_H */
 /* caf_hash_table.h ends here */
+

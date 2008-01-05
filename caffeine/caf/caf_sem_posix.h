@@ -81,3 +81,4 @@ CAF_END_C_EXTERNS
 /** }@ */
 #endif /* !CAF_SEM_POSIX_H */
 /* caf_sem_posix.h ends here */
+

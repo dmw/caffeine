@@ -83,7 +83,7 @@ struct caf_dsm_s {
  *
  * Defines the state identifiers that can have the DSM
  * state list, the main use is the DSM control.
- * 
+ *
  * @see		caf_dsm_state_t
  * @see		caf_dsm_state_s
  */
@@ -105,7 +105,7 @@ typedef enum {
  * different state interfaces, the return type holds the control
  * variable (r_control), the parameter data (r_data) and the
  * return value (r_return).
- * 
+ *
  * @see			caf_dsm_return_s
  */
 typedef struct caf_dsm_return_s caf_dsm_return_t;
@@ -116,7 +116,7 @@ typedef struct caf_dsm_return_s caf_dsm_return_t;
  * different state interfaces, the return type holds the control
  * variable (r_control), the parameter data (r_data) and the
  * return value (r_return).
- * 
+ *
  * @see			caf_dsm_return_t
  */
 struct caf_dsm_return_s {
@@ -128,23 +128,23 @@ struct caf_dsm_return_s {
 	void *r_return;
 };
 
-/** 
+/**
  * @brief		DSM State Holder Typdef
  *
  * Holds the structure that contains the DSM state itself.
  * Has an identifier, a type a normal proceding callback and
  * an error callback.
- * 
+ *
  * @see	caf_dsm_state_s
  */
 typedef struct caf_dsm_state_s caf_dsm_state_t;
-/** 
+/**
  * @brief		DSM State Holder Typdef
  *
  * Holds the structure that contains the DSM state itself.
  * Has an identifier, a type a normal proceding callback and
  * an error callback.
- * 
+ *
  * @see	caf_dsm_state_t
  */
 struct caf_dsm_state_s {
@@ -182,7 +182,7 @@ typedef enum {
  * A DSM runner it's a structure that holds the DSM instance
  * and the current state of it. Also, holds data about the
  * current call and many items that affects the DSM behavior.
- * 
+ *
  * @see caf_dsm_runner_s
  */
 typedef struct caf_dsm_runner_s caf_dsm_runner_t;
@@ -192,7 +192,7 @@ typedef struct caf_dsm_runner_s caf_dsm_runner_t;
  * A DSM runner it's a structure that holds the DSM instance
  * and the current state of it. Also, holds data about the
  * current call and many items that affects the DSM behavior.
- * 
+ *
  * @see caf_dsm_runner_t
  */
 struct caf_dsm_runner_s {
@@ -214,120 +214,120 @@ struct caf_dsm_runner_s {
 	lstdln_t *l_current;
 };
 
-/** 
+/**
  * @brief		Allocates a new DSM
  *
  * Allocates a new DSM (creates a new instance).
- * 
+ *
  * @param id			DSM identifier
  * @param cycle			Cycle the DSM
- * 
+ *
  * @return a new allocated caf_dsm_t pointer.
  */
 caf_dsm_t *caf_dsm_new (int id, int cycle);
 
-/** 
+/**
  * @brief				Deallocates the given DSM
  *
  * Deallocates the given DSM.
- * 
+ *
  * @param r				DSM to deallocate
- * 
+ *
  * @return CAF_OK on success, CAF_ERROR on failure.
  */
 int caf_dsm_delete (caf_dsm_t *r);
 
-/** 
+/**
  * @brief				Allocates a new State for the DSM
  *
  * Allocates a new State for a DSM.
- * 
+ *
  * @param s_id			State identifier
  * @param s_type		State Type
  * @param s_call		State Call
  * @param s_error		State Error Callback
- * 
+ *
  * @return A new allocated DSM state on success, NULL on failure.
  */
 caf_dsm_state_t *caf_dsm_state_new (int s_id, caf_dsm_state_type_t s_type,
 									CAD_DSM_CALL(s_call),
 									CAD_DSM_CALL(s_error));
 
-/** 
+/**
  * @brief				Deallocates the given DSM state.
  *
  * Deallocates the given DSM state.
- * 
+ *
  * @param r				DSM state to deallocate.
- * 
+ *
  * @return CAF_OK on success, CAF_ERROR on failure.
  */
 int caf_dsm_state_delete (caf_dsm_state_t *r);
 
-/** 
+/**
  * @brief				Adds a state to the given DSM.
  *
  * Adds a new state or previouslly allocated state to
  * the given DSM, this allows you to repeat a state through
  * the State Running routine.
- * 
+ *
  * @param m				DSM where to add the state.
  * @param s				State to add.
- * 
+ *
  * @return CAF_OK on success, CAF_ERROR on failure.
  */
 int caf_dsm_add (caf_dsm_t *m, caf_dsm_state_t *s);
 
-/** 
+/**
  * @brief				Removes the given state from the DSM.
  *
  * Removes a State from the DSM. This allows you to remove
  * a part of the DSM.
- * 
+ *
  * @param m				DSM where to remove from the given state.
  * @param s				State to add.
- * 
+ *
  * @return CAF_OK on success, CAF_ERROR on failure.
  */
 int caf_dsm_remove (caf_dsm_t *m, caf_dsm_state_t *s);
 
-/** 
+/**
  * @brief				Creates a new Runner for the given DSM.
  *
  * Creates a new Runner for the given. A runner is a thread safe
  * running instance for a DSM. If you don't use shared static
  * variables or similar coding faults on your DSM, a runner is
  * usefull on thread safe tasks.
- * 
+ *
  * @param m				DSM from where create a new Runner.
  * @param r_id			Runner identifier.
  * @param ctrl			Control Startup.
- * 
+ *
  * @return CAF_OK on success, CAF_ERROR on failure.
  */
 caf_dsm_runner_t *caf_dsm_runner_new (caf_dsm_t *m, int r_id,
 									  caf_dsm_state_control_t ctrl);
 
-/** 
+/**
  * @brief				Deallocates the given Runner.
  *
  * Deallocates the given Runner.
- * 
+ *
  * @param r				Runner to deallocate.
- * 
+ *
  * @return CAF_OK on success, CAF_ERROR on failure.
  */
 int caf_dsm_runner_delete (caf_dsm_runner_t *r);
 
-/** 
+/**
  * @brief				Makes the runner work.
  *
  * Starts the runner, and the program/thread control passes to
  * the runner.
- * 
+ *
  * @param r				Runner to work on.
  * @param r_data		Initial Runner Data.
- * 
+ *
  * @return CAF_OK on success, CAF_ERROR on failure.
  */
 int caf_dsm_runnner_work (caf_dsm_runner_t *r, void *r_data);

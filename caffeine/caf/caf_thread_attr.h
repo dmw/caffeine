@@ -229,3 +229,4 @@ CAF_END_C_EXTERNS
 /** }@ */
 #endif /* !CAF_THREAD_ATTR_H */
 /* caf_thread_attr.h ends here */
+

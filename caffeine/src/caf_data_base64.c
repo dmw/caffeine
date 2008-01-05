@@ -573,3 +573,4 @@ caf_base_decode_file (caf_io_file_t *inf, caf_io_file_t *outf,
 
 
 /* caf_data_base64.c ends here */
+

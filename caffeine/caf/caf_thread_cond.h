@@ -80,3 +80,4 @@ CAF_END_C_EXTERNS
 /** }@ */
 #endif /* !CAF_THREAD_COND_H */
 /* caf_thread_cond.h ends here */
+

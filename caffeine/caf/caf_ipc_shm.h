@@ -88,3 +88,4 @@ CAF_END_C_EXTERNS
 /** }@ */
 #endif /* !CAF_IPC_SHM_H */
 /* caf_ipc_shm.h ends here */
+

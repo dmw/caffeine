@@ -198,3 +198,4 @@ pth_rwl_unlock (pth_rwlock_t *rwl) {
 }
 
 /* caf_thread_rwlock.c ends here */
+

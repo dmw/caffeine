@@ -143,3 +143,4 @@ pidfile_kill (const char *path, int sig) {
 }
 
 /* caf_data_pidfile.c ends here */
+

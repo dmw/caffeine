@@ -173,3 +173,4 @@ caf_tail_getoffset (caf_tail_stream_t *stream, cbuffer_t *buffer) {
 }
 
 /* caf_io_tail.c ends here */
+

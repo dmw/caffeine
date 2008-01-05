@@ -194,3 +194,4 @@ pth_attri_get (pth_attri_t *attri, pth_attr_types_t t, void *data) {
 }
 
 /* caf_thread_attr.c ends here */
+

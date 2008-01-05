@@ -84,3 +84,4 @@ CAF_END_C_EXTERNS
 /** }@ */
 #endif /* !CAF_IO_CORE_H */
 /* caf_io_file.h ends here */
+

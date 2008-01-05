@@ -100,3 +100,4 @@ xmemcpy (void *dst, void *src, size_t sz) {
 
 #endif /* !CAFFEINE_DEBUG */
 /* caf_data_mem.c ends here */
+
