@@ -45,6 +45,7 @@ set (CAFFEINE_SRCS
 	caf_data_pidfile.c
 	caf_dsm.c
 	caf_ssm.c
+	caf_psm.c
 	caf_dso.c
 	caf_hash_str.c
 	caf_hash_table.c
@@ -91,6 +92,7 @@ set (CAFFEINE_HEADERS
 	../caf/caf_data_struct.h
 	../caf/caf_dsm.h
 	../caf/caf_ssm.h
+	../caf/caf_psm.h
 	../caf/caf_dso.h
 	../caf/caf_evt.h
 	../caf/caf_evt_fio.h
