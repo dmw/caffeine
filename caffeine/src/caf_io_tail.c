@@ -119,7 +119,7 @@ caf_tail_read (caf_tail_stream_t *s, cbuffer_t *b) {
 			if ((caf_fio_evt_handle (s->events)) == CAF_OK) {
 				if ((caf_fio_evt_iswrite (s->events)) == CAF_OK) {
 					offs = caf_tail_getoffset(s, b);
-					if ((s->file = io_restat (s->file)) !=
+					if ((s->file = io_reopen (s->file)) !=
 						(caf_io_file_t *)NULL) {
 						if ((io_flseek (s->file, offs, SEEK_SET)) == CAF_OK) {
 							cbuf_clean (b);
@@ -138,7 +138,7 @@ caf_tail_read (caf_tail_stream_t *s, cbuffer_t *b) {
 				}
 			}
 		} else {
-			if ((s->file = io_restat (s->file)) != (caf_io_file_t *)NULL) {
+			if ((s->file = io_reopen (s->file)) != (caf_io_file_t *)NULL) {
 				offs = caf_tail_getoffset(s, b);
 				if ((io_flseek (s->file, offs, SEEK_SET)) == CAF_OK) {
 					cbuf_clean (b);
