@@ -180,63 +180,62 @@ caf_ssm_runnner_work (caf_ssm_runner_t *r, void *r_data) {
 	caf_ssm_return_t *rt = (caf_ssm_return_t *)NULL;
 	int c, l;
 	int passed = CAF_ERROR;
-	if (r != (caf_ssm_runner_t *)NULL) {
+	if (r != (caf_ssm_runner_t *)NULL
+		&& r->r_machine != (caf_ssm_t *)NULL) {
 		m = r->r_machine;
-		if (m != (caf_ssm_t *)NULL) {
-			if (m->m_state != (caf_ssm_state_t **)NULL) {
-				for (c = 0; c <= m->last; c++) {
-					s = (caf_ssm_state_t *)m->m_state[c];
-					if (s->s_call != NULL) {
-						if (passed != CAF_OK) {
-							rt = (caf_ssm_return_t *)s->s_call (r_data,
-																(void *)NULL);
-							passed = CAF_OK;
-						} else {
-							rt = (caf_ssm_return_t *)s->s_call (r->r_data,
-																r->r_return);
+		if (m->m_state != (caf_ssm_state_t **)NULL) {
+			for (c = 0; c <= m->last; c++) {
+				s = (caf_ssm_state_t *)m->m_state[c];
+				if (s->s_call != NULL) {
+					if (passed != CAF_OK) {
+						rt = (caf_ssm_return_t *)s->s_call (r_data,
+															(void *)NULL);
+						passed = CAF_OK;
+					} else {
+						rt = (caf_ssm_return_t *)s->s_call (r->r_data,
+															r->r_return);
+					}
+					r->r_return = rt;
+					r->r_call = s->s_call;
+					r->l_current = c;
+					r->r_data = rt->r_data;
+					r->r_control = rt->r_control;
+					switch (r->r_control) {
+					case CAF_SSM_CONTROL_FORWARD:
+						break;
+					case CAF_SSM_CONTROL_BACKWARD:
+						l = c - 2;
+						if (l > -1 && m->m_state[l] != NULL) {
+							c = l;
+							s = m->m_state[l];
 						}
-						r->r_return = rt;
-						r->r_call = s->s_call;
-						r->l_current = c;
-						r->r_data = rt->r_data;
-						r->r_control = rt->r_control;
-						switch (r->r_control) {
-						case CAF_SSM_CONTROL_FORWARD:
-							break;
-						case CAF_SSM_CONTROL_BACKWARD:
+						break;
+					case CAF_SSM_CONTROL_STAY:
+						l = c - 1;
+						if (l > -1 && m->m_state[l] != (caf_ssm_state_t *)NULL) {
+							c = l;
+							s = m->m_state[l];
+						}
+						break;
+					case CAF_SSM_CONTROL_ERROR:
+						if (s->s_error != NULL) {
+							rt = s->s_error (rt->r_data, rt->r_return);
+							r->r_call = s->s_error;
+							r->l_current = c;
 							l = c - 2;
-							if (l > -1 && m->m_state[l] != NULL) {
-								c = l;
-								s = m->m_state[l];
-							}
-							break;
-						case CAF_SSM_CONTROL_STAY:
-							l = c - 1;
 							if (l > -1 && m->m_state[l] != (caf_ssm_state_t *)NULL) {
-								c = l;
 								s = m->m_state[l];
-							}
-							break;
-						case CAF_SSM_CONTROL_ERROR:
-							if (s->s_error != NULL) {
-								rt = s->s_error (rt->r_data, rt->r_return);
-								r->r_call = s->s_error;
+								c = l;
 								r->l_current = c;
-								l = c - 2;
-								if (l > -1 && m->m_state[l] != (caf_ssm_state_t *)NULL) {
-									s = m->m_state[l];
-									c = l;
-									r->l_current = c;
-								}
 							}
-							break;
-						default:
-							return CAF_ERROR;
 						}
+						break;
+					default:
+						return CAF_ERROR;
 					}
 				}
-				return CAF_OK;
 			}
+			return CAF_OK;
 		}
 	}
 	return CAF_ERROR;

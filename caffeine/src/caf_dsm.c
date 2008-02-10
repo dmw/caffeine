@@ -168,62 +168,61 @@ caf_dsm_runnner_work (caf_dsm_runner_t *r, void *r_data) {
 	caf_dsm_return_t *rt = (caf_dsm_return_t *)NULL;
 	lstdln_t *n = (lstdln_t *)NULL;
 	int passed = CAF_ERROR;
-	if (r != (caf_dsm_runner_t *)NULL) {
+	if (r != (caf_dsm_runner_t *)NULL
+		&& r->r_machine != (caf_dsm_t *)NULL) {
 		m = r->r_machine;
-		if (m != (caf_dsm_t *)NULL) {
-			if (m->m_state != (lstdl_t *)NULL) {
-				n = m->m_state->head;
-				while (n != (lstdln_t *)NULL) {
-					s = (caf_dsm_state_t *)n->data;
-					if (passed != CAF_OK) {
-						rt = (caf_dsm_return_t *)s->s_call (r_data,
-						                                    (void *)NULL);
-						passed = CAF_OK;
-					} else {
-						rt = (caf_dsm_return_t *)s->s_call (r->r_data,
-						                                    r->r_return);
-					}
-					r->r_return = rt;
-					r->r_call = s->s_call;
-					r->l_current = n;
-					r->r_data = rt->r_data;
-					r->r_control = rt->r_control;
-					switch (r->r_control) {
-					case CAF_DSM_CONTROL_FORWARD:
-						break;
-					case CAF_DSM_CONTROL_BACKWARD:
-						if (n->prev != (lstdln_t *)NULL) {
-							n = n->prev;
-							if (n->prev != (lstdln_t *)NULL) {
-								n = n->prev;
-							}
-						}
-						break;
-					case CAF_DSM_CONTROL_STAY:
-						if (n->prev != (lstdln_t *)NULL) {
-							n = n->prev;
-						}
-						break;
-					case CAF_DSM_CONTROL_ERROR:
-						if (s->s_error != NULL) {
-							rt = s->s_error (rt->r_data, rt->r_return);
-							r->r_call = s->s_error;
-							r->l_current = n;
-							if (n->prev != (lstdln_t *)NULL) {
-								n = n->prev;
-								if (n->prev != (lstdln_t *)NULL) {
-									n = n->prev;
-								}
-							}
-						}
-						break;
-					default:
-						return CAF_ERROR;
-					}
-					n = n->next;
+		if (m->m_state != (lstdl_t *)NULL) {
+			n = m->m_state->head;
+			while (n != (lstdln_t *)NULL) {
+				s = (caf_dsm_state_t *)n->data;
+				if (passed != CAF_OK) {
+					rt = (caf_dsm_return_t *)s->s_call (r_data,
+														(void *)NULL);
+					passed = CAF_OK;
+				} else {
+					rt = (caf_dsm_return_t *)s->s_call (r->r_data,
+														r->r_return);
 				}
-				return CAF_OK;
+				r->r_return = rt;
+				r->r_call = s->s_call;
+				r->l_current = n;
+				r->r_data = rt->r_data;
+				r->r_control = rt->r_control;
+				switch (r->r_control) {
+				case CAF_DSM_CONTROL_FORWARD:
+					break;
+				case CAF_DSM_CONTROL_BACKWARD:
+					if (n->prev != (lstdln_t *)NULL) {
+						n = n->prev;
+						if (n->prev != (lstdln_t *)NULL) {
+							n = n->prev;
+						}
+					}
+					break;
+				case CAF_DSM_CONTROL_STAY:
+					if (n->prev != (lstdln_t *)NULL) {
+						n = n->prev;
+					}
+					break;
+				case CAF_DSM_CONTROL_ERROR:
+					if (s->s_error != NULL) {
+						rt = s->s_error (rt->r_data, rt->r_return);
+						r->r_call = s->s_error;
+						r->l_current = n;
+						if (n->prev != (lstdln_t *)NULL) {
+							n = n->prev;
+							if (n->prev != (lstdln_t *)NULL) {
+								n = n->prev;
+							}
+						}
+					}
+					break;
+				default:
+					return CAF_ERROR;
+				}
+				n = n->next;
 			}
+			return CAF_OK;
 		}
 	}
 	return CAF_ERROR;

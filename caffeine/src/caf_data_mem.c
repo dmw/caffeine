@@ -60,7 +60,6 @@ void
 xfree (void *ptr) {
 	if (ptr != (void *)NULL) {
 		free (ptr);
-		ptr = (void *)NULL;
 	}
 }
 

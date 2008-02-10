@@ -139,11 +139,10 @@ caf_aio_reopen (caf_aio_file_t *r) {
 int
 caf_aio_restat (caf_aio_file_t *r) {
 	struct stat sb;
-	if (r != (caf_aio_file_t *)NULL) {
-		if ((fstat (r->fd, &sb)) == 0) {
-			r->sd = sb;
-			return CAF_OK;
-		}
+	if (r != (caf_aio_file_t *)NULL
+		&& (fstat (r->fd, &sb)) == 0) {
+		r->sd = sb;
+		return CAF_OK;
 	}
 	return CAF_ERROR;
 }
@@ -163,10 +162,10 @@ caf_aio_fchanged (caf_aio_file_t *r, struct timespec *lmt, struct timespec *lct)
 int
 caf_aio_read (caf_aio_file_t *r, cbuffer_t *b) {
 	int rd = -1;
-	if (r != (caf_aio_file_t *)NULL && b != (cbuffer_t *)NULL) {
-		if (r->fd >= 0 && (b->sz > 0 || b->iosz > 0)) {
-			rd = aio_read (&(r->iocb));
-		}
+	if (r != (caf_aio_file_t *)NULL
+		&& b != (cbuffer_t *)NULL
+		&& (r->fd >= 0 && (b->sz > 0 || b->iosz > 0))) {
+		rd = aio_read (&(r->iocb));
 	}
 	return rd;
 }
@@ -175,10 +174,10 @@ caf_aio_read (caf_aio_file_t *r, cbuffer_t *b) {
 int
 caf_aio_write (caf_aio_file_t *r, cbuffer_t *b) {
 	int wr = -1;
-	if (r != (caf_aio_file_t *)NULL && b != (cbuffer_t *)NULL) {
-		if ((b->iosz > 0 || b->sz > 0) && r->fd >= 0) {
-			wr = aio_write (&(r->iocb));
-		}
+	if (r != (caf_aio_file_t *)NULL
+		&& b != (cbuffer_t *)NULL
+		&& ((b->iosz > 0 || b->sz > 0) && r->fd >= 0)) {
+		wr = aio_write (&(r->iocb));
 	}
 	return wr;
 }

@@ -123,22 +123,20 @@ pth_pool_add (pth_pool_t *p, pth_attri_t *attrs, CAF_PT_PROTOTYPE(rtn),
 	pth_pool_t *pool = (pth_pool_t *)NULL;
 	int rt = CAF_ERROR;
 	pthread_t *thr;
-	if (rtn != NULL) {
-		if (p != (pth_pool_t *)NULL) {
-			if (p->threads != (lstdl_t *)NULL) {
-				thr = (pthread_t *)xmalloc (sizeof (pthread_t));
-				if (thr != (pthread_t *)NULL) {
-					if (attrs != (pth_attri_t *)NULL) {
-						rt = pthread_create (thr, &(attrs->attr), rtn,
-						                     arg);
-					} else {
-						rt = pthread_create (thr, &(pool->attri->attr), rtn,
-						                     arg);
-					}
-					if (rt == 0) {
-						lstdl_push (pool->threads, thr);
-					}
-				}
+	if (rtn != NULL
+		&& p != (pth_pool_t *)NULL
+		&& p->threads != (lstdl_t *)NULL) {
+		thr = (pthread_t *)xmalloc (sizeof (pthread_t));
+		if (thr != (pthread_t *)NULL) {
+			if (attrs != (pth_attri_t *)NULL) {
+				rt = pthread_create (thr, &(attrs->attr), rtn,
+									 arg);
+			} else {
+				rt = pthread_create (thr, &(pool->attri->attr), rtn,
+									 arg);
+			}
+			if (rt == 0) {
+				lstdl_push (pool->threads, thr);
 			}
 		}
 	}
@@ -153,23 +151,22 @@ pth_pool_join (pth_pool_t *pool) {
 	void *thread_stat = (void *)NULL;
 	lstdln_t *n;
 	pthread_t *thr;
-	if (pool != (pth_pool_t *)NULL) {
-		if (pool->threads != (lstdl_t *)NULL) {
-			attri = (pth_attri_t *)pool->attri;
-			if (attri->at & PTH_ATTR_JOINABLE) {
-				jn = pth_attri_set(attri, PTH_ATTR_JOINABLE, (void *)&ds);
-				if (jn == 0) {
-					n = pool->threads->head;
-					if (n != (lstdln_t *)NULL) {
-						while (n != (lstdln_t *)NULL) {
-							thr = (pthread_t *)n->data;
-							thread_stat = (void *)NULL;
-							rt = pthread_join (*thr, (void **)&thread_stat);
-							if (thread_stat != PTHREAD_CANCELED) {
-								final += rt;
-							}
-							n = n->next;
+	if (pool != (pth_pool_t *)NULL
+		&& pool->threads != (lstdl_t *)NULL) {
+		attri = (pth_attri_t *)pool->attri;
+		if (attri->at & PTH_ATTR_JOINABLE) {
+			jn = pth_attri_set(attri, PTH_ATTR_JOINABLE, (void *)&ds);
+			if (jn == 0) {
+				n = pool->threads->head;
+				if (n != (lstdln_t *)NULL) {
+					while (n != (lstdln_t *)NULL) {
+						thr = (pthread_t *)n->data;
+						thread_stat = (void *)NULL;
+						rt = pthread_join (*thr, (void **)&thread_stat);
+						if (thread_stat != PTHREAD_CANCELED) {
+							final += rt;
 						}
+						n = n->next;
 					}
 				}
 			}
@@ -185,20 +182,19 @@ pth_pool_detach (pth_pool_t *pool) {
 	int rt = 0, ds = 0, final = 0, jn = 0;
 	lstdln_t *n;
 	pthread_t *thr;
-	if (pool != (pth_pool_t *)NULL) {
-		if (pool->threads != (lstdl_t *)NULL) {
-			attri = (pth_attri_t *)pool->attri;
-			if (attri->at & PTH_ATTR_JOINABLE) {
-				jn = pth_attri_set(attri, PTH_ATTR_JOINABLE, (void *)&ds);
-				if (jn != 0) {
-					n = pool->threads->head;
-					if (n != (lstdln_t *)NULL) {
-						while (n != (lstdln_t *)NULL) {
-							thr = (pthread_t *)n->data;
-							rt = pthread_detach (*thr);
-							final += rt;
-							n = n->next;
-						}
+	if (pool != (pth_pool_t *)NULL
+		&& pool->threads != (lstdl_t *)NULL) {
+		attri = (pth_attri_t *)pool->attri;
+		if (attri->at & PTH_ATTR_JOINABLE) {
+			jn = pth_attri_set(attri, PTH_ATTR_JOINABLE, (void *)&ds);
+			if (jn != 0) {
+				n = pool->threads->head;
+				if (n != (lstdln_t *)NULL) {
+					while (n != (lstdln_t *)NULL) {
+						thr = (pthread_t *)n->data;
+						rt = pthread_detach (*thr);
+						final += rt;
+						n = n->next;
 					}
 				}
 			}
@@ -213,16 +209,15 @@ pth_pool_cancel (pth_pool_t *pool) {
 	int rt = 0, final = 0;
 	lstdln_t *n;
 	pthread_t *thr;
-	if (pool != (pth_pool_t *)NULL) {
-		if (pool->threads != (lstdl_t *)NULL) {
-			n = pool->threads->head;
-			if (n != (lstdln_t *)NULL) {
-				while (n != (lstdln_t *)NULL) {
-					thr = (pthread_t *)n->data;
-					rt = pthread_cancel (*thr);
-					final += rt;
-					n = n->next;
-				}
+	if (pool != (pth_pool_t *)NULL
+		&& pool->threads != (lstdl_t *)NULL) {
+		n = pool->threads->head;
+		if (n != (lstdln_t *)NULL) {
+			while (n != (lstdln_t *)NULL) {
+				thr = (pthread_t *)n->data;
+				rt = pthread_cancel (*thr);
+				final += rt;
+				n = n->next;
 			}
 		}
 	}

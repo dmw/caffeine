@@ -118,10 +118,9 @@ pth_kpool_delete (pth_kpool_t *kpool) {
 
 void *
 pth_kpool_add (pth_kpool_t *pool, pth_key_t *key) {
-	if (pool != (pth_kpool_t *)NULL) {
-		if (key != (pth_key_t *)NULL) {
-			return lstdl_push(pool->keys, (void *)key);
-		}
+	if (pool != (pth_kpool_t *)NULL
+		&& key != (pth_key_t *)NULL) {
+		return lstdl_push(pool->keys, (void *)key);
 	}
 	return (void *)NULL;
 }
@@ -131,17 +130,16 @@ pth_key_t *
 pth_kpool_get_key (pth_kpool_t *pool, int id) {
 	pth_key_t *k = (pth_key_t *)NULL;
 	lstdln_t *n;
-	if (pool != (pth_kpool_t *)NULL) {
-		if (pool->keys != (lstdl_t *)NULL) {
-			n = pool->keys->head;
-			if (n != (lstdln_t *)NULL) {
-				while (n != (lstdln_t *)NULL) {
-					k = (pth_key_t *)n->data;
-					if (k->id == id) {
-						return k;
-					}
-					n = n->next;
+	if (pool != (pth_kpool_t *)NULL
+		&& pool->keys != (lstdl_t *)NULL) {
+		n = pool->keys->head;
+		if (n != (lstdln_t *)NULL) {
+			while (n != (lstdln_t *)NULL) {
+				k = (pth_key_t *)n->data;
+				if (k->id == id) {
+					return k;
 				}
+				n = n->next;
 			}
 		}
 	}
@@ -153,17 +151,16 @@ void *
 pth_kpool_get (pth_kpool_t *pool, int id) {
 	pth_key_t *k = (pth_key_t *)NULL;
 	lstdln_t *n;
-	if (pool != (pth_kpool_t *)NULL) {
-		if (pool->keys != (lstdl_t *)NULL) {
-			n = pool->keys->head;
-			if (n != (lstdln_t *)NULL) {
-				while (n != (lstdln_t *)NULL) {
-					k = (pth_key_t *)n->data;
-					if (k->id == id) {
-						return pth_key_get (k);
-					}
-					n = n->next;
+	if (pool != (pth_kpool_t *)NULL
+		&& pool->keys != (lstdl_t *)NULL) {
+		n = pool->keys->head;
+		if (n != (lstdln_t *)NULL) {
+			while (n != (lstdln_t *)NULL) {
+				k = (pth_key_t *)n->data;
+				if (k->id == id) {
+					return pth_key_get (k);
 				}
+				n = n->next;
 			}
 		}
 	}
@@ -175,18 +172,17 @@ void
 pth_kpool_remove_by_id (pth_kpool_t *pool, int id) {
 	pth_key_t *k = (pth_key_t *)NULL;
 	lstdln_t *n;
-	if (pool != (pth_kpool_t *)NULL) {
-		if (pool->keys != (lstdl_t *)NULL) {
-			n = pool->keys->head;
-			if (n != (lstdln_t *)NULL) {
-				while (n != (lstdln_t *)NULL) {
-					k = (pth_key_t *)n->data;
-					if (k->id == id) {
-						lstdl_node_delete (pool->keys, n,
-						                   pth_kpool_remove_callback);
-					}
-					n = n->next;
+	if (pool != (pth_kpool_t *)NULL
+		&& pool->keys != (lstdl_t *)NULL) {
+		n = pool->keys->head;
+		if (n != (lstdln_t *)NULL) {
+			while (n != (lstdln_t *)NULL) {
+				k = (pth_key_t *)n->data;
+				if (k->id == id) {
+					lstdl_node_delete (pool->keys, n,
+									   pth_kpool_remove_callback);
 				}
+				n = n->next;
 			}
 		}
 	}
@@ -195,11 +191,11 @@ pth_kpool_remove_by_id (pth_kpool_t *pool, int id) {
 
 void
 pth_kpool_remove (pth_kpool_t *pool, pth_key_t *key) {
-	if (pool != (pth_kpool_t *)NULL && key != (pth_key_t *)NULL) {
-		if (pool->keys != (lstdl_t *)NULL) {
-			lstdl_node_delete_by_data (pool->keys, (void *)key,
-			                           pth_kpool_remove_callback);
-		}
+	if (pool != (pth_kpool_t *)NULL
+		&& key != (pth_key_t *)NULL
+		&& pool->keys != (lstdl_t *)NULL) {
+		lstdl_node_delete_by_data (pool->keys, (void *)key,
+								   pth_kpool_remove_callback);
 	}
 }
 
