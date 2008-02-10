@@ -88,6 +88,8 @@ main (int argc, char **argv) {
 				}
 				cbuf_delete (buf);
 			}
+		} else {
+			printf ("stream not opened\n");
 		}
 
 		if ((caf_tail_close (stream)) == CAF_OK) {

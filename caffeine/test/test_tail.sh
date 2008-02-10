@@ -6,7 +6,7 @@ rm -vf test_tail.txt
 echo "Creating a new file (test_tail.txt)..."
 touch test_tail.txt
 
-echo "Sending caf_tail to background..."
+echo "Sending caf_tail to background"
 ./caf_tail test_tail.txt &
 
 echo "Sending text to the file..."

@@ -119,9 +119,16 @@ int
 io_restat (caf_io_file_t *r) {
 	struct stat sb;
 	if (r != (caf_io_file_t *)NULL) {
-		if ((fstat (r->fd, &sb)) == 0) {
-			r->sd = sb;
-			return CAF_OK;
+		if (r->path != (char *)NULL) {
+			if ((stat (r->path, &sb)) == 0) {
+				r->sd = sb;
+				return CAF_OK;
+			}
+		} else {
+			if ((fstat (r->fd, &sb)) == 0) {
+				r->sd = sb;
+				return CAF_OK;
+			}
 		}
 	}
 	return CAF_ERROR;
@@ -244,18 +251,16 @@ io_check_stat_flags (const struct stat *sd, int flg) {
 		euid = geteuid ();
 		gid = getgid ();
 		egid = getegid ();
-		if ((flg & (O_RDONLY)) != 0) {
-			if ((sd->st_uid == uid || sd->st_uid == euid) &&
-				((sd->st_mode & (mode_t)S_IRUSR) != 0)) {
-				r |= 0400;
-			}
-			if ((sd->st_gid == gid || sd->st_gid == euid) &&
-				((sd->st_mode & (mode_t)S_IRGRP) != 0)) {
-				r |= 0040;
-			}
-			if ((sd->st_mode & (mode_t)S_IROTH) != 0) {
-				r |= 0004;
-			}
+		if ((sd->st_uid == uid || sd->st_uid == euid) &&
+			((sd->st_mode & (mode_t)S_IRUSR) != 0)) {
+			r |= 0400;
+		}
+		if ((sd->st_gid == gid || sd->st_gid == euid) &&
+			((sd->st_mode & (mode_t)S_IRGRP) != 0)) {
+			r |= 0040;
+		}
+		if ((sd->st_mode & (mode_t)S_IROTH) != 0) {
+			r |= 0004;
 		}
 		if ((flg & (O_WRONLY)) != 0) {
 			if ((sd->st_uid == uid || sd->st_uid == euid) &&
