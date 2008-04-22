@@ -3,7 +3,7 @@
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
   Caffeine - C Application Framework
-  Copyright (C) 2006 Daniel Molina Wegener
+  Copyright (C) 2006 Daniel Molina Wegener <dmw@coder.cl>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -66,7 +66,7 @@ CAF_BEGIN_C_EXTERNS
 		f->iocb.aio_reqprio = CAF_AIO_PRIORITY;
 
 /**
- * @brief Asynchrnous I/O File Type
+ * @brief Asynchrnous I/O File Type.
  *
  * The type used to represent files in asynchronous I/O
  * operations.
@@ -76,7 +76,7 @@ CAF_BEGIN_C_EXTERNS
 typedef struct caf_aio_file_s caf_aio_file_t;
 
 /**
- * @brief Asynchronous I/O File Representation
+ * @brief Asynchronous I/O File Representation.
  *
  * This structure represents the an asynchronous opened file
  * containing all the data needed to operate with the file
@@ -104,7 +104,7 @@ struct caf_aio_file_s {
 };
 
 /**
- * @brief AIO Pool Control Type
+ * @brief AIO Pool Control Type.
  *
  * This type is used as control structure to work with
  * pools of AIO files, using batch operating system interfaces
@@ -115,7 +115,7 @@ struct caf_aio_file_s {
 typedef struct caf_aio_file_lst_s caf_aio_file_lst_t;
 
 /**
- * @brief AIO Pool Control Structure
+ * @brief AIO Pool Control Structure.
  *
  * This structure controls the AIO over pools of files
  * to work in batch operation modes, using the proper batch
@@ -145,17 +145,28 @@ struct caf_aio_file_lst_s {
 };
 
 /**
- * @brief Opens a file for a AIO
+ * @brief Opens a file for AIO operations.
  *
- * @param path[in]				file path to open
+ * Opens a file for asynchronous IO operations, checking every
+ * step in the process of opening the file and setting the
+ * proper data to operate with these files. The arguments
+ * to this functions are the <b>path</b> to the file
+ * to open, the argument <b>flg</b> are the flags of
+ * the file to <b>open(2)</b>, <b>md</b> are the opening
+ * mode flags, <b>fs</b> when is <b>CAF_OK</b> retreives
+ * the file stats with <b>fstat(2)</b> and <b>bsz</b>
+ * sets the file buffer size using <b>caf_buffer_t</b>.
+ *
+ * @param path[in]				path to the to open
  * @param flg[in]				open flags
- * @param md[in]				file mode on create files
+ * @param md[in]				file modes on file creation
  * @param fs[in]				retreive file stats (<b>fstat(2)</b>)
  * @param bsz[in]				file buffer size
  *
- * @return caf_aio_file_t *		an allocated aio file type
+ * @return caf_aio_file_t *		an allocated aio file
  *
  * @see caf_aio_file_t
+ * @see caf_buffer_t
  */
 caf_aio_file_t *caf_aio_fopen (const char *path, const int flg,
 							   const mode_t md, int fs, size_t bsz);
@@ -163,26 +174,123 @@ caf_aio_file_t *caf_aio_fopen (const char *path, const int flg,
 /**
  * @brief Close an opened file for AIO
  *
+ * Closes the file descriptor asociated with the file
+ * and releases the memory asociated with the given
+ * <b>caf_aio_file_t</b> structure <b>r</b>.
+ *
  * @param r[in]			pointer to the opened file
  *
  * @return int			CAF_OK on success, CAF_ERROR on failure
+ *
+ * @see caf_aio_file_t
  */
 int caf_aio_fclose (caf_aio_file_t *r);
 
-/**
- * @brief
+/** 
+ * @brief Repeat Open operation.
  *
- * @param r
- *
- * @return
+ * Repeats the open operation over the given <b>caf_aio_file_t</b>
+ * structure <b>r</b>, allocating a new pointer with <b>r</b> data
+ * and using <b>caf_aio_file_open</b> to allocate it, also uses
+ * <b>caf_aio_fclose</b> to clear the old pointer references.
+ * 
+ * @param r[in]			pointer to the opened file to reopen
+ * 
+ * @return caf_aio_file_t *		new allocated pointer or NULL on failure
  */
 caf_aio_file_t *caf_aio_reopen (caf_aio_file_t *r);
+
+/** 
+ * @brief Refills the file stats
+ * 
+ * Calls <b>fstat(2)</b> over the asociated file descriptor and
+ * restores file stats with fresh data.
+ * 
+ * @param r[in]			pointer to the file to restat
+ * 
+ * @return int			CAF_OK on success, CAF_ERROR on failure.
+ */
 int caf_aio_restat (caf_aio_file_t *r);
+
+/** 
+ * @brief Checks if the file has changed
+ *
+ * Checks if the has changed using the file stats timestamps,
+ * against the given timestamps (<b>lmt</b> and <b>lct</b>).
+ * The behaviour of this functions depends on the system
+ * implementation of <b>fstat(2)</b> and <b>clock_gettime(2)</b>.
+ *
+ * @param r[in]			file to check
+ * @param lmt[in]		modification timespec to check against
+ * @param lct[in]		change timespec to check against
+ * 
+ * @return				CAF_OK with changes, CAF_ERROR with no changes.
+ */
 int caf_aio_fchanged (caf_aio_file_t *r, struct timespec *lmt,
 					  struct timespec *lct);
+
+/** 
+ * @brief Reads asynchrnously from the given file
+ *
+ * Uses the standard <b>aio_read(2)</b> to read from the given
+ * <b>caf_aio_file_t</b> structure <b>r</b> and using the
+ * <b>cbuffer_t</b> structure <b>b</b> the data readed from
+ * the <b>r</b> asociated file descriptor. Be carefull with the
+ * <b>b</b> buffer, since the read and write operations are
+ * asynchrnous, you may use some kind of <i>resource locking</i>
+ * technique.
+ * 
+ * @param r[in]			file to read from
+ * @param b[in]			buffer to fill with data
+ * 
+ * @return int			the amount of readed bytes.
+ */
 int caf_aio_read (caf_aio_file_t *r, cbuffer_t *b);
+
+/** 
+ * @brief Writes asynchrnously from the given file
+ *
+ * Uses the standard <b>aio_write(2)</b> to write to the given
+ * <b>caf_aio_file_t</b> structure <b>r</b> using the data
+ * contained in the <b>cbuffer_t</b> structure <b>b</b>.
+ * Be carefull with the <b>b</b> buffer, since the read and
+ * write operations are asynchrnous, you may use some kind of
+ * <i>resource locking</i> technique.
+ * 
+ * @param r[in]			file to read from
+ * @param b[in]			buffer to fill with data
+ * 
+ * @return int			the amount of readed bytes.
+ */
 int caf_aio_write (caf_aio_file_t *r, cbuffer_t *b);
+
+/** 
+ * @brief Applies <b>fcntl(2)</b> to the given AIO file
+ *
+ * Applies <b>fcntl(2)</b> commands to the given
+ * <b>caf_aio_file_t</b> structure file descriptor.
+ * 
+ * @param r[in]			the file where to apply the commands
+ * @param cmd[in]		<b>fcntl(2)</b> command
+ * @param arg[in]		<b>fcntl(2)</b> command argument
+ * 
+ * @return int			the results of the <b>fcntl(2)</b> operation.
+ */
 int caf_aio_fcntl (caf_aio_file_t *r, int cmd, int *arg);
+
+/** 
+ * @brief Apply <b>lseek(2)</b> to the given AIO file
+ * 
+ * Applies <b>lseek(2)</b> to the given <b>caf_aio_file_t</b>
+ * structure <b>r</b>, using the offset (<b>off_t</b>) <b>o</b>
+ * and the whence flags <b>w</b>.
+ *
+ * @param r[in]			the file to operate
+ * @param o[in]			the wanted file offset
+ * @param w[in]			whence flags
+ * 
+ * @return int			CAF_OK on success, CAF_ERROR on failure.
+ */
 int caf_aio_flseek (caf_aio_file_t *r, off_t o, int w);
 int caf_aio_cancel (caf_aio_file_t *r);
 int caf_aio_return (caf_aio_file_t *r);

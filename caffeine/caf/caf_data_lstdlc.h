@@ -3,7 +3,7 @@
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
   Caffeine - C Application Framework
-  Copyright (C) 2006 Daniel Molina Wegener
+  Copyright (C) 2006 Daniel Molina Wegener <dmw@coder.cl>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -36,7 +36,7 @@
  * @brief     Caffeine Double Linked Circular List Functions.
  * @date      $Date: 2007-05-02 20:50:25 -0400 (Wed, 02 May 2007) $
  * @version   $Revision: 8 $
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * List management functions. These are function to manage Double
  * Linked Lists. This includes push, pop, delete, set and other common

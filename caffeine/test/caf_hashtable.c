@@ -3,7 +3,7 @@
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
   Caffeine - C Application Framework
-  Copyright (C) 2006 Daniel Molina Wegener
+  Copyright (C) 2006 Daniel Molina Wegener <dmw@coder.cl>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public

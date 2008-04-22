@@ -3,7 +3,7 @@
 /* kate: space-indent off; indent-width 4; mixedindent off; indent-mode cstyle; */
 /*
   Caffeine - C Application Framework
-  Copyright (C) 2006 Daniel Molina Wegener
+  Copyright (C) 2006 Daniel Molina Wegener <dmw@coder.cl>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -114,7 +114,7 @@ caf_aio_fclose (caf_aio_file_t *r) {
 			return CAF_OK;
 		}
 	}
-	return CAF_ERROR;
+p	return CAF_ERROR;
 }
 
 
@@ -153,9 +153,13 @@ caf_aio_fchanged (caf_aio_file_t *r, struct timespec *lmt, struct timespec *lct)
 	time_t diff;
 	if (r != (caf_aio_file_t *)NULL) {
 		diff = (r->sd.st_mtime - lmt->tv_sec) + (r->sd.st_ctime - lct->tv_sec);
-		return (int)diff;
+		if (diff != 0) {
+			return CAF_OK;
+		} else {
+			return CAF_ERROR;
+		}
 	}
-	return CAF_OK;
+	return -1;
 }
 
 
