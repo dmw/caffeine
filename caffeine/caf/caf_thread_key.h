@@ -37,7 +37,7 @@
  * @brief     Thread Key.
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * Manage Thread Keys (TSD). Allow the program to create key pools
  * instantly released on pool destruction, otherwise, if the key

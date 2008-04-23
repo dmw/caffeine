@@ -38,7 +38,7 @@
  * @brief     Caffeine Data Buffer
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * Caffeine Data Buffer functions allows you to store data in the
  * cbuffer_t structure, with two members inside, the void pointer

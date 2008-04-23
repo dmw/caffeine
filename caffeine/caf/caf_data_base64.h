@@ -36,7 +36,7 @@
  * @brief     Caffeine Base Encoding Interfaces
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * Caffeine Base Encoding interfaces, provides common interfaces for
  * base encoding operations. You can encode/decode using known encodings

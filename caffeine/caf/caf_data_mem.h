@@ -33,7 +33,7 @@
  * @brief     Caffeine Memory Routines.
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * Common memory routines, as defines the GNU Coding Standards, these
  * are wrapper routines to common memory allocation and deallocation

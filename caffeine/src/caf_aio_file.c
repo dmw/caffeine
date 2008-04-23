@@ -70,6 +70,8 @@ caf_aio_fopen (const char *path, const int flg, const mode_t md,
 					r->mode = md;
 					r->path = strdup (path);
 					r->ustat = fs;
+					r->errno = 0;
+					r->lastop = CAF_AIO_NOOP;
 					if (fs == CAF_OK) {
 						if ((fstat (r->iocb.aio_fildes, &(r->sd))) == 0) {
 							return r;
@@ -114,7 +116,7 @@ caf_aio_fclose (caf_aio_file_t *r) {
 			return CAF_OK;
 		}
 	}
-p	return CAF_ERROR;
+	return CAF_ERROR;
 }
 
 
@@ -142,6 +144,7 @@ caf_aio_restat (caf_aio_file_t *r) {
 	if (r != (caf_aio_file_t *)NULL
 		&& (fstat (r->fd, &sb)) == 0) {
 		r->sd = sb;
+		r->lastop = CAF_AIO_RSTAT;
 		return CAF_OK;
 	}
 	return CAF_ERROR;
@@ -170,6 +173,7 @@ caf_aio_read (caf_aio_file_t *r, cbuffer_t *b) {
 		&& b != (cbuffer_t *)NULL
 		&& (r->fd >= 0 && (b->sz > 0 || b->iosz > 0))) {
 		rd = aio_read (&(r->iocb));
+		r->lastop = CAF_AIO_READ;
 	}
 	return rd;
 }
@@ -182,6 +186,7 @@ caf_aio_write (caf_aio_file_t *r, cbuffer_t *b) {
 		&& b != (cbuffer_t *)NULL
 		&& ((b->iosz > 0 || b->sz > 0) && r->fd >= 0)) {
 		wr = aio_write (&(r->iocb));
+		r->lastop = CAF_AIO_WRITE;
 	}
 	return wr;
 }
@@ -189,14 +194,16 @@ caf_aio_write (caf_aio_file_t *r, cbuffer_t *b) {
 
 int
 caf_aio_fcntl (caf_aio_file_t *r, int cmd, int *arg) {
+	int opr = CAF_ERROR_SUB;
 	if (r != (caf_aio_file_t *)NULL) {
 		if (arg != (int *)NULL) {
-			return fcntl (r->fd, cmd, *arg);
+			opr = fcntl (r->fd, cmd, *arg);
 		} else {
-			return fcntl (r->fd, cmd);
+			opr = fcntl (r->fd, cmd);
 		}
+		r->lastop = CAF_AIO_FCNTL;
 	}
-	return CAF_ERROR_SUB;
+	return opr;
 }
 
 
@@ -204,6 +211,7 @@ int
 caf_aio_flseek (caf_aio_file_t *r, off_t o, int w) {
 	if (r != (caf_aio_file_t *)NULL) {
 		if ((lseek (r->fd, o, w)) > -1) {
+			r->lastop = CAF_AIO_LSEEK;
 			return CAF_OK;
 		}
 	}
@@ -213,10 +221,23 @@ caf_aio_flseek (caf_aio_file_t *r, off_t o, int w) {
 
 int
 caf_aio_cancel (caf_aio_file_t *r) {
+	int op = CAF_AIO_CANCELBADF;
 	if (r != (caf_aio_file_t *)NULL) {
-		return aio_cancel (r->iocb.aio_fildes, &(r->iocb));
+		op = aio_cancel (r->iocb.aio_fildes, &(r->iocb));
+		switch (op) {
+		case AIO_CANCELED:
+			op = CAF_AIO_CANCELED;
+			break;
+		case AIO_NOTCANCELED:
+			op = CAF_AIO_NOTCANCELED;
+			break;
+		case AIO_ALLDONE:
+			op = CAF_AIO_ALLDONE;
+			break;
+		}
+		r->lastop = CAF_AIO_CANCEL;
 	}
-	return AIO_ALLDONE;
+	return op;
 }
 
 
@@ -325,6 +346,7 @@ caf_aio_lst_close (caf_aio_file_lst_t *r) {
 		for (c = 0; c < r->iocb_count; c++) {
 			if (r->iocb_fds[c] > -1) {
 				if ((close (r->iocb_fds[c])) == 0) {
+					r->iocb_fds[c] = -1;
 					ofc++;
 				}
 			}

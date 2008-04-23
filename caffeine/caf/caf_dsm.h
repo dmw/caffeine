@@ -33,7 +33,7 @@
  * @brief     Caffeine Dynamic State Machine
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * Caffeine Dynamic State Machine
  *

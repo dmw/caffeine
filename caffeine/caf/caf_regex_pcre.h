@@ -33,7 +33,7 @@
  * @brief     PCRE Regular Expressions
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * PCRE Regular Expressions.
  *

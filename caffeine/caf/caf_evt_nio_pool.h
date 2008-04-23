@@ -33,7 +33,7 @@
  * @brief     I/O Events Pool Manager Abstraction
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * I/O Events Pool Manager Abstraction
  *

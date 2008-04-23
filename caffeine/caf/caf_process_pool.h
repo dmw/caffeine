@@ -33,7 +33,7 @@
  * @brief     Process Pool Manager.
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * Process Pool Manager is the set of functions to manage a process pool,
  * similar to other daemons that does multiple forks(2) at one time to

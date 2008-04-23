@@ -37,7 +37,7 @@
  * @brief     Thread Pool Manager.
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * Thread Pool Manager is the set of functions to manage a thread pool.
  * A Thread Pool is a DLL of threads that shares the same attributes,

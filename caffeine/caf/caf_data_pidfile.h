@@ -37,7 +37,7 @@
  * @brief     Caffeine PID File Manager
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * PID File Manager for Caffeine. Allows create and desatroy PID Files for
  * Caffeine Applications.

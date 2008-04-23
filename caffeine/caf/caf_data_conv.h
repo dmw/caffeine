@@ -33,7 +33,7 @@
  * @brief     Caffeine Data Conversion.
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * Data conversion functions and defines. Here you can search for
  * functions which converts from one type to another. Usually made

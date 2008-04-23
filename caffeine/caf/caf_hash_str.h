@@ -33,7 +33,7 @@
  * @brief     String Hash Functions.
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * String Hash Functions
  *

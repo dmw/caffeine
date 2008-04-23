@@ -40,7 +40,7 @@
  * @brief     IPC Messages
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * IPC Messages
  *

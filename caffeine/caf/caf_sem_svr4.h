@@ -43,7 +43,7 @@
  * @brief     Caffeine SVr4 Semaphores.
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * Caffeine SVr4 Semaphores.
  *

@@ -36,7 +36,7 @@
  * @brief     Thread Mutexes.
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * This module manage specific mutexes and his attributes. The idea is to
  * maintain the mutex and his attributes. Also a bitfield to manage

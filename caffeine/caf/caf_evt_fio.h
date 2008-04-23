@@ -33,7 +33,7 @@
  * @brief     CAF Event Manager.
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * File I/O Events Manager Abstraction
  *

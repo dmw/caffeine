@@ -33,7 +33,7 @@
  * @brief     Caffeine Circular List Functions.
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * List management functions. These are function to manage Circular
  * Lists. This includes push, pop, delete, set and other common

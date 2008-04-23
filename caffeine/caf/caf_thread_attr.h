@@ -37,7 +37,7 @@
  * @brief     Thread Attributes.
  * @date      $Date$
  * @version   $Revision$
- * @author    Daniel Molina Wegener <dmw@unete.cl>
+ * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * A way to manage thread attributes in a simplified way, trying to build an
  * abstraction layer for thread attributes. Some systems may have some
