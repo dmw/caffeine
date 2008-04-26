@@ -358,15 +358,16 @@ caf_aio_lst_close (caf_aio_file_lst_t *r) {
 
 int
 caf_aio_lst_suspend (caf_aio_file_lst_t *r, const struct timespec *to,
-					 int idx) {
+					 int idx, int cnt) {
 	struct aiocb **p = (struct aiocb **)NULL;
 	if (r != (caf_aio_file_lst_t *)NULL
 		&& to != (const struct timespec *)NULL
 		&& idx >= 0) {
-		if (idx < r->iocb_count) {
+		if (idx < r->iocb_count
+			&& (idx + cnt) <= r->iocb_count) {
 			p = (struct aiocb **)&(r->iocb_list[idx]);
 			return aio_suspend ((const struct aiocb * const *)p,
-								r->iocb_count, to);
+								cnt, to);
 		}
 	}
 	return -1;
