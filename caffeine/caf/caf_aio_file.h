@@ -70,7 +70,7 @@ CAF_BEGIN_C_EXTERNS
 /** <b>caf_aio_cancel</b> return value when cancelation is not done */
 #define CAF_AIO_NOTCANCELED			0x0020
 
->caf_aio_cancel</b> return value when AIO operations are done
+/** <b>caf_aio_cancel</b> return value when AIO operations are done
     and can not be canceled */
 #define CAF_AIO_ALLDONE				0x0030
 /** <b>caf_aio_cancel</b> return value when a wrong
@@ -121,7 +121,7 @@ struct caf_aio_file_s {
 	/** File opened with <b>fstat(2)</b> handling */
 	int ustat;
 	/** <b>errno(3)</b> for AIO operations */
-	int errno;
+	int aio_errno;
 	/** Last AIO operation */
 	int lastop;
 	/** File mode used with <b>open(2)</b> when created  */
@@ -391,7 +391,7 @@ int caf_aio_error (caf_aio_file_t *r);
  * @return int			zero on success, -1 on failure.
  */
 int caf_aio_suspend (caf_aio_file_t *r,
-					 const struct timespec *to);read
+					 const struct timespec *to);
 
 /**
  * @brief Prepares a file list for AIO operations

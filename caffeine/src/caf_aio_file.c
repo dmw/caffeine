@@ -70,7 +70,7 @@ caf_aio_fopen (const char *path, const int flg, const mode_t md,
 					r->mode = md;
 					r->path = strdup (path);
 					r->ustat = fs;
-					r->errno = 0;
+					r->aio_errno = 0;
 					r->lastop = CAF_AIO_NOOP;
 					if (fs == CAF_OK) {
 						if ((fstat (r->iocb.aio_fildes, &(r->sd))) == 0) {
