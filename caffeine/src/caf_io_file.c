@@ -223,7 +223,7 @@ io_can_open (const char *path, int oflg) {
 		s = stat (path, &ps);
 		if (s == -1 && errno != 0) {
 			if (errno == ENOENT && ((oflg & O_CREAT) != 0)) {
-				dn = dirname (path);
+				dn = dirname ((char *)path);
 				s = stat (dn, &ps);
 				xfree (dn);
 				if ((io_check_stat_flags (&ps, oflg)) != 0) {

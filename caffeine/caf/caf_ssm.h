@@ -25,9 +25,9 @@
 #ifndef CAF_SSM_H
 #define CAF_SSM_H 1
 /**
- * @defgroup      caf_dsm             Caffeine Static State Machine
+ * @defgroup      caf_ssm             Caffeine Static State Machine
  * @ingroup       caf_process
- * @addtogroup    caf_dsm
+ * @addtogroup    caf_ssm
  * @{
  *
  * @brief     Caffeine Static State Machine

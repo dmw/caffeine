@@ -163,6 +163,8 @@ struct caf_aio_file_lst_s {
 	int flags;
 	/** Batch Open <b>fstat(2)</b> handling */
 	int ustat;
+	/** <b>errno(3)</b> for AIO operations */
+	int aio_errno;
 	/** Batch <b>open(2)</b> mode when creating a files  */
 	mode_t mode;
 	/** Batch AIO Buffer size  */

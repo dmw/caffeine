@@ -55,15 +55,20 @@ static char Id[] = "$Id$";
 caf_aio_file_t *
 caf_aio_fopen (const char *path, const int flg, const mode_t md,
 			   int fs, size_t bsz) {
+	int prev_errno;
 	caf_aio_file_t *r = (caf_aio_file_t *)NULL;
 	if (path != (char *)NULL) {
 		r = (caf_aio_file_t *)xmalloc (CAF_IO_FILE_SZ);
 		if (r != (caf_aio_file_t *)NULL) {
+			prev_errno = errno;
+			errno = 0;
 			if (md != 0) {
 				r->iocb.aio_fildes = open (path, flg, md);
 			} else {
 				r->iocb.aio_fildes = open (path, flg);
 			}
+			r->aio_errno = errno;
+			errno = prev_errno;
 			if (r->iocb.aio_fildes >= 0) {
 				if (fs == CAF_OK) {
 					r->flags = flg;
@@ -169,10 +174,15 @@ caf_aio_fchanged (caf_aio_file_t *r, struct timespec *lmt, struct timespec *lct)
 int
 caf_aio_read (caf_aio_file_t *r, cbuffer_t *b) {
 	int rd = -1;
+	int prev_errno;
 	if (r != (caf_aio_file_t *)NULL
 		&& b != (cbuffer_t *)NULL
 		&& (r->fd >= 0 && (b->sz > 0 || b->iosz > 0))) {
+		prev_errno = errno;
+		errno = 0;
 		rd = aio_read (&(r->iocb));
+		r->aio_errno = errno;
+		errno = prev_errno;
 		r->lastop = CAF_AIO_READ;
 	}
 	return rd;
@@ -182,10 +192,15 @@ caf_aio_read (caf_aio_file_t *r, cbuffer_t *b) {
 int
 caf_aio_write (caf_aio_file_t *r, cbuffer_t *b) {
 	int wr = -1;
+	int prev_errno;
 	if (r != (caf_aio_file_t *)NULL
 		&& b != (cbuffer_t *)NULL
 		&& ((b->iosz > 0 || b->sz > 0) && r->fd >= 0)) {
+		prev_errno = errno;
+		errno = 0;
 		wr = aio_write (&(r->iocb));
+		r->aio_errno = errno;
+		errno = prev_errno;
 		r->lastop = CAF_AIO_WRITE;
 	}
 	return wr;
@@ -195,12 +210,17 @@ caf_aio_write (caf_aio_file_t *r, cbuffer_t *b) {
 int
 caf_aio_fcntl (caf_aio_file_t *r, int cmd, int *arg) {
 	int opr = CAF_ERROR_SUB;
+	int prev_errno;
 	if (r != (caf_aio_file_t *)NULL) {
+		prev_errno = errno;
+		errno = 0;
 		if (arg != (int *)NULL) {
 			opr = fcntl (r->fd, cmd, *arg);
 		} else {
 			opr = fcntl (r->fd, cmd);
 		}
+		r->aio_errno = errno;
+		errno = prev_errno;
 		r->lastop = CAF_AIO_FCNTL;
 	}
 	return opr;
@@ -209,11 +229,16 @@ caf_aio_fcntl (caf_aio_file_t *r, int cmd, int *arg) {
 
 int
 caf_aio_flseek (caf_aio_file_t *r, off_t o, int w) {
+	int prev_errno;
 	if (r != (caf_aio_file_t *)NULL) {
+		prev_errno = errno;
+		errno = 0;
 		if ((lseek (r->fd, o, w)) > -1) {
 			r->lastop = CAF_AIO_LSEEK;
 			return CAF_OK;
 		}
+		r->aio_errno = errno;
+		errno = prev_errno;
 	}
 	return CAF_ERROR;
 }
@@ -222,8 +247,13 @@ caf_aio_flseek (caf_aio_file_t *r, off_t o, int w) {
 int
 caf_aio_cancel (caf_aio_file_t *r) {
 	int op = CAF_AIO_CANCELBADF;
+	int prev_errno;
 	if (r != (caf_aio_file_t *)NULL) {
+		prev_errno = errno;
+		errno = 0;
 		op = aio_cancel (r->iocb.aio_fildes, &(r->iocb));
+		r->aio_errno = errno;
+		errno = prev_errno;
 		switch (op) {
 		case AIO_CANCELED:
 			op = CAF_AIO_CANCELED;
@@ -243,42 +273,66 @@ caf_aio_cancel (caf_aio_file_t *r) {
 
 int
 caf_aio_return (caf_aio_file_t *r) {
+	int s = -1;
+	int prev_errno;
 	if (r != (caf_aio_file_t *)NULL) {
-		return aio_return (&(r->iocb));
+		prev_errno = 0;
+		errno = 0;
+		s = aio_return (&(r->iocb));
+		r->aio_errno = errno;
+		errno = prev_errno;
 	}
-	return -1;
+	return s;
 }
 
 
 int
 caf_aio_error (caf_aio_file_t *r) {
+	int s = -1;
+	int prev_errno;
 	if (r != (caf_aio_file_t *)NULL) {
-		return aio_error (&(r->iocb));
+		prev_errno = errno;
+		errno = 0;
+		s = aio_error (&(r->iocb));
+		r->aio_errno = errno;
+		errno = prev_errno;
 	}
-	return -1;
+	return s;
 }
 
 
 int
 caf_aio_suspend (caf_aio_file_t *r, const struct timespec *to) {
+	int s = -1;
+	int prev_errno;
 	struct aiocb *l_iocb[1];
 	if (r != (caf_aio_file_t *)NULL && to != (const struct timespec *)NULL) {
 		l_iocb[0] = &(r->iocb);
-		return aio_suspend ((const struct aiocb * const *)l_iocb, 1, to);
+		prev_errno = errno;
+		errno = 0;
+		s = aio_suspend ((const struct aiocb * const *)l_iocb, 1, to);
+		r->aio_errno = errno;
+		errno = prev_errno;
 	}
-	return -1;
+	return s;
 }
 
 
 #ifdef HAVE_AIO_WAITCOMPLETE
 int
 caf_aio_waitcomplete (caf_aio_file_t *r, struct timespec *to) {
+	int s = -1;
+	int prev_errno;
 	struct aiocb *l_iocb[1];
 	if (r != (caf_aio_file_t *)NULL && to != (const struct timespec *)NULL) {
 		l_iocb[0] = &(r->iocb);
-		return aio_waitcomplete ((struct aiocb **)l_iocb, to);
+		prev_errno = errno;
+		errno = 0;
+		s = aio_waitcomplete ((struct aiocb **)l_iocb, to);
+		r->aio_errno = errno;
+		errno = prev_errno;
 	}
-	return -1;
+	return s;
 }
 #endif /* !HAVE_AIO_WAITCOMPLETE */
 
@@ -360,17 +414,23 @@ int
 caf_aio_lst_suspend (caf_aio_file_lst_t *r, const struct timespec *to,
 					 int idx, int cnt) {
 	struct aiocb **p = (struct aiocb **)NULL;
+	int s = -1;
+	int prev_errno;
 	if (r != (caf_aio_file_lst_t *)NULL
 		&& to != (const struct timespec *)NULL
 		&& idx >= 0) {
 		if (idx < r->iocb_count
 			&& (idx + cnt) <= r->iocb_count) {
 			p = (struct aiocb **)&(r->iocb_list[idx]);
-			return aio_suspend ((const struct aiocb * const *)p,
-								cnt, to);
+			prev_errno = errno;
+			errno = 0;
+			s = aio_suspend ((const struct aiocb * const *)p,
+							 cnt, to);
+			r->aio_errno = errno;
+			errno = prev_errno;
 		}
 	}
-	return -1;
+	return s;
 }
 
 
@@ -379,15 +439,21 @@ int
 caf_aio_lst_waitcomplete (caf_aio_file_lst_t *r, struct timespec *to,
 						  int idx) {
 	struct aiocb **p = (struct aiocb **)NULL;
+	int s = -1;
+	int prev_errno;
 	if (r != (caf_aio_file_lst_t *)NULL
 		&& to != (const struct timespec *)NULL
 		&& idx >= 0) {
 		if (idx < r->iocb_count) {
 			p = (struct aiocb **)&(r->iocb_list[idx]);
-			return aio_waitcomplete (p, to);
+			prev_errno = errno;
+			errno = 0;
+			s = aio_waitcomplete (p, to);
+			r->aio_errno = errno;
+			errno = prev_errno;
 		}
 	}
-	return -1;
+	return s;
 }
 #endif /* !HAVE_AIO_WAIT_COMPLETE */
 
@@ -396,11 +462,17 @@ int
 caf_aio_lst_operation (caf_aio_file_lst_t *r, struct sigevent *e,
 					   int mode) {
 	struct aiocb **p = (struct aiocb **)NULL;
+	int s = -1;
+	int prev_errno;
 	if (r != (caf_aio_file_lst_t *)NULL
 		&& e != (struct sigevent *)NULL) {
 		p = (struct aiocb **)&(r->iocb_list);
-		return lio_listio (mode, (struct aiocb * const *)p, r->iocb_count,
-						   e);
+		prev_errno = errno;
+		errno = 0;
+		s = lio_listio (mode, (struct aiocb * const *)p, r->iocb_count,
+						e);
+		r->aio_errno = errno;
+		errno = prev_errno;
 	}
 	return -1;
 }

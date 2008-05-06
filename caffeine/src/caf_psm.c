@@ -141,15 +141,17 @@ int
 caf_psm_remove (caf_psm_t *m, int s_id) {
 	int c;
 	caf_psm_state_t *s;
-	if (s != (caf_psm_state_t *)NULL && m != (caf_psm_t *)NULL) {
+	if (m != (caf_psm_t *)NULL) {
 		for (c = 0; c <= m->last; c++) {
 			s = &(m->m_state[c]);
-			if (s->s_id == s_id) {
-				s->s_id = 0;
-				s->s_type = 0;
-				s->s_call = NULL;
-				s->s_error = NULL;
-				return CAF_OK;
+			if (s != (caf_psm_state_t *)NULL) {
+				if (s->s_id == s_id) {
+					s->s_id = 0;
+					s->s_type = 0;
+					s->s_call = NULL;
+					s->s_error = NULL;
+					return CAF_OK;
+				}
 			}
 		}
 	}

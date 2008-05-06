@@ -25,9 +25,9 @@
 #ifndef CAF_PSM_H
 #define CAF_PSM_H 1
 /**
- * @defgroup      caf_dsm             Caffeine Plugable State Machine
+ * @defgroup      caf_psm             Caffeine Plugable State Machine
  * @ingroup       caf_process
- * @addtogroup    caf_dsm
+ * @addtogroup    caf_psm
  * @{
  *
  * @brief     Caffeine Plugable State Machine
