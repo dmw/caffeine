@@ -12,7 +12,7 @@ K&R blocks breakings and KNF -- Kernel Normal Form -- indenting.
 * Functions in ISO C 99 (ISO/IEC 9899:1999) calling convention.
 * Block must be broken using K&R indenting style.
 * The code must be indented with concrete tabs of width 4.
-* The virtual margin must be set to 80 columns.
+* The fill column must set to the column 78.
 
 Concrete tabs are used to speed up the compile time of caffeine, concrete
 tabs means less tokens to parse.
