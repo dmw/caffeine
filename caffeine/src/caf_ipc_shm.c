@@ -44,6 +44,7 @@ static char Id[] = "$Id$";
 
 
 static int caf_shm_pool_delete_callback (void *data);
+static int caf_shm_alloc_search_callback (void *lptr, void *data);
 
 
 caf_shm_pool_t *
@@ -79,7 +80,58 @@ int
 caf_shm_pool_add (caf_shm_pool_t *s, caf_shm_alloc_t *a) {
 	if (s != (caf_shm_pool_t *)NULL && a != (caf_shm_alloc_t *)NULL) {
 		if ((lstdl_push (s->pool, (void *)a)) != (lstdl_t *)NULL) {
+			s->sz += a->sz;
+			s->count++;
 			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
+}
+
+
+static int
+caf_shm_alloc_search_callback (void *lptr, void *data) {
+	caf_shm_alloc_t *src;
+	int *id;
+	if (lptr != (void *)NULL && data != (void *)NULL) {
+		id = (int *)data;
+		src = (caf_shm_alloc_t *)lptr;
+		if (src->id == *id) {
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
+}
+
+
+static int
+caf_shm_alloc_delete_callback (void *data) {
+	if (data != (void *)NULL) {
+		if (caf_shm_seg_delete((caf_shm_alloc_t *)data) == CAF_OK) {
+			return CAF_OK;
+		}
+	}
+	return CAF_ERROR;
+}
+
+
+int
+caf_shm_pool_remove (caf_shm_pool_t *s, int id) {
+	caf_shm_alloc_t *found;
+	if (s != (caf_shm_pool_t *)NULL && s->pool != (lstdl_t *)NULL) {
+		if ((found = (caf_shm_alloc_t *)
+			 lstdl_search (s->pool, (void *)id,
+						   caf_shm_alloc_search_callback))
+			!= (caf_shm_alloc_t *)NULL) {
+			if ((lstdl_node_delete_by_data (s->pool, (void *)found,
+											caf_shm_alloc_delete_callback))
+				== CAF_OK) {
+				s->sz -= found->sz;
+				s->count--;
+				return CAF_OK;
+			} else {
+				return CAF_ERROR;
+			}
 		}
 	}
 	return CAF_ERROR;
