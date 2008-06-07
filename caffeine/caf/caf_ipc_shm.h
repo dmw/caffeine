@@ -50,10 +50,16 @@
 CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
+/** Size of the <b>caf_shm_pool_t</b> structure */
 #define CAF_SHM_POOL_SZ                 (sizeof (caf_shm_pool_t))
+/** Size of the <b>caf_shm_alloc_t</b> structure */
 #define CAF_SHM_ALLOC_SZ                (sizeof (caf_shm_alloc_t))
-#define CAF_SHM_DETACH_OK(s)            (s->ptr != (void *)-1)
-#define CAF_SHM_BAD_ALLOC               ((void *)-1)
+/** Evaluates if the given <b>caf_shm_alloc_t</b> structure <b>s</b>
+  has a pointer targeting the allocation to <b>NULL</b> */
+#define CAF_SHM_DETACH_OK(s)            (s->ptr != (void *)NULL)
+/** Bad allocation points to <b>NULL</b>, because usally <b>NULL</b>
+  points to the <i>zero</i> virtual address. */
+#define CAF_SHM_BAD_ALLOC               ((void *)NULL)
 
 /**
  * @brief SHM Allocation Block Type

@@ -201,7 +201,7 @@ int caf_hash_table_delete (caf_hash_table_t *table);
  * 
  * Adds a new hash to the given table <b>table</b>. You don't
  * need to pass the entire <b>caf_hash_t</b> structure, instead,
- * you must pass the data confirming the hash, the <b>key</b>ç
+ * you must pass the data confirming the hash, the <b>key</b>
  * and <b>data</b> pair. Also, the key size <b>ksz</b> is
  * needed.
  *

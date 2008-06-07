@@ -84,10 +84,14 @@ caf_ipcmsg_send (const caf_msg_t *m) {
 
 int
 caf_ipcmsg_recv (caf_msg_t *m) {
+	int gmsg;
 	if (m != (caf_msg_t *)NULL) {
 		if (m->data != (cbuffer_t *)NULL) {
-			return msgrcv (caf_ipcmsg_get (m, 0), m->data->data,
-						   m->data->sz, m->msg.mtype, m->msgflg);
+			gmsg = caf_ipcmsg_get (m, 0);
+			if (gmsg == 0) {
+				return msgrcv (gmsg, m->data->data,
+							   m->data->sz, m->msg.mtype, m->msgflg);
+			}
 		}
 	}
 	return CAF_ERROR;
@@ -108,18 +112,27 @@ caf_ipcmsg_get (const caf_msg_t *m, mode_t perm) {
 
 
 int
-caf_ipcmsg_create (const caf_msg_t *m, mode_t perm) {
+caf_ipcmsg_create (caf_msg_t *m, mode_t perm) {
 	if (m != (caf_msg_t *)NULL) {
-		return msgget (m->key, IPC_CREAT | perm);
+		m->qid = msgget (m->key, IPC_CREAT | perm);
+		m->merrno = errno;
+		if (m->qid >= 0) {
+			return m->qid;
+		}
 	}
 	return CAF_ERROR_SUB;
 }
 
 
 int
-caf_ipcmsg_remove (const caf_msg_t *m) {
+caf_ipcmsg_remove (caf_msg_t *m) {
 	if (m != (caf_msg_t *)NULL) {
-		return caf_ipcmsg_ctrl (m, IPC_RMID, NULL);
+		if ((caf_ipcmsg_ctrl (m, IPC_RMID, NULL)) == 0) {
+			return CAF_OK;
+		} else {
+			m->merrno = errno;
+			return CAF_ERROR_SUB;
+		}
 	}
 	return CAF_ERROR_SUB;
 }
@@ -129,9 +142,9 @@ int
 caf_ipcmsg_ctrl (const caf_msg_t *m, const int cmd,
 				 struct msqid_ds *b) {
 	if (m != (caf_msg_t *)NULL) {
-		return msgctl (caf_ipcmsg_get (m, 0), cmd, b);
+		msgctl (caf_ipcmsg_get (m, 0), cmd, b);
 	}
-	return CAF_ERROR;
+	return CAF_ERROR_SUB;
 }
 
 /* caf_ipc_msg.c ends here */
