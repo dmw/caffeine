@@ -157,10 +157,12 @@ caf_aio_restat (caf_aio_file_t *r) {
 
 
 int
-caf_aio_fchanged (caf_aio_file_t *r, struct timespec *lmt, struct timespec *lct) {
+caf_aio_fchanged (caf_aio_file_t *r, struct timespec *lmt,
+				  struct timespec *lct) {
 	time_t diff;
 	if (r != (caf_aio_file_t *)NULL) {
-		diff = (r->sd.st_mtime - lmt->tv_sec) + (r->sd.st_ctime - lct->tv_sec);
+		diff = (r->sd.st_mtime - lmt->tv_sec) +
+			(r->sd.st_ctime - lct->tv_sec);
 		if (diff != 0) {
 			return CAF_OK;
 		} else {
@@ -306,7 +308,8 @@ caf_aio_suspend (caf_aio_file_t *r, const struct timespec *to) {
 	int s = -1;
 	int prev_errno;
 	struct aiocb *l_iocb[1];
-	if (r != (caf_aio_file_t *)NULL && to != (const struct timespec *)NULL) {
+	if (r != (caf_aio_file_t *)NULL
+		&& to != (const struct timespec *)NULL) {
 		l_iocb[0] = &(r->iocb);
 		prev_errno = errno;
 		errno = 0;
@@ -324,7 +327,8 @@ caf_aio_waitcomplete (caf_aio_file_t *r, struct timespec *to) {
 	int s = -1;
 	int prev_errno;
 	struct aiocb *l_iocb[1];
-	if (r != (caf_aio_file_t *)NULL && to != (const struct timespec *)NULL) {
+	if (r != (caf_aio_file_t *)NULL
+		&& to != (const struct timespec *)NULL) {
 		l_iocb[0] = &(r->iocb);
 		prev_errno = errno;
 		errno = 0;

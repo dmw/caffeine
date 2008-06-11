@@ -40,7 +40,24 @@
  * @version   $Revision$
  * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
- * Core Asynchronous I/O
+ * <p>Core Asynchronous I/O module consists on a group of interfaces
+ * that works as wrappers arround native asynchronous I/O system
+ * calls according to <i>POSIX</i> standards.</p>
+ *
+ * <p><em>These interfaces are used only as wrappers and do not
+ * implement the real interfaces, and needs the native implementation
+ * of them.</em></p>
+ *
+ * <p>All information about asynchrnous I/O operations over files
+ * is retained inside the <b>@link #caf_aio_file_t @endlink</b>
+ * structure and it's components. Buffer I/O information is stored
+ * in the <b>@link #caf_aio_file_t#buf @endlink</b> structure
+ * member, and all retained data permits any cloning and reopening
+ * operations in failure cases and duplication operations.
+ * </p>
+ *
+ * <p>These interfaces are used in the <i>Caffeine Logging Engine</i>
+ * and some other small modules of <i>Caffeine</i>.
  *
  */
 
@@ -52,27 +69,36 @@ CAF_BEGIN_C_EXTERNS
 
 /** Default priority for Asynchrnous I/O */
 #define CAF_AIO_PRIORITY			0
-/** Size of the caf_aio_file_t structure (@see caf_io_file_t) */
+
+/** Size of the caf_aio_file_t structure
+	(@link #caf_aio_file_t @endlink) */
 #define CAF_AIO_FILE_SZ				(sizeof (caf_aio_file_t))
-/** Size of the aiocb (Asyncrhonous I/O Control Block) structure */
+
+/** Size of the aiocb (Asyncrhonous I/O Control Block)
+	structure */
 #define CAF_AIO_CTRLB_SZ			(sizeof (struct aiocb))
-/** Compares the Buffer Size and Buffer I/O Size members of a
-	cbuffer_t structure (@see cbuffer_t) */
+
+/** Compares the Buffer Size (@link #cbuffer_t#sz @endlink)
+	and I/O Buffer Size (@link #cbuffer_t#iosz @endlink)
+	members of a @link #cbuffer_t @endlink. */
 #define CAF_CBUF_AIO_EQ(b)			((ssize_t)b->sz == b->iosz)
-/** Cleans a caf_aio_file_t structure to the default values
-	(@see caf_aio_file_t) */
+
+/** Cleans a @link #caf_aio_file_t @endlink structure to the
+	default values */
 #define CAF_AIO_CLEAN(f)								\
 		f->iocb.aio_lio_opcode = LIO_NOP;				\
 		f->iocb.aio_reqprio = CAF_AIO_PRIORITY;
 
 /** <b>caf_aio_cancel</b> return value when cancelation is done */
 #define CAF_AIO_CANCELED			0x0010
+
 /** <b>caf_aio_cancel</b> return value when cancelation is not done */
 #define CAF_AIO_NOTCANCELED			0x0020
 
 /** <b>caf_aio_cancel</b> return value when AIO operations are done
     and can not be canceled */
 #define CAF_AIO_ALLDONE				0x0030
+
 /** <b>caf_aio_cancel</b> return value when a wrong
 	<b>caf_aio_file_t</b> parameter is passed */
 #define CAF_AIO_CANCELBADF			0x0040
@@ -114,7 +140,7 @@ typedef struct caf_aio_file_s caf_aio_file_t;
  * @see caf_aio_file_t
  */
 struct caf_aio_file_s {
-	/** File descriptor asociated with  */
+	/** File descriptor asociated with */
 	int fd;
 	/** File <b>open(2)</b> flags  */
 	int flags;
@@ -138,12 +164,10 @@ struct caf_aio_file_s {
 
 /**
  * @brief AIO Pool Control Type.
-
-
  *
- * This type is used as control structure to work with
+ * <p>This type is used as control structure to work with
  * pools of AIO files, using batch operating system interfaces
- * to work on.
+ * to work on.</p>
  *
  * @see caf_aio_file_lst_s
  */
@@ -152,9 +176,9 @@ typedef struct caf_aio_file_lst_s caf_aio_file_lst_t;
 /**
  * @brief AIO Pool Control Structure.
  *
- * This structure controls the AIO over pools of files
+ * <p>This structure controls the AIO over pools of files
  * to work in batch operation modes, using the proper batch
- * system interfaces to work on AIO files.
+ * system interfaces to work on AIO files.</p>
  *
  * @see caf_aio_file_lst_t
  */
@@ -184,7 +208,7 @@ struct caf_aio_file_lst_s {
 /**
  * @brief Opens a file for AIO operations.
  *
- * Opens a file for asynchronous IO operations, checking every
+ * <p>Opens a file for asynchronous IO operations, checking every
  * step in the process of opening the file and setting the
  * proper data to operate with these files. The arguments
  * to this functions are the <b>path</b> to the file
@@ -192,7 +216,7 @@ struct caf_aio_file_lst_s {
  * the file to <b>open(2)</b>, <b>md</b> are the opening
  * mode flags, <b>fs</b> when is <b>CAF_OK</b> retreives
  * the file stats with <b>fstat(2)</b> and <b>bsz</b>
- * sets the file buffer size using <b>caf_buffer_t</b>.
+ * sets the file buffer size using <b>@link #caf_buffer_t @endlink</b>.</p>
  *
  * @param path[in]				path to the to open
  * @param flg[in]				open flags
@@ -213,9 +237,9 @@ caf_aio_file_t *caf_aio_fopen (const char *path,
 /**
  * @brief Close an opened file for AIO
  *
- * Closes the file descriptor asociated with the file
+ * <p>Closes the file descriptor asociated with the file
  * and releases the memory asociated with the given
- * <b>caf_aio_file_t</b> structure <b>r</b>.
+ * <b>@link #caf_aio_file_t @endlink</b> structure <b>r</b>.</p>
  *
  * @param r[in]			pointer to the opened file
  *
@@ -228,10 +252,12 @@ int caf_aio_fclose (caf_aio_file_t *r);
 /**
  * @brief Repeat Open operation.
  *
- * Repeats the open operation over the given <b>caf_aio_file_t</b>
+ * <p>Repeats the open operation over the given
+ * <b>@link #caf_aio_file_t @endlink</b>
  * structure <b>r</b>, allocating a new pointer with <b>r</b> data
- * and using <b>caf_aio_file_open</b> to allocate it, also uses
- * <b>caf_aio_fclose</b> to clear the old pointer references.
+ * and using <b>@link caf_aio_file_open() @endlink</b> to allocate
+ * it, also uses <b>@link caf_aio_fclose() @endlink</b> to clear
+ * the old pointer references.</p>
  *
  * @param r[in]			pointer to the opened file to reopen
  *
@@ -242,8 +268,8 @@ caf_aio_file_t *caf_aio_reopen (caf_aio_file_t *r);
 /**
  * @brief Refills the file stats
  *
- * Calls <b>fstat(2)</b> over the asociated file descriptor and
- * restores file stats with fresh data.
+ * <p>Calls <b>fstat(2)</b> over the asociated file descriptor and
+ * restores file stats with fresh data.</p>
  *
  * @param r[in]			pointer to the file to restat
  *
@@ -255,10 +281,10 @@ int caf_aio_restat (caf_aio_file_t *r);
 /**
  * @brief Checks if the file has changed
  *
- * Checks if the has changed using the file stats timestamps,
+ * <p>Checks if the has changed using the file stats timestamps,
  * against the given timestamps (<b>lmt</b> and <b>lct</b>).
  * The behaviour of this functions depends on the system
- * implementation of <b>fstat(2)</b> and <b>clock_gettime(2)</b>.
+ * implementation of <b>fstat(2)</b> and <b>clock_gettime(2)</b>.</p>
  *
  * @param r[in]			file to check
  * @param lmt[in]		modification timespec to check against
@@ -272,13 +298,13 @@ int caf_aio_fchanged (caf_aio_file_t *r, struct timespec *lmt,
 /**
  * @brief Reads asynchrnously from the given file
  *
- * Uses the standard <b>aio_read(2)</b> to read from the given
- * <b>caf_aio_file_t</b> structure <b>r</b> and using the
- * <b>cbuffer_t</b> structure <b>b</b> the data readed from
+ * <p>Uses the standard <b>aio_read(2)</b> to read from the given
+ * <b>@link #caf_aio_file_t @endlink</b> structure <b>r</b> and using the
+ * <b>@link #cbuffer_t @endlink</b> structure <b>b</b> the data readed from
  * the <b>r</b> asociated file descriptor. Be carefull with the
  * <b>b</b> buffer, since the read and write operations are
  * asynchrnous, you may use some kind of <i>resource locking</i>
- * technique.
+ * technique.</p>
  *
  * @param r[in]			file to read from
  * @param b[in]			buffer to fill with data
@@ -290,12 +316,12 @@ int caf_aio_read (caf_aio_file_t *r, cbuffer_t *b);
 /**
  * @brief Writes asynchrnously from the given file
  *
- * Uses the standard <b>aio_write(2)</b> to write to the given
- * <b>caf_aio_file_t</b> structure <b>r</b> using the data
- * contained in the <b>cbuffer_t</b> structure <b>b</b>.
+ * <p>Uses the standard <b>aio_write(2)</b> to write to the given
+ * <b>@link #caf_aio_file_t @endlink</b> structure <b>r</b> using the data
+ * contained in the <b>@link #cbuffer_t @endlink</b> structure <b>b</b>.
  * Be carefull with the <b>b</b> buffer, since the read and
  * write operations are asynchrnous, you may use some kind of
- * <i>resource locking</i> technique.
+ * <i>resource locking</i> technique.</p>
  *
  * @param r[in]			file to read from
  * @param b[in]			buffer to fill with data
@@ -307,8 +333,8 @@ int caf_aio_write (caf_aio_file_t *r, cbuffer_t *b);
 /**
  * @brief Applies <b>fcntl(2)</b> to the given AIO file
  *
- * Applies <b>fcntl(2)</b> commands to the given
- * <b>caf_aio_file_t</b> structure file descriptor.
+ * <p>Applies <b>fcntl(2)</b> commands to the given
+ * <b>@link #caf_aio_file_t @endlink</b> structure file descriptor.</p>
  *
  * @param r[in]			the file where to apply the commands
  * @param cmd[in]		<b>fcntl(2)</b> command
@@ -321,9 +347,10 @@ int caf_aio_fcntl (caf_aio_file_t *r, int cmd, int *arg);
 /**
  * @brief Apply <b>lseek(2)</b> to the given AIO file
  *
- * Applies <b>lseek(2)</b> to the given <b>caf_aio_file_t</b>
- * structure <b>r</b>, using the offset (<b>off_t</b>) <b>o</b>
- * and the whence flags <b>w</b>.
+ * <p>Applies <b>lseek(2)</b> to the given
+ * <b>@link #caf_aio_file_t @endlink</b> structure <b>r</b>,
+ * using the offset (<b>off_t</b>) <b>o</b>
+ * and the whence flags <b>w</b>.</p>
  *
  * @param r[in]			the file to operateread
  * @param o[in]			the wanted file offset
@@ -336,11 +363,11 @@ int caf_aio_flseek (caf_aio_file_t *r, off_t o, int w);
 /**
  * @brief Try to cancel AIO operations
  *
- * Try to cancel AIO operations related to the file descriptor
- * asociated with the <b>caf_aio_file_t</b> parameter <b>r</b>.
- * Returns CAF_AIO_CANCELED, CAF_AIO_NOTCANCELED, CAF_AIO_ALLDONE
- * and CAF_AIO_CANCELBADF, according to the cancel operation
- * results and parameters given.
+ * <p>Try to cancel AIO operations related to the file descriptor
+ * asociated with the <b>@link #caf_aio_file_t @endlink</b> parameter
+ * <b>r</b>. Returns CAF_AIO_CANCELED, CAF_AIO_NOTCANCELED,
+ * CAF_AIO_ALLDONE and CAF_AIO_CANCELBADF, according to the cancel
+ * operation results and parameters given.</p>
  *
  * @param r[in]			file where to cancel operations
  *
@@ -357,9 +384,9 @@ int caf_aio_cancel (caf_aio_file_t *r);
 /**
  * @brief Applies <b>aio_return(2)</b> to the given file
  *
- * Applies the <b>aio_return(2)</b> interface to the given
- * <b>caf_aio_file_t</b> parameter <b>r</b> asociated file
- * descriptor.
+ * <p>Applies the <b>aio_return(2)</b> interface to the given
+ * <b>@link #caf_aio_file_t @endlink</b> parameter <b>r</b>
+ * asociated file descriptor.</p>
  *
  * @param r[in]			file where to apply the interface
  *
@@ -370,10 +397,11 @@ int caf_aio_return (caf_aio_file_t *r);
 /**
  * @brief Gives the status of the AIO operation
  *
- * Gives the error status of the AIO operation by appliying
+ * <p>Gives the error status of the AIO operation by appliying
  * <b>aio_error(2)</b> to the asociated file descriptor in
- * the given <b>caf_aio_file_t</b> parameter <b>r</b>.
- *read
+ * the given <b>@link #caf_aio_file_t @endlink</b> parameter
+ * <b>r</b>.</p>
+ *
  * @param r[in]			file where to apply the interface
  *
  * @return int			zero on success, error value on error.
@@ -383,9 +411,9 @@ int caf_aio_error (caf_aio_file_t *r);
 /**
  * @brief Wait for AIO operation completion.
  *
- * Suspends the calling process to wait for AIO operations on the
+ * <p>Suspends the calling process to wait for AIO operations on the
  * given file, applying <b>aio_suspend(2)</b> system call or waits
- * for timeout.
+ * for timeout.</p>
  *
  * @param r[in]			file from where to wait for AIO
  * @param to[in]		timeout specs
@@ -398,12 +426,13 @@ int caf_aio_suspend (caf_aio_file_t *r,
 /**
  * @brief Prepares a file list for AIO operations
  *
- * Prepares file list of <b>caf_aio_file_t</a> for AIO
- * operations and stores it in a <b>caf_aio_file_lst_t</b>
+ * <p>Prepares file list of <b>@link #caf_aio_file_t @endlink</a>
+ * for AIO operations and stores it in a
+ * <b>@link #caf_aio_file_lst_t @endlink</b>
  * with the common opening data such as flags and modes.
  * The list operations are made to operate with the
  * <b>lio_listio(2)</b> system call through <b>caffeine
- * *file_lst*</b> interfaces.
+ * *file_lst*</b> interfaces.</p>
  *
  * @param flg[in]		opening flags
  * @param md[in]		opening mode
@@ -425,11 +454,14 @@ caf_aio_file_lst_t *caf_aio_lst_new (const int flg, const mode_t md,
 /**
  * @brief Deallocates an AIO file list
  *
- * Deallocates an AIO file list (<b>caf_aio_file_lst_t</b>)
+ * <p>Deallocates an AIO file list
+ * (<b>@link #caf_aio_file_lst_t @endlink</b>)
  * parameter <b>r</b>, but this interface does not <b>close</b>
  * the file descriptors asociated with the list. You must
- * call <b>caf_aio_lst_close</b> before you delete the list
- * if the file descriptors are opened through <b>caf_aio_lst_open</b>.
+ * call <b>@link #caf_aio_lst_close @endlink</b> before you delete
+ * the list if the file descriptors are opened through
+ * <b>@link #caf_aio_lst_open @endlink</b>.
+ * </p>
  *
  * @param r[in]			list to deallocate
  *
@@ -448,13 +480,14 @@ int caf_aio_lst_delete (caf_aio_file_lst_t *r);
 /**
  * @brief Batch open the file list for AIO
  *
- * Batch open the files for AIO operations. After allocating
- * the structure with <b>caf_aio_lst_new</b>, you must open
- * the file list with this interface, returning the open count
- * for file descriptors. A subsequent call to <b>caf_aio_lst_close</b>
+ * <p>Batch open the files for AIO operations. After allocating
+ * the structure with <b>@link #caf_aio_lst_new @endlink</b>,
+ * you must open the file list with this interface, returning
+ * the open count for file descriptors. A subsequent call to
+ * <b>@link caf_aio_lst_close() @endlink</b>
  * must be done to close the file descriptors and then a
- * a call to <b>caf_aio_lst_delete</b> to deallocate the file
- * list.
+ * a call to <b>@link caf_aio_lst_delete() @endlink</b> to
+ * deallocate the file list.</p>
  *
  * @param r[in]			list where to store the files
  * @param paths[in]		list of paths to open
@@ -475,12 +508,13 @@ int caf_aio_lst_open (caf_aio_file_lst_t *r,
 /**
  * @brief Batch close the give file descriptor list
  *
- * Closes the asociated file descriptors but does not release
- * the memory allocated for the given <b>caf_aio_file_lst_t</b>,
+ * <p>Closes the asociated file descriptors but does not release
+ * the memory allocated for the given
+ * <b>@link #caf_aio_file_lst_t @endlink</b>,
  * returning the count of closed file descriptors. You may
  * compare the <b>iocb_count</b> structure member to check
  * for the complete operation, and verify which file descriptor
- * has a <b>-1</b> assigned to verify errors.</b>
+ * has a <b>-1</b> assigned to verify errors.</p>
  *
  * @param r[in]			file list to operate over
  *
@@ -498,14 +532,15 @@ int caf_aio_lst_close (caf_aio_file_lst_t *r);
 /**
  * @brief Waits for AIO operations on the given list
  *
- * Makes the calling process to wait for AIO operations
- * completion or failure on the given <b>caf_aio_file_lst_t</b>.
+ * <p>Makes the calling process to wait for AIO operations
+ * completion or failure on the given
+ * <b>@link #caf_aio_file_lst_t @endlink</b>.
  * Also, runs under a timeout spec specified as the
  * <b>to</b> argument. The indexing <b>idx</b> argument
  * specifies the list index from where to start the suspension.
  * The count arguments indicates the file descriptor count
  * from where to wait for AIO events. This interfaces uses
- * <b>aio_suspend(2)</b> system call.
+ * <b>aio_suspend(2)</b> system call.</p>
  *
  * @param r[in]			list from to wait
  * @param to[in]		timeout spec
@@ -522,14 +557,14 @@ int caf_aio_lst_suspend (caf_aio_file_lst_t *r,
  * @brief Batch AIO operations over the given file list
  *
  * <p>Run AIO operations over the given file list
- * <b>caf_aio_file_lst_t</b> argument <b>r</b>. The <b>e</b>
- * arguments indicates the signals thrown when the operations
- * is complete, be careful using sigmasks and other kind
- * of signal masking technique, instead of handling signals,
- * that are a generic event mechanism, try calling and then
- * using <b>caf_aio_lst_suspend</b> or
- * <b>caf_aio_lst_waitcomplete</b> if your system have
- * implemented the <b>aio_waitcomplete(2)</b> system call.</p>
+ * <b>@link #caf_aio_file_lst_t @endlink</b> argument <b>r</b>.
+ * The <b>e</b> arguments indicates the signals thrown when
+ * the operations is complete, be careful using sigmasks and
+ * other kind of signal masking technique, instead of handling
+ * signals, that are a generic event mechanism, try calling and
+ * then using <b>@link caf_aio_lst_suspend() @endlink</b> or
+ * <b>@link caf_aio_lst_waitcomplete() @endlink</b> if your system
+ * have implemented the <b>aio_waitcomplete(2)</b> system call.</p>
  *
  * <p>If your system have <b>SIGUSR</b> signal sets, then you
  * can use signal handling mechanism in other way, pass a
@@ -548,8 +583,6 @@ int caf_aio_lst_suspend (caf_aio_file_lst_t *r,
  */
 int caf_aio_lst_operation (caf_aio_file_lst_t *r,
 						   struct sigevent *e, int mode);
-
-
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS
