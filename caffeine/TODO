@@ -1,15 +1,36 @@
 
-CAFFEINE TODO:
+*** CAFFEINE TODO ***
 
 Mandatory:
 ==========
-* Write unitary test cases for implemented functions.
-* Document implemented functions.
-* Every unit test case must be tested under valgrind and correct errors or
+- Write unitary test cases for implemented functions.
+- Document implemented functions.
+- Every unit test case must be tested under valgrind and correct errors or
   report them through the mailing list.
+
+
+Implement the Next Features:
+============================
+- Implement lock-free, wait-free and non-blocking concurrency
+  algorithms.
+- Implement lock based concurrency algorithms.
+- Implement concurrency tools for thread pool and process pool.
+- Integrate concurrency tools with states machines.
+- Link concurrency tools, thread pool, process pool and state
+  machines.
+- Write unit tests for networking support.
+- Write unit tests for concurrency integration.
+- Enhance networking support.
+- Add support for netgraph under *BSD, and search similar
+  support under Linux.
+- Implement trees: avl-tree, rb-tree, b-tree (persistent).
+- Integrate other regular expression libraries into caffeine:
+  GNU RX and native freebsd regex library.
+Enough for today...
 
 
 On the way:
 ===========
-* The caffeine design will be published in a near date.
+- The caffeine design will be published in a near date.
+
 
