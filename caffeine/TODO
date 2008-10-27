@@ -11,8 +11,8 @@ Mandatory:
 
 Implement the Next Features:
 ============================
-- Implement lock-free, wait-free and non-blocking concurrency
-  algorithms.
+- Implement lock-free, wait-free and try to implement new non-blocking
+  concurrency algorithms.
 - Implement lock based concurrency algorithms.
 - Implement concurrency tools for thread pool and process pool.
 - Integrate concurrency tools with states machines.
