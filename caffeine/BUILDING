@@ -34,3 +34,6 @@ To clean the project output made by kdevelop:
 
 $ cmk.sh -kc
 
+
+$Id$
+

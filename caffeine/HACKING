@@ -48,3 +48,5 @@ This means that the code must be 100% C99 (ISO/IEC 9899:1990) compilant.
 Every compile warning related to this standard, must be removed. To build
 Caffeine under debugging configuration, see the BUILDING text file.
 
+$Id$
+
