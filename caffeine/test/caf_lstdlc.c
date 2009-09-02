@@ -37,8 +37,8 @@ void test_create (void);
 void test_new (void);
 void test_pop (void);
 void test_get (void);
-void test_walk (void);
-int test_walk_cb (void *data);
+void test_map (void);
+int test_map_cb (void *data);
 
 
 int
@@ -47,7 +47,7 @@ main (void) {
 	test_new ();
 	test_pop ();
 	test_get ();
-	test_walk ();
+	test_map ();
 	return 0;
 }
 
@@ -187,7 +187,7 @@ test_get (void) {
 
 
 void
-test_walk (void) {
+test_map (void) {
 	char *d1 = strdup("3");
 	char *d2 = strdup("4");
 	lstdlcn_t *n1;
@@ -199,7 +199,7 @@ test_walk (void) {
 	lstdlc_push (lst, d2);
 	lstdlc_push (lst, strdup("5"));
 	lstdlc_push (lst, strdup("6"));
-	lstdlc_walk (lst, test_walk_cb);
+	lstdlc_map (lst, test_map_cb);
 	n1 = lstdlc_search_node (lst, d1);
 	n2 = lstdlc_search_node (lst, d2);
 	printf ("node %p = '%s'\n", (void *)n1, (char *)d1);
@@ -209,7 +209,7 @@ test_walk (void) {
 
 
 int
-test_walk_cb (void *data) {
+test_map_cb (void *data) {
 	printf ("item %p = '%s'\n", data, (char *)data);
 	return 0;
 }

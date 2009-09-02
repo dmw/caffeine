@@ -84,17 +84,17 @@ typedef u_int64_t caf_unit_qword_t;
  */
 typedef enum {
 	/** OCTET type */
-	CAF_UNIT_OCTET,
+	CAF_UNIT_OCTET = 100,
 	/** WORD type */
-	CAF_UNIT_WORD,
+	CAF_UNIT_WORD = 200,
 	/** DWORD type */
-	CAF_UNIT_DWORD,
+	CAF_UNIT_DWORD = 300,
 	/** QWORD type */
-	CAF_UNIT_QWORD,
+	CAF_UNIT_QWORD = 400,
 	/** STRING type */
-	CAF_UNIT_STRING,
+	CAF_UNIT_STRING = 500,
 	/** PASCAL STRING type */
-	CAF_UNIT_PSTRING
+	CAF_UNIT_PSTRING = 600
 } caf_unit_type_t;
 
 

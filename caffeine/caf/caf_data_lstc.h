@@ -50,8 +50,8 @@ CAF_BEGIN_C_EXTERNS
 #define CAF_LSTCNODE_CBDEL(del)       int (*del)(void *ptr)
 /** Declares a dump callback to use with list nodes */
 #define CAF_LSTCNODE_CBDUMP(dmp)      int (*dmp)(FILE *out, void *ptr)
-/** Declares a walk callback to use with list nodes */
-#define CAF_LSTCNODE_CBWALK(walk)     int (*walk)(void *ptr)
+/** Declares a maps callback to use with list nodes */
+#define CAF_LSTCNODE_CBMAP(maps)      int (*maps)(void *ptr)
 /** Declares a search callback to use with list nodes */
 #define CAF_LSTCNODE_CBSRCH(srch)     int (*srch)(void *ndata, void *data)
 
@@ -296,7 +296,7 @@ void *lstc_get (lstcn_t *lst, int pos);
  * @see      lstc_t
  * @see      lstcn_t
  */
-int lstc_walk (lstcn_t *lst, CAF_LSTCNODE_CBWALK(step));
+int lstc_map (lstcn_t *lst, CAF_LSTCNODE_CBMAP(step));
 
 /**
  *
@@ -316,7 +316,7 @@ int lstc_walk (lstcn_t *lst, CAF_LSTCNODE_CBWALK(step));
  * @see      lstc_t
  * @see      lstcn_t
  */
-int lstc_walk_checked (lstcn_t *lst, CAF_LSTCNODE_CBWALK(step));
+int lstc_map_checked (lstcn_t *lst, CAF_LSTCNODE_CBMAP(step));
 
 /**
  *

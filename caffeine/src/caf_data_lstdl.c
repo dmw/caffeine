@@ -358,7 +358,7 @@ lstdl_get (lstdl_t *lst, int pos) {
 
 
 int
-lstdl_walk (lstdl_t *lst, CAF_LSTDLNODE_CBWALK(step)) {
+lstdl_map (lstdl_t *lst, CAF_LSTDLNODE_CBMAP(step)) {
 	int c = 0;
 	lstdln_t *n;
 	if (lst != (lstdl_t *)NULL) {
@@ -375,7 +375,7 @@ lstdl_walk (lstdl_t *lst, CAF_LSTDLNODE_CBWALK(step)) {
 
 
 int
-lstdl_walk_checked (lstdl_t *lst, CAF_LSTDLNODE_CBWALK(step)) {
+lstdl_map_checked (lstdl_t *lst, CAF_LSTDLNODE_CBMAP(step)) {
 	int c = 0;
 	lstdln_t *n;
 	if (lst != (lstdl_t *)NULL) {

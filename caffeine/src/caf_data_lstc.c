@@ -263,7 +263,7 @@ lstc_get (lstcn_t *lst, int pos) {
 
 
 int
-lstc_walk (lstcn_t *lst, CAF_LSTCNODE_CBWALK(step)) {
+lstc_map (lstcn_t *lst, CAF_LSTCNODE_CBMAP(step)) {
 	int c = 0;
 	lstcn_t *n;
 	if (lst != (lstcn_t *)NULL) {
@@ -280,7 +280,7 @@ lstc_walk (lstcn_t *lst, CAF_LSTCNODE_CBWALK(step)) {
 
 
 int
-lstc_walk_checked (lstcn_t *lst, CAF_LSTCNODE_CBWALK(step)) {
+lstc_map_checked (lstcn_t *lst, CAF_LSTCNODE_CBMAP(step)) {
 	int c = 0;
 	lstcn_t *n;
 	if (lst != (lstcn_t *)NULL) {

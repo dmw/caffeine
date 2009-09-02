@@ -152,6 +152,8 @@ struct caf_aio_file_s {
 	int lastop;
 	/** File mode used with <b>open(2)</b> when created  */
 	mode_t mode;
+	/** Optimal IO size */
+	ssize_t blksz;
 	/** File stats (used by <b>fstat(2)</b>) */
 	struct stat sd;
 	/** File path */
@@ -216,7 +218,11 @@ struct caf_aio_file_lst_s {
  * the file to <b>open(2)</b>, <b>md</b> are the opening
  * mode flags, <b>fs</b> when is <b>CAF_OK</b> retreives
  * the file stats with <b>fstat(2)</b> and <b>bsz</b>
- * sets the file buffer size using <b>@link #caf_buffer_t @endlink</b>.</p>
+ * sets the file buffer size using <b>@link #caf_buffer_t @endlink</b>.
+ * When <b>fs</b> argumen is CAF_OK, then we get optimal file IO
+ * blocksize from the st_blksize, if <b>fs</b> differs from CAF_OK,
+ * and no file status is given to the function, the <b>bsz</b>
+ * buffer size and block size is used.</p>
  *
  * @param path[in]				path to the to open
  * @param flg[in]				open flags

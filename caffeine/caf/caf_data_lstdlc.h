@@ -57,7 +57,7 @@ CAF_BEGIN_C_EXTERNS
 /** Declares a dump callback to use with list nodes */
 #define CAF_LSTDLCNODE_CBDUMP(dmp)      int (*dmp)(FILE *out, void *ptr)
 /** Declares a walk callback to use with list nodes */
-#define CAF_LSTDLCNODE_CBWALK(walk)     int (*walk)(void *ptr)
+#define CAF_LSTDLCNODE_CBMAP(map)       int (*map)(void *ptr)
 /** Declares a search callback to use with list nodes */
 #define CAF_LSTDLCNODE_CBSRCH(srch)     int (*srch)(void *ndata, void *data)
 
@@ -365,7 +365,7 @@ int lstdlc_set (lstdlc_t *lst, int pos, void *data);
  * @see      lstdlc_t
  * @see      lstdlcn_t
  */
-int lstdlc_walk (lstdlc_t *lst, CAF_LSTDLCNODE_CBWALK(step));
+int lstdlc_map (lstdlc_t *lst, CAF_LSTDLCNODE_CBMAP(step));
 
 /**
  *
@@ -384,7 +384,7 @@ int lstdlc_walk (lstdlc_t *lst, CAF_LSTDLCNODE_CBWALK(step));
  * @see      lstdlc_t
  * @see      lstdlcn_t
  */
-int lstdlc_walk_checked (lstdlc_t *lst, CAF_LSTDLCNODE_CBWALK(step));
+int lstdlc_map_checked (lstdlc_t *lst, CAF_LSTDLCNODE_CBMAP(step));
 
 /**
  *

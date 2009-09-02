@@ -34,6 +34,8 @@ static char Id[] = "$Id$";
 #include <errno.h>
 
 #include <sys/types.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 
 #include "caf/caf.h"
 #include "caf/caf_data_mem.h"
@@ -45,6 +47,7 @@ static struct caf_unit_size_map_s {
 	caf_unit_type_t type;
 	size_t sz;
 }
+
 caf_unit_size_map_v[] = {
 	{ CAF_UNIT_OCTET, sizeof(u_int8_t) },
 	{ CAF_UNIT_WORD, sizeof(u_int16_t) },
@@ -52,6 +55,29 @@ caf_unit_size_map_v[] = {
 	{ CAF_UNIT_QWORD, sizeof(u_int64_t) }
 };
 
+static inline uint64_t
+htonll(uint64_t x) {
+	return ((((x) & 0xff00000000000000LL) >> 56) | \
+			(((x) & 0x00ff000000000000LL) >> 40) | \
+			(((x) & 0x0000ff0000000000LL) >> 24) | \
+			(((x) & 0x000000ff00000000LL) >> 8)  | \
+			(((x) & 0x00000000ff000000LL) << 8)  | \
+			(((x) & 0x0000000000ff0000LL) << 24) | \
+			(((x) & 0x000000000000ff00LL) << 40) | \
+			(((x) & 0x00000000000000ffLL) << 56));
+}
+
+static inline uint64_t
+ntohll(uint64_t x) {
+	return ((((x) & 0x00000000000000ffLL) << 56) | \
+			(((x) & 0x000000000000ff00LL) << 40) | \
+			(((x) & 0x0000000000ff0000LL) << 24) | \
+			(((x) & 0x00000000ff000000LL) << 8)  | \
+			(((x) & 0x000000ff00000000LL) >> 8)  | \
+			(((x) & 0x0000ff0000000000LL) >> 24) | \
+			(((x) & 0x00ff000000000000LL) >> 40) | \
+			(((x) & 0xff00000000000000LL) >> 56));
+}
 
 static size_t
 caf_unit_get_size (caf_unit_type_t type) {
@@ -288,7 +314,7 @@ caf_packet_getpstr (caf_unit_t *u, void *b, size_t p) {
 				sz = (size_t)*((caf_unit_dword_t *)(b));
 			case CAF_UNIT_QWORD_SZ:
 				/* XXX: this is buggy code, a size_t
-				   should not be a quad word */
+				   could not be a quad word */
 				sz = (size_t)*((caf_unit_qword_t *)(b));
 			}
 			ptr = (void *)((size_t)p + u->length);
@@ -330,6 +356,9 @@ caf_packet_parse (caf_packet_t *r, cbuffer_t *buf) {
 	caf_unit_value_t *v = (caf_unit_value_t *)NULL;
 	void *ptr = (void *)NULL;
 	size_t pos = 0;
+	uint16_t *c16;
+	uint32_t *c32;
+	uint64_t *c64;
 	if (r != (caf_packet_t *)NULL && buf != (cbuffer_t *)NULL) {
 		if (r->pack != (caf_pack_t *)NULL && r->packets != (lstdl_t *)NULL) {
 			lstdl_delete_nocb (r->packets);
@@ -347,6 +376,21 @@ caf_packet_parse (caf_packet_t *r, cbuffer_t *buf) {
 						break;
 					case CAF_UNIT_PSTRING:
 						v = caf_packet_getpstr (u, ptr, u->length);
+						break;
+					case CAF_UNIT_WORD_SZ:
+						c16 = (uint16_t *)ptr;
+						*c16 = ntohs (*c16);
+						v = caf_unit_value_new (u->type, u->length, c16);
+						break;
+					case CAF_UNIT_DWORD_SZ:
+						c32 = (uint32_t *)ptr;
+						*c32 = ntohl (*c32);
+						v = caf_unit_value_new (u->type, u->length, c32);
+						break;
+					case CAF_UNIT_QWORD_SZ:
+						c64 = (uint64_t *)ptr;
+						*c64 = ntohll (*c64);
+						v = caf_unit_value_new (u->type, u->length, c64);
 						break;
 					default:
 						v = caf_unit_value_new (u->type, u->length,
@@ -374,6 +418,9 @@ caf_packet_translate (caf_packet_t *r) {
 	caf_unit_value_t *u = (caf_unit_value_t *)NULL;
 	cbuffer_t *buf = (cbuffer_t *)NULL;
 	size_t bsz = 0, pos = 0;
+	uint16_t c16;
+	uint32_t c32;
+	uint64_t c64;
 	if (r != (caf_packet_t *)NULL && buf != (cbuffer_t *)NULL) {
 		if (r->pack != (caf_pack_t *)NULL && r->packets != (lstdl_t *)NULL) {
 			if (r->pack->units != (lstdl_t *)NULL) {
@@ -388,7 +435,32 @@ caf_packet_translate (caf_packet_t *r) {
 					pos = (size_t)buf->data;
 					while (un != (lstdln_t *)NULL) {
 						u = (caf_unit_value_t *)un->data;
-						memcpy ((void *)pos, u->data, u->sz);
+						switch (u->type) {
+						case CAF_UNIT_STRING:
+							memcpy ((void *)pos, u->data, u->sz);
+							break;
+						case CAF_UNIT_PSTRING:
+							memcpy ((void *)pos, u->data, u->sz);
+							break;
+						case CAF_UNIT_WORD_SZ:
+							c16 = *((uint16_t *)u->data);
+							c16 = ntohs(c16);
+							memcpy ((void *)(pos), &c16, u->sz);
+							break;
+						case CAF_UNIT_DWORD_SZ:
+							c32 = *((uint32_t *)u->data);
+							c32 = ntohl(c32);
+							memcpy ((void *)(pos), &c32, u->sz);
+							break;
+						case CAF_UNIT_QWORD_SZ:
+							c64 = *((uint64_t *)u->data);
+							c64 = ntohll(c64);
+							memcpy ((void *)(pos), &c64, u->sz);
+							break;
+						default:
+							memcpy ((void *)(pos), u->data, u->sz);
+							break;
+						}
 						pos += u->sz;
 						un = un->next;
 					}

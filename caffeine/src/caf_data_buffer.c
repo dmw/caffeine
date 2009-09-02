@@ -92,7 +92,8 @@ cbuf_delete (cbuffer_t *buf) {
 
 
 int
-cbuf_delete_interactive (cbuffer_t *buf, CAF_BUFF_DELETE_CB(cb)) {
+cbuf_delete_interactive (cbuffer_t *buf,
+						 CAF_BUFF_DELETE_CB(cb)) {
 	if (buf != (cbuffer_t *)NULL) {
 		if ((cb (buf->data, buf->sz)) == 0) {
 			xfree (buf);
@@ -145,7 +146,8 @@ cbuf_copy (cbuffer_t *dst, const cbuffer_t *src) {
 					return 0;
 				}
 			}
-			if ((xmemcpy(dst->data, src->data, src->sz)) != (void *)NULL) {
+			if ((xmemcpy(dst->data, src->data, src->sz))
+				!= (void *)NULL) {
 				dst->sz = src->sz;
 				return dst->sz;
 			}
@@ -156,8 +158,10 @@ cbuf_copy (cbuffer_t *dst, const cbuffer_t *src) {
 
 
 size_t
-cbuf_import (cbuffer_t *dst, const void *data, const size_t sz) {
-	if (data != (void *)NULL && dst != (cbuffer_t *)NULL && sz > 0) {
+cbuf_import (cbuffer_t *dst, const void *data,
+			 const size_t sz) {
+	if (data != (void *)NULL && dst
+		!= (cbuffer_t *)NULL && sz > 0) {
 		cbuf_clean(dst);
 		if (dst->data != (void *)NULL) {
 			dst->data = xrealloc (dst->data, sz);
@@ -170,7 +174,8 @@ cbuf_import (cbuffer_t *dst, const void *data, const size_t sz) {
 				return 0;
 			}
 		}
-		if ((xmemcpy((void *)dst->data, (void *)data, sz)) != (void *)NULL) {
+		if ((xmemcpy((void *)dst->data, (void *)data, sz))
+			!= (void *)NULL) {
 			dst->sz = sz;
 			return sz;
 		}
@@ -180,7 +185,8 @@ cbuf_import (cbuffer_t *dst, const void *data, const size_t sz) {
 
 
 cbuffer_t *
-cbuf_extract (const cbuffer_t *src, const size_t from, const size_t to) {
+cbuf_extract (const cbuffer_t *src, const size_t from,
+			  const size_t to) {
 	cbuffer_t *ret = (cbuffer_t *)NULL;
 	size_t imp = (size_t)NULL, diff = (size_t)NULL;
 	void *b_ptr = (void *)NULL;
@@ -205,7 +211,8 @@ cbuf_extract (const cbuffer_t *src, const size_t from, const size_t to) {
 
 
 cbuffer_t *
-cbuf_cut (cbuffer_t *src, const size_t from, const size_t to) {
+cbuf_cut (cbuffer_t *src, const size_t from,
+		  const size_t to) {
 	cbuffer_t *newb = (cbuffer_t *)NULL;
 	void *final = (void *)NULL;
 	size_t diff = 0, trailing = 0, final_sz = 0;
@@ -243,12 +250,14 @@ cbuf_cut (cbuffer_t *src, const size_t from, const size_t to) {
 
 
 cbuffer_t *
-cbuf_paste (cbuffer_t *dst, const cbuffer_t *src, const size_t from_dst,
-            const size_t from_src, const size_t to_src) {
+cbuf_paste (cbuffer_t *dst, const cbuffer_t *src,
+			const size_t from_dst, const size_t from_src,
+			const size_t to_src) {
 	size_t diff_src = 0, diff_dst = 0;
 	void *from_ptr = (void *)NULL, *to_ptr = (void *)NULL;
 	if (dst != (cbuffer_t *)NULL && src != (cbuffer_t *)NULL) {
-		if ((int)from_dst < 0 || ((int)to_src < 0 || (int)from_src < 0)) {
+		if ((int)from_dst < 0 ||
+			((int)to_src < 0 || (int)from_src < 0)) {
 			return (cbuffer_t *)NULL;
 		} else {
 			diff_dst = dst->sz - from_dst;
@@ -428,7 +437,8 @@ cbuf_append (cbuffer_t *head, cbuffer_t *tail)
 			if (r != (cbuffer_t *)NULL) {
 				cbuf_clean (r);
 				xmemcpy (r->data, head->data, head->iosz);
-				xmemcpy ((void *)((size_t)(r->data) + head->iosz), tail->data, tail->iosz);
+				xmemcpy ((void *)((size_t)(r->data) + head->iosz),
+						 tail->data, tail->iosz);
 			}
 		} else {
 			tsz = head->sz + tail->sz;
@@ -436,7 +446,8 @@ cbuf_append (cbuffer_t *head, cbuffer_t *tail)
 			if (r != (cbuffer_t *)NULL) {
 				cbuf_clean (r);
 				xmemcpy (r->data, head->data, head->sz);
-				xmemcpy ((void *)((size_t)(r->data) + head->sz), tail->data, tail->sz);
+				xmemcpy ((void *)((size_t)(r->data) + head->sz),
+						 tail->data, tail->sz);
 			}
 		}
 	}

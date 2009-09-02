@@ -57,54 +57,53 @@ caf_aio_fopen (const char *path, const int flg, const mode_t md,
 			   int fs, size_t bsz) {
 	int prev_errno;
 	caf_aio_file_t *r = (caf_aio_file_t *)NULL;
-	if (path != (char *)NULL) {
-		r = (caf_aio_file_t *)xmalloc (CAF_IO_FILE_SZ);
-		if (r != (caf_aio_file_t *)NULL) {
-			prev_errno = errno;
-			errno = 0;
-			if (md != 0) {
-				r->iocb.aio_fildes = open (path, flg, md);
-			} else {
-				r->iocb.aio_fildes = open (path, flg);
-			}
-			r->aio_errno = errno;
-			errno = prev_errno;
-			if (r->iocb.aio_fildes >= 0) {
-				if (fs == CAF_OK) {
-					r->flags = flg;
-					r->mode = md;
-					r->path = strdup (path);
-					r->ustat = fs;
-					r->aio_errno = 0;
-					r->lastop = CAF_AIO_NOOP;
-					if (fs == CAF_OK) {
-						if ((fstat (r->iocb.aio_fildes, &(r->sd))) == 0) {
-							return r;
-						} else {
-							close (r->iocb.aio_fildes);
-							xfree (r->path);
-							xfree (r);
-							r = (caf_aio_file_t *)NULL;
-						}
-					}
-				}
-				r->buf = cbuf_create (bsz);
-				if (r->buf != (cbuffer_t *)NULL) {
-					cbuf_clean (r->buf);
-					r->iocb.aio_buf = r->buf->data;
-					r->iocb.aio_nbytes = r->buf->sz;
-					r->iocb.aio_offset = 0;
-					CAF_AIO_CLEAN(r);
+	if (path == (char *)NULL) {
+		return r;
+	}
+	r = (caf_aio_file_t *)xmalloc (CAF_IO_FILE_SZ);
+	if (r != (caf_aio_file_t *)NULL) {
+		prev_errno = errno;
+		errno = 0;
+		if (md != 0) {
+			r->iocb.aio_fildes = open (path, flg, md);
+		} else {
+			r->iocb.aio_fildes = open (path, flg);
+		}
+		r->aio_errno = errno;
+		errno = prev_errno;
+		if (r->iocb.aio_fildes >= 0) {
+			if (fs == CAF_OK) {
+				r->flags = flg;
+				r->mode = md;
+				r->path = strdup (path);
+				r->ustat = fs;
+				r->aio_errno = 0;
+				r->lastop = CAF_AIO_NOOP;
+				if ((fstat (r->iocb.aio_fildes, &(r->sd))) == 0) {
+					return r;
 				} else {
 					close (r->iocb.aio_fildes);
 					xfree (r->path);
 					xfree (r);
 					r = (caf_aio_file_t *)NULL;
 				}
+			}
+			r->buf = cbuf_create (fs == CAF_OK ? r->sd.st_blksize : bsz);
+			if (r->buf != (cbuffer_t *)NULL) {
+				cbuf_clean (r->buf);
+				r->iocb.aio_buf = r->buf->data;
+				r->iocb.aio_nbytes = fs == CAF_OK ? r->sd.st_blksize : r->buf->sz;
+				r->iocb.aio_offset = 0;
+				CAF_AIO_CLEAN(r);
 			} else {
+				close (r->iocb.aio_fildes);
+				xfree (r->path);
 				xfree (r);
 				r = (caf_aio_file_t *)NULL;
 			}
+		} else {
+			xfree (r);
+			r = (caf_aio_file_t *)NULL;
 		}
 	}
 	return r;
@@ -113,13 +112,14 @@ caf_aio_fopen (const char *path, const int flg, const mode_t md,
 
 int
 caf_aio_fclose (caf_aio_file_t *r) {
-	if (r != (caf_aio_file_t *)NULL) {
-		if ((close (r->iocb.aio_fildes)) == 0) {
-			cbuf_delete (r->buf);
-			xfree (r->path);
-			xfree (r);
-			return CAF_OK;
-		}
+	if (r == (caf_aio_file_t *)NULL) {
+		return CAF_ERROR;
+	}
+	if ((close (r->iocb.aio_fildes)) == 0) {
+		cbuf_delete (r->buf);
+		xfree (r->path);
+		xfree (r);
+		return CAF_OK;
 	}
 	return CAF_ERROR;
 }
@@ -128,15 +128,16 @@ caf_aio_fclose (caf_aio_file_t *r) {
 caf_aio_file_t *
 caf_aio_reopen (caf_aio_file_t *r) {
 	caf_aio_file_t *r2 = (caf_aio_file_t *)NULL;
-	if (r != (caf_aio_file_t *)NULL) {
-		r2 = caf_aio_fopen (r->path, r->flags, r->mode, r->ustat, r->buf->sz);
-		if (r2 != (caf_aio_file_t *)NULL) {
-			if ((caf_aio_fclose (r)) == CAF_OK) {
-				return r2;
-			} else {
-				caf_aio_fclose (r2);
-				r2 = (caf_aio_file_t *)NULL;
-			}
+	if (r == (caf_aio_file_t *)NULL) {
+		return r;
+	}
+	r2 = caf_aio_fopen (r->path, r->flags, r->mode, r->ustat, r->buf->sz);
+	if (r2 != (caf_aio_file_t *)NULL) {
+		if ((caf_aio_fclose (r)) == CAF_OK) {
+			return r2;
+		} else {
+			caf_aio_fclose (r2);
+			r2 = (caf_aio_file_t *)NULL;
 		}
 	}
 	return r2;
@@ -169,7 +170,7 @@ caf_aio_fchanged (caf_aio_file_t *r, struct timespec *lmt,
 			return CAF_ERROR;
 		}
 	}
-	return -1;
+	return CAF_ERROR_SUB;
 }
 
 
