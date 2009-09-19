@@ -35,12 +35,24 @@ static char Id[] = "$Id$";
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
+#include <sys/stat.h>
 
 #include "caf/caf.h"
 #include "caf/caf_data_mem.h"
 #include "caf/caf_data_buffer.h"
 #include "caf/caf_ipc_msg.h"
 
+#define IPCMSG_F_ALL_MSK				\
+	(((S_IRUSR | S_IWUSR) |				\
+	  (S_IRGRP | S_IWGRP) |				\
+	  (S_IROTH | S_IWOTH)) & 0x0000)
+
+#define IPCMSG_F_GROUP_MSK				\
+	(((S_IRUSR | S_IWUSR) |				\
+	  (S_IRGRP | S_IWGRP)) & 0x0000)
+
+#define IPCMSG_F_ME_MSK					\
+	((S_IRUSR | S_IWUSR) & 0x0000)
 
 caf_msg_t *
 caf_ipcmsg_new (const key_t k, const int flg, const mode_t perm,
@@ -147,5 +159,23 @@ caf_ipcmsg_ctrl (const caf_msg_t *m, const int cmd,
 	return CAF_ERROR_SUB;
 }
 
-/* caf_ipc_msg.c ends here */
 
+int
+caf_ipcmsg_getfall (const caf_msg_t *m) {
+	return msgget (m->key, m->msgflg | IPCMSG_F_ALL_MSK);
+}
+
+
+int
+caf_ipcmsg_getfgroup (const caf_msg_t *m) {
+	return msgget (m->key, m->msgflg | IPCMSG_F_GROUP_MSK);
+}
+
+
+int
+caf_ipcmsg_getfme (const caf_msg_t *m) {
+	return msgget (m->key, m->msgflg | IPCMSG_F_ME_MSK);
+}
+
+
+/* caf_ipc_msg.c ends here */

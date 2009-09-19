@@ -64,6 +64,7 @@ set (CAFFEINE_HEADERS
     caf_io_tool.h
 	caf_ipc.h
     caf_ipc_msg.h
+    caf_ipc_msg_proto.h
     caf_ipc_shm.h
     caf_mem.h
     caf_process.h

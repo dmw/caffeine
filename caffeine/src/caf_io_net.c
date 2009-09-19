@@ -240,66 +240,11 @@ caf_conn_options_clone (caf_conn_t *dst, caf_conn_t *src) {
 	return r;
 }
 
+
 int
 caf_conn_connect (caf_conn_t *c) {
 	if (c != (caf_conn_t *)NULL) {
 		return connect (c->sock, c->daddr, c->addrlen);
-	}
-	return CAF_ERROR;
-}
-
-
-int
-caf_conn_hrdtcpcon (caf_conn_t *c) {
-	int r = CAF_OK;
-	int ra = 1;
-	int ka = 1;
-	int nd = 1;
-	int nf = O_NONBLOCK;
-	if (c != (caf_conn_t *)NULL) {
-		if ((caf_conn_socket (c, PF_INET, SOCK_STREAM, IPPROTO_TCP)) ==
-			CAF_OK) {
-			r += caf_conn_options (c, CAF_CONN_SOCKOPTS, SOL_SOCKET,
-			                       SO_REUSEADDR, &ra);
-			r += caf_conn_options (c, CAF_CONN_SOCKOPTS, SOL_SOCKET,
-			                       SO_KEEPALIVE, &ka);
-			r += caf_conn_options (c, CAF_CONN_SOCKOPTS, IPPROTO_TCP,
-			                       TCP_NODELAY, &nd);
-			r += (caf_conn_options (c, CAF_CONN_FCNTL, CAF_CONN_NOLEVEL,
-			                        F_SETFL, &nf)) == -1 ? CAF_ERROR : CAF_OK;
-			if (r == CAF_OK) {
-				return caf_conn_connect (c);
-			}
-		}
-	}
-	return CAF_ERROR;
-}
-
-
-int
-caf_conn_hrdtcpsrv (caf_conn_t *c, int bl) {
-	int r = CAF_OK;
-	int ra = 1;
-	int ka = 1;
-	int nd = 1;
-	int nf = O_NONBLOCK;
-	if (c != (caf_conn_t *)NULL) {
-		if ((caf_conn_socket (c, PF_INET, SOCK_STREAM, IPPROTO_TCP)) ==
-			CAF_OK) {
-			r += caf_conn_options (c, CAF_CONN_SOCKOPTS, SOL_SOCKET,
-			                       SO_REUSEADDR, &ra);
-			r += caf_conn_options (c, CAF_CONN_SOCKOPTS, SOL_SOCKET,
-			                       SO_KEEPALIVE, &ka);
-			r += caf_conn_options (c, CAF_CONN_SOCKOPTS, IPPROTO_TCP,
-			                       TCP_NODELAY, &nd);
-			r += (caf_conn_options (c, CAF_CONN_FCNTL, CAF_CONN_NOLEVEL,
-			                        F_SETFL, &nf)) == -1 ? CAF_ERROR : CAF_OK;
-			if (r == CAF_OK) {
-				if ((bind (c->sock, c->daddr, c->addrlen)) == 0) {
-					return (listen (c->sock, bl));
-				}
-			}
-		}
 	}
 	return CAF_ERROR;
 }

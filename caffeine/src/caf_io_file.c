@@ -141,9 +141,9 @@ io_fchanged (caf_io_file_t *r, struct timespec *lmt, struct timespec *lct) {
 	if (r != (caf_io_file_t *)NULL && lmt != (struct timespec *)NULL &&
 		lct != (struct timespec *)NULL) {
 		diff = (r->sd.st_mtime - lmt->tv_sec) + (r->sd.st_ctime - lct->tv_sec);
-		return (int)diff;
+		return (int)diff == 0 ? CAF_OK : CAF_ERROR;
 	}
-	return CAF_OK;
+	return CAF_ERROR_SUB;
 }
 
 
@@ -226,12 +226,12 @@ io_can_open (const char *path, int oflg) {
 				dn = dirname ((char *)path);
 				s = stat (dn, &ps);
 				xfree (dn);
-				if ((io_check_stat_flags (&ps, oflg)) != 0) {
+				if ((ps.st_mode & oflg) == oflg) {
 					r = CAF_OK;
 				}
 			}
 		} else {
-			if ((io_check_stat_flags (&ps, oflg)) != 0) {
+			if ((ps.st_mode & oflg) == oflg) {
 				r = CAF_OK;
 			}
 		}
@@ -239,62 +239,6 @@ io_can_open (const char *path, int oflg) {
 	}
 	return r;
 }
-
-
-int
-io_check_stat_flags (const struct stat *sd, int flg) {
-	uid_t uid, euid;
-	gid_t gid, egid;
-	int r = 0;
-	if (sd != (const struct stat *)NULL && flg != 0) {
-		uid = getuid ();
-		euid = geteuid ();
-		gid = getgid ();
-		egid = getegid ();
-		if ((sd->st_uid == uid || sd->st_uid == euid) &&
-			((sd->st_mode & (mode_t)S_IRUSR) != 0)) {
-			r |= 0400;
-		}
-		if ((sd->st_gid == gid || sd->st_gid == euid) &&
-			((sd->st_mode & (mode_t)S_IRGRP) != 0)) {
-			r |= 0040;
-		}
-		if ((sd->st_mode & (mode_t)S_IROTH) != 0) {
-			r |= 0004;
-		}
-		if ((flg & (O_WRONLY)) != 0) {
-			if ((sd->st_uid == uid || sd->st_uid == euid) &&
-				((sd->st_mode & (mode_t)S_IWUSR) != 0)) {
-				r |= 0200;
-			}
-			if ((sd->st_gid == gid || sd->st_gid == euid) &&
-				((sd->st_mode & (mode_t)S_IWGRP) != 0)) {
-				r |= 0020;
-			}
-			if ((sd->st_mode & (mode_t)S_IWOTH) != 0) {
-				r |= 0002;
-			}
-		}
-		if ((flg & (O_RDWR)) != 0) {
-			if ((sd->st_uid == uid || sd->st_uid == euid) &&
-				((sd->st_mode & (mode_t)S_IRUSR) != 0) &&
-				((sd->st_mode & (mode_t)S_IWUSR) != 0)) {
-				r |= 0600;
-			}
-			if ((sd->st_gid == gid || sd->st_gid == euid) &&
-				((sd->st_mode & (mode_t)S_IRGRP) != 0) &&
-				((sd->st_mode & (mode_t)S_IWGRP) != 0)) {
-				r |= 0060;
-			}
-			if ((sd->st_mode & (mode_t)S_IROTH) != 0 &&
-				(sd->st_mode & (mode_t)S_IWOTH) != 0) {
-				r |= 0006;
-			}
-		}
-	}
-	return r;
-}
-
 
 /* caf_io_file.c ends here */
 

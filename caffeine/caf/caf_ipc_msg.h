@@ -42,7 +42,12 @@
  * @version   $Revision$
  * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
- * IPC Messages
+ * This is the core module for treating the SysV IPC messaging API
+ * to allow you to treat them with an easy implementation and abstraction.
+ * This module is the core module for the IPC Messaging Protocol,
+ * and it will allow to send/receive small commands between processes.
+ * Read more about the IPC Messaging Protocol module to understand the
+ * module purpose.
  *
  */
 
@@ -118,38 +123,38 @@ struct caf_msg_s {
 	int merrno;
 };
 
-/** 
- * @brief Allocates memory for a <b>caf_msg_t</b> structure
+/**
+o * @brief Allocates memory for a <b>caf_msg_t</b> structure
  *
  * Allocates enough memory for a <b>caf_msg_t</b> structure
  * pointer, setting default values to the propper parameters
  * to start working with messages.
- * 
+ *
  * @param k[in]		ipc key
  * @param flg[in]	messaging flags
  * @param perm[in]  key permissions
  * @param type[in]  user message definiton
  * @param msg[in]	user allocated message through <b>cbuffer_t</b>
- * 
+ *
  * @return caf_msg_t	a new and clear allocated pointer.
  */
 caf_msg_t *caf_ipcmsg_new (const key_t k, const int flg, const mode_t perm,
 						   const int type, const cbuffer_t *msg);
 
-/** 
+/**
  * @brief Deallocates a <b>caf_msg_t</b> pointer
  *
  * Deallocates the given <b>caf_msg_t</b> pointer, but does not
  * closes and removes the <i>ipc key</i> contained in the given
  * structure, it just releases the memory block through <b>free(3)</b>.
- * 
+ *
  * @param m[in]			pointer to deallocate.
- * 
+ *
  * @return int	CAF_OK on success, CAF_ERROR on failure
  */
 int caf_ipcmsg_delete (caf_msg_t *m);
 
-/** 
+/**
  * @brief Sends messages through <b>msgsnd(2)</b>
  *
  * Sends the given <b>@link #caf_msg_t @endlink</b> pointer through
@@ -161,14 +166,14 @@ int caf_ipcmsg_delete (caf_msg_t *m);
  * <i>message size</i> parameter.
  *
  * @param m[in]			message to send.
- * 
+ *
  * @return int	CAF_OK (zero) on success, distinct to zero on failure.
  */
 int caf_ipcmsg_send (const caf_msg_t *m);
 
-/** 
+/**
  * @brief Receives IPC messages
- * 
+ *
  * <p>Receives IPC messages through the <b>msgrcv(2)</b> system call.
  * Also, uses the <b>@link #caf_msg_t @endlink</b> structure to
  * pass parameters to the system call. Also, calls <b>msgget(2)</b>
@@ -185,12 +190,12 @@ int caf_ipcmsg_send (const caf_msg_t *m);
  * @endlink</b>, accorind with <b>msgrcv(2)</b> interface.</p>
  *
  * @param m[in]			structure to hold the received message.
- * 
+ *
  * @return int	CAF_OK (zero) on success, non zero on failure.
  */
 int caf_ipcmsg_recv (caf_msg_t *m);
 
-/** 
+/**
  * @brief Retreives message identifiers
  *
  * <p>Retreives message identifiers through <b>msgget(2)</b> system
@@ -206,15 +211,15 @@ int caf_ipcmsg_recv (caf_msg_t *m);
  * <p><i>Note that if you use this interface, you must retreive the
  * messages by your own. This interface is defined for <b>caffeine</b>
  * internal use.</i></p>
- * 
+ *
  * @param m[in]			message to get
  * @param perm[in]		permissions if you want to use different ones.
- * 
+ *
  * @return int	CAF_OK (zero) on success, distinct to zero on failure.
  */
 int caf_ipcmsg_get (const caf_msg_t *m, const mode_t perm);
 
-/** 
+/**
  * @brief Creates a message queue
  *
  * <p>Creates a <i>message queue</i> using the <b>msgget(2)</b> system
@@ -229,15 +234,15 @@ int caf_ipcmsg_get (const caf_msg_t *m, const mode_t perm);
  * the permissions using <i>numeric constants</i>. You can use the
  * <b>@link #caf_msg_t#errno @endling</b> trap to know which error
  * was triggered with the system call failure.</p>
- * 
+ *
  * @param m[in]			the message structure to use as base.
  * @param perm[in]		queue permissions
- * 
+ *
  * @return int			queue identifier
  */
 int caf_ipcmsg_create (caf_msg_t *m, mode_t perm);
 
-/** 
+/**
  * @brief Removes a message queue
  *
  * <p>Removes an <i>IPC Message Queue</i> by using the
@@ -246,14 +251,14 @@ int caf_ipcmsg_create (caf_msg_t *m, mode_t perm);
  *
  * <p>It uses the data stored in the <b>@link #caf_msg_t @endlink</b>
  * structure to pass parameters through the calls.</p>
- * 
+ *
  * @param m[in]			message definition to use.
- * 
+ *
  * @return int	CAF_OK (zero) on success, CAF_ERROR_SUB on failure
  */
 int caf_ipcmsg_remove (caf_msg_t *m);
 
-/** 
+/**
  * @brief Controls message queues
  *
  * <p>Applies <b>msgctl(2)</b> system call to the given
@@ -272,11 +277,44 @@ int caf_ipcmsg_remove (caf_msg_t *m);
  * @param m[in]			message queue to use
  * @param cmd[in]		command to apply
  * @param b				information in/out buffer
- * 
+ *
  * @return int	CAF_ERROR_SUB on failure, on success the system
  *				call returned value
  */
 int caf_ipcmsg_ctrl (const caf_msg_t *m, const int cmd, struct msqid_ds *b);
+
+
+/**
+ * @brief Creates a message queue for all users
+ *
+ * Same as @link caf_ipcmsg_get() @endlink, but uses permissions for
+ * all users for reading/writing the queue.
+ *
+ * @return CAF_OK on success, CAF_ERROR on failure
+ */
+int caf_ipcmsg_getfall (const caf_msg_t *m);
+
+
+/**
+ * @brief Creates a message queue for GID level
+ *
+ * Same as @link caf_ipcmsg_get() @endlink, but uses permissions for
+ * group specific for reading/writing the queue.
+ *
+ * @return CAF_OK on success, CAF_ERROR on failure
+ */
+int caf_ipcmsg_getfgroup (const caf_msg_t *m);
+
+
+/**
+ * @brief Creates a message queue for owner level
+ *
+ * Same as @link caf_ipcmsg_get() @endlink, but uses permissions for
+ * owner level specific for reading/writing the queue.
+ *
+ * @return CAF_OK on success, CAF_ERROR on failure
+ */
+int caf_ipcmsg_getfme (const caf_msg_t *m);
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS

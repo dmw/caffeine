@@ -73,6 +73,7 @@ set (CAFFEINE_SRCS
 	caf_sem_svr4.c
 	caf_sem_posix.c
 	caf_ipc_msg.c
+	caf_ipc_msg_proto.c
 	caf_ipc_shm.c
 	)
 
@@ -108,6 +109,7 @@ set (CAFFEINE_HEADERS
 	../caf/caf_io_tail.h
 	../caf/caf_io_tool.h
 	../caf/caf_ipc_msg.h
+	../caf/caf_ipc_msg_proto.h
 	../caf/caf_ipc_shm.h
 	../caf/caf_mem.h
 	../caf/caf_process.h
@@ -251,7 +253,7 @@ check_type_size (
 if (CADDR_T_SZ)
 else (CADDR_T_SZ)
 	set (CADDR_T_SZ 0)
-endif (CADDR_T_SZ)	
+endif (CADDR_T_SZ)
 
 check_type_size (
 	"void *"
