@@ -44,6 +44,10 @@ static char Id[] = "$Id$";
 #include "caf/caf_data_buffer.h"
 #include "caf/caf_ipc_msg.h"
 #include "caf/caf_ipc_msg_proto.h"
+#include "caf/caf_psm.h"
+#include "caf/caf_ssm.h"
+#include "caf/caf_dsm.h"
+
 
 #define CAF_MSG_SVC_SRCH_CB				caf_msg_svc_session_compare_id
 
@@ -52,7 +56,9 @@ static int caf_msg_svc_session_compare_id(void *s, void *id);
 
 
 caf_msg_svc_t *
-caf_ipcmsg_svc_create (caf_msg_t *seed) {
+caf_ipcmsg_svc_create (caf_msg_t *seed,
+					   caf_msg_svc_sm_t type,
+					   void *machine) {
 	caf_msg_svc_t *r = (caf_msg_svc_t *)NULL;
 	if (seed == (caf_msg_t *)NULL) {
 		return r;
@@ -69,6 +75,14 @@ caf_ipcmsg_svc_create (caf_msg_t *seed) {
 	if (r->sessions == (lstdl_t *)NULL) {
 		xfree (r);
 		r = (caf_msg_svc_t *)NULL;
+	}
+	if (type != MSG_SVC_MACHINE_NONE
+		&& machine != NULL) {
+		r->machine = machine;
+		r->type = type;
+	} else {
+		r->machine = NULL;
+		r->type = MSG_SVC_MACHINE_NONE;
 	}
 	return r;
 }
@@ -129,6 +143,80 @@ caf_ipcmsg_svc_removeses (caf_msg_svc_t *s, long sid) {
 	r = lstdl_node_delete_by_data (s->sessions, (void *)f,
 								   caf_msg_svc_session_delete_cb);
 	return r;
+}
+
+
+int
+caf_ipcmsg_svc_process (caf_msg_svc_t *s,
+						CAF_MSG_SVC_PCB(pcb)) {
+	int cnt = CAF_ERROR;
+	if (s == (caf_msg_svc_t *)NULL
+		|| pcb == NULL) {
+		s->errno_v = EINVAL;
+		return cnt;
+	}
+	if (s->sessions == (lstdl_t *)NULL) {
+		s->errno_v = EINVAL;
+		return cnt;
+	}
+	switch (s->type) {
+	case MSG_SVC_MACHINE_NONE:
+		return lstdl_map (s->sessions, pcb);
+	case MSG_SVC_MACHINE_STATIC:
+		return lstdl_map (s->sessions, caf_msg_svc_run_ssm);
+	case MSG_SVC_MACHINE_PLUGABLE:
+		return lstdl_map (s->sessions, caf_msg_svc_run_psm);
+	case MSG_SVC_MACHINE_DYNAMIC:
+		return lstdl_map (s->sessions, caf_msg_svc_run_dsm);
+	default:
+		return lstdl_map (s->sessions, pcb);
+		break;
+	}
+}
+
+
+int
+caf_msg_svc_run_ssm (void *data) {
+	caf_msg_session_t *ses = (caf_msg_session_t *)data;
+	caf_msg_svc_t *svc;
+	if (data == NULL) {
+		return CAF_ERROR;
+	}
+	svc = (caf_msg_svc_t *)ses->svc;
+	if (svc == (caf_msg_svc_t *)NULL) {
+		return CAF_ERROR;
+	}
+	return caf_ssm_runner_work ((caf_ssm_runner_t *)svc->machine, ses);
+}
+
+
+int
+caf_msg_svc_run_psm (void *data) {
+	caf_msg_session_t *ses = (caf_msg_session_t *)data;
+	caf_msg_svc_t *svc;
+	if (data == NULL) {
+		return CAF_ERROR;
+	}
+	svc = (caf_msg_svc_t *)ses->svc;
+	if (svc == (caf_msg_svc_t *)NULL) {
+		return CAF_ERROR;
+	}
+	return caf_psm_runner_work ((caf_ssm_runner_t *)svc->machine, ses);
+}
+
+
+int
+caf_msg_svc_run_dsm (void *data) {
+	caf_msg_session_t *ses = (caf_msg_session_t *)data;
+	caf_msg_svc_t *svc;
+	if (data == NULL) {
+		return CAF_ERROR;
+	}
+	svc = (caf_msg_svc_t *)ses->svc;
+	if (svc == (caf_msg_svc_t *)NULL) {
+		return CAF_ERROR;
+	}
+	return caf_dsm_runner_work ((caf_ssm_runner_t *)svc->machine, ses);
 }
 
 

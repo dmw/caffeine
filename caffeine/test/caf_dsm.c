@@ -133,7 +133,7 @@ init_runner () {
 		printf (msg, m1, runner);
 		d1 = 0;
 		printf ("\trunner = %p && d1 = %p\n", (void *)runner, (void *)&d1);
-		caf_dsm_runnner_work (runner, (void *)&d1);
+		caf_dsm_runner_work (runner, (void *)&d1);
 	}
 }
 

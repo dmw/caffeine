@@ -333,7 +333,7 @@ int caf_ssm_runner_delete (caf_ssm_runner_t *r);
  *
  * @return CAF_OK on success, CAF_ERROR on failure.
  */
-int caf_ssm_runnner_work (caf_ssm_runner_t *r, void *r_data);
+int caf_ssm_runner_work (caf_ssm_runner_t *r, void *r_data);
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS

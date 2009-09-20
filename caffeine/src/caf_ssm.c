@@ -174,7 +174,7 @@ caf_ssm_runner_delete (caf_ssm_runner_t *r) {
 
 
 int
-caf_ssm_runnner_work (caf_ssm_runner_t *r, void *r_data) {
+caf_ssm_runner_work (caf_ssm_runner_t *r, void *r_data) {
 	caf_ssm_t *m = (caf_ssm_t *)NULL;
 	caf_ssm_state_t *s = (caf_ssm_state_t *)NULL;
 	caf_ssm_return_t *rt = (caf_ssm_return_t *)NULL;

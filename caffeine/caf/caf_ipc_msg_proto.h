@@ -31,6 +31,9 @@
 
 #include <caf/caf_data_buffer.h>
 #include <caf/caf_ipc_msg.h>
+#include <caf/caf_psm.h>
+#include <caf/caf_ssm.h>
+#include <caf/caf_dsm.h>
 
 /**
  * @defgroup      caf_ipc_msg_proto     IPC Messages Lightweight Protocol
@@ -58,6 +61,9 @@ CAF_BEGIN_C_EXTERNS
 
 #define CAF_MSG_SESSION_SZ				(sizeof(caf_msg_session_t))
 #define CAF_MSG_SVC_SZ					(sizeof(caf_msg_svc_t))
+#define CAF_MSG_SVC_PCB(pcb)			int (*pcb)(void *s)
+#define CAF_MSG_SVC_LOCKED				1
+#define CAF_MSG_SVC_UNLOCKED			0
 
 /**
  * @brief Messaging Session Type
@@ -68,6 +74,16 @@ CAF_BEGIN_C_EXTERNS
  * @see caf_msg_session_s
  */
 typedef struct caf_msg_session_s caf_msg_session_t;
+
+/**
+ * @brief Message Server Type
+ *
+ * C typedef for the <b>@link #caf_msg_svc_s @endlink</b>
+ * structure.
+ *
+ * @see caf_msg_svc_s
+ */
+typedef struct caf_msg_svc_s caf_msg_svc_t;
 
 /**
  * @brief Messaging Session Structure
@@ -98,17 +114,33 @@ struct caf_msg_session_s {
 	pid_t client;
 	/** Server PID */
 	pid_t server;
+	/** Lock */
+	int locked;
+	/** Service holder */
+	caf_msg_svc_t *svc;
 };
 
+
 /**
- * @brief Message Server Type
+ * @brief Message Service State Machine Proccessing Types
  *
- * C typedef for the <b>@link #caf_msg_svc_s @endlink</b>
- * structure.
+ * State Machine selector to process the Messaging Service
  *
- * @see caf_msg_svc_s
+ * @see caf_psm
+ * @see caf_dsm
+ * @see caf_ssm
  */
-typedef struct caf_msg_svc_s caf_msg_svc_t;
+typedef enum {
+	/** The state machine has no type and is not used */
+	MSG_SVC_MACHINE_NONE = 0,
+	/** The state machine is of type @see caf_ssm */
+	MSG_SVC_MACHINE_STATIC = 100,
+	/** The state machine is of type @see caf_psm */
+	MSG_SVC_MACHINE_PLUGABLE = 200,
+	/** The state machine is of type @see caf_dsm */
+	MSG_SVC_MACHINE_DYNAMIC = 300
+} caf_msg_svc_sm_t;
+
 
 /**
  * @brief Message Server Structure
@@ -133,10 +165,18 @@ struct caf_msg_svc_s {
 	u_long rcv_inc;
 	/** List of sessions */
 	lstdl_t *sessions;
+	/** Processing Machine */
+	void *machine;
+	/** Processing Machine Type */
+	caf_msg_svc_sm_t type;
+	/** errno value for common operations */
+	int errno_v;
 };
 
 
-caf_msg_svc_t *caf_ipcmsg_svc_create (caf_msg_t *seed);
+caf_msg_svc_t *caf_ipcmsg_svc_create (caf_msg_t *seed,
+									  caf_msg_svc_sm_t type,
+									  void *machine);
 
 int caf_ipcmsg_svc_release (caf_msg_svc_t *s);
 
@@ -148,6 +188,13 @@ static int caf_msg_svc_session_delete_cb(void *s);
 
 static int caf_msg_svc_session_compare_id(void *s, void *id);
 
+int caf_ipcmsg_svc_process (caf_msg_svc_t *s, CAF_MSG_SVC_PCB(pcb));
+
+int caf_msg_svc_run_ssm (void *data);
+
+int caf_msg_svc_run_psm (void *data);
+
+int caf_msg_svc_run_dsm (void *data);
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS

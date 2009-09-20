@@ -330,7 +330,7 @@ int caf_dsm_runner_delete (caf_dsm_runner_t *r);
  *
  * @return CAF_OK on success, CAF_ERROR on failure.
  */
-int caf_dsm_runnner_work (caf_dsm_runner_t *r, void *r_data);
+int caf_dsm_runner_work (caf_dsm_runner_t *r, void *r_data);
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS

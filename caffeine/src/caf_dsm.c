@@ -162,7 +162,7 @@ caf_dsm_runner_delete (caf_dsm_runner_t *r) {
 
 
 int
-caf_dsm_runnner_work (caf_dsm_runner_t *r, void *r_data) {
+caf_dsm_runner_work (caf_dsm_runner_t *r, void *r_data) {
 	caf_dsm_t *m = (caf_dsm_t *)NULL;
 	caf_dsm_state_t *s = (caf_dsm_state_t *)NULL;
 	caf_dsm_return_t *rt = (caf_dsm_return_t *)NULL;

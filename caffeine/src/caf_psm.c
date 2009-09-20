@@ -191,7 +191,7 @@ caf_psm_runner_delete (caf_psm_runner_t *r) {
 
 
 int
-caf_psm_runnner_work (caf_psm_runner_t *r, void *r_data) {
+caf_psm_runner_work (caf_psm_runner_t *r, void *r_data) {
 	caf_psm_t *m = (caf_psm_t *)NULL;
 	caf_psm_state_t *s = (caf_psm_state_t *)NULL;
 	caf_psm_return_t *rt = (caf_psm_return_t *)NULL;

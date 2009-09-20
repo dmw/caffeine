@@ -90,6 +90,7 @@ typedef enum {
  * @see			caf_psm_return_s
  */
 typedef struct caf_psm_return_s caf_psm_return_t;
+
 /**
  * @brief		State return type
  *
@@ -119,6 +120,7 @@ struct caf_psm_return_s {
  * @see	caf_psm_state_s
  */
 typedef struct caf_psm_state_s caf_psm_state_t;
+
 /**
  * @brief		PSM State Holder Typdef
  *
@@ -146,6 +148,7 @@ struct caf_psm_state_s {
  * @see      caf_psm_s
  */
 typedef struct caf_psm_s caf_psm_t;
+
 /**
  *
  * @brief    Caffeine PSM structure
@@ -189,6 +192,7 @@ typedef enum {
  * @see caf_psm_runner_s
  */
 typedef struct caf_psm_runner_s caf_psm_runner_t;
+
 /**
  * @brief		PSM Runner, this makes all PSMs thread safe
  *
@@ -333,7 +337,7 @@ int caf_psm_runner_delete (caf_psm_runner_t *r);
  *
  * @return CAF_OK on success, CAF_ERROR on failure.
  */
-int caf_psm_runnner_work (caf_psm_runner_t *r, void *r_data);
+int caf_psm_runner_work (caf_psm_runner_t *r, void *r_data);
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS
