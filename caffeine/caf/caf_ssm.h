@@ -101,7 +101,7 @@ typedef struct caf_ssm_return_s caf_ssm_return_t;
  * @see			caf_ssm_return_t
  */
 struct caf_ssm_return_s {
-	/** Return Control, @see caf_ssm_state_control_t) */
+	/** Return Control, @see caf_ssm_state_control_t */
 	int r_control;
 	/** Return Input Data */
 	void *r_data;
@@ -119,6 +119,7 @@ struct caf_ssm_return_s {
  * @see	caf_ssm_state_s
  */
 typedef struct caf_ssm_state_s caf_ssm_state_t;
+
 /**
  * @brief		SSM State Holder Typdef
  *

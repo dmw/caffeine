@@ -136,6 +136,7 @@ struct caf_unit_s {
  * @see      caf_unit_value_s
  */
 typedef struct caf_unit_value_s caf_unit_value_t;
+
 /**
  *
  * @brief    Packet Unit Structure
@@ -185,6 +186,7 @@ struct caf_pack_s {
  * @see      caf_packet_s
  */
 typedef struct caf_packet_s caf_packet_t;
+
 /**
  *
  * @brief    Data Packet Structure
@@ -464,6 +466,44 @@ int caf_packet_parse(caf_packet_t *r, cbuffer_t *buf);
  *				failure.
  */
 cbuffer_t *caf_packet_translate(caf_packet_t *r);
+
+
+/**
+ * @brief		Parse a packet from the given input buffer
+ *
+ * Parses a packet from the input given buffer. A packet is defined
+ * by unit definition, and return the unit definition values in the
+ * given packet. Itself, this interface isn't thread safe, but, if
+ * you define a pack separatelly from the packet definition, and
+ * assing that pack to the packet definition, you can make a thread
+ * safe packet. The difference with
+ * @link caf_packet_parse_machine() @endlink is that it is not
+ * converting to network endianes.
+ *
+ * @param r[out]		Packet Definition
+ * @param buf[in]		Input Buffer
+ *
+ * @return				CAF_OK on success, CAF_ERROR on failure
+ *
+ */
+int caf_packet_parse_machine (caf_packet_t *r, cbuffer_t *buf);
+
+
+/**
+ * @brief		Translates the given packet into a buffer.
+ *
+ * Translates the given buffer into a packet, ready to be sent
+ * over the network or write a file. This can be usefull with
+ * strong varaying packets protocolos and files. The differente
+ * with @link caf_packet_translate() @endlink is that it is not
+ * using the network endianes.
+ *
+ * @param r[in]			the packet to translate.
+ *
+ * @return		The allocated buffer with translated data, NULL on
+ *				failure.
+ */
+cbuffer_t *caf_packet_translate_machine (caf_packet_t *r);
 
 
 #ifdef __cplusplus

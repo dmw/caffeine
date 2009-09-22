@@ -338,6 +338,30 @@ lstdl_set (lstdl_t *lst, int pos, void *data) {
 }
 
 
+int
+lstdl_insert (lstdl_t *lst, int pos, void *data) {
+	lstdln_t *pn, *xnew;
+	int c;
+	if (lst != (lstdl_t *)NULL) {
+		c = 0;
+		pn = lst->head;
+		while (pn != (lstdln_t *)NULL) {
+			if (pos == c) {
+				xnew = (lstdln_t *)xmalloc (CAF_LSTDLNODE_SZ);
+				xnew->data = data;
+				xnew->prev = pn->prev;
+				xnew->next = pn;
+				pn->prev = xnew;
+				return pos;
+			}
+			pn = pn->next;
+			c++;
+		}
+	}
+	return CAF_ERROR_SUB;
+}
+
+
 void *
 lstdl_get (lstdl_t *lst, int pos) {
 	lstdln_t *pn;

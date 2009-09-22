@@ -46,7 +46,8 @@ caf_ssm_new (int id, int cycle, int steps) {
 	if (id > 0 && steps > 0) {
 		r = (caf_ssm_t *)xmalloc (CAF_SSM_SZ);
 		if (r != (caf_ssm_t *)NULL) {
-			r->m_state = (caf_ssm_state_t **)xmalloc ((size_t)steps * (size_t)(sizeof(NULL)));
+			r->m_state = (caf_ssm_state_t **)xmalloc ((size_t)steps
+													  * (size_t)(sizeof(NULL)));
 			if (r->m_state != (caf_ssm_state_t **)NULL) {
 				for (c = 0; c < steps; c++) {
 					r->m_state[c] = (caf_ssm_state_t *)NULL;

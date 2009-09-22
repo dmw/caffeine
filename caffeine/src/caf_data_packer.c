@@ -307,15 +307,14 @@ caf_packet_getpstr (caf_unit_t *u, void *b, size_t p) {
 		if (u->type == CAF_UNIT_STRING) {
 			switch (u->length) {
 			case CAF_UNIT_OCTET_SZ:
-				sz = (size_t)*((caf_unit_octet_t *)(b));
+				sz = ((size_t)*((caf_unit_octet_t *)(b))) & 0xff;
 			case CAF_UNIT_WORD_SZ:
-				sz = (size_t)*((caf_unit_word_t *)(b));
+				sz = ((size_t)*((caf_unit_word_t *)(b))) & 0xffff;
 			case CAF_UNIT_DWORD_SZ:
-				sz = (size_t)*((caf_unit_dword_t *)(b));
+				sz = ((size_t)*((caf_unit_dword_t *)(b))) & 0xffffffff;
 			case CAF_UNIT_QWORD_SZ:
-				/* XXX: this is buggy code, a size_t
-				   could not be a quad word */
-				sz = (size_t)*((caf_unit_qword_t *)(b));
+				/* the is no packet with that size... ;) */
+				sz = ((size_t)*((caf_unit_qword_t *)(b))) & 0xffffffff;
 			}
 			ptr = (void *)((size_t)p + u->length);
 			r = caf_unit_value_new (CAF_UNIT_PSTRING, sz, ptr);
@@ -412,6 +411,60 @@ caf_packet_parse (caf_packet_t *r, cbuffer_t *buf) {
 }
 
 
+int
+caf_packet_parse_machine (caf_packet_t *r, cbuffer_t *buf) {
+	lstdln_t *n = (lstdln_t *)NULL;
+	caf_unit_t *u = (caf_unit_t *)NULL;
+	caf_unit_value_t *v = (caf_unit_value_t *)NULL;
+	void *ptr = (void *)NULL;
+	size_t pos = 0;
+	if (r != (caf_packet_t *)NULL && buf != (cbuffer_t *)NULL) {
+		if (r->pack != (caf_pack_t *)NULL && r->packets != (lstdl_t *)NULL) {
+			lstdl_delete_nocb (r->packets);
+			r->packets = lstdl_create ();
+			if (r->packets == (lstdl_t *)NULL) {
+				return CAF_ERROR;
+			}
+			if (r->pack->units != (lstdl_t *)NULL) {
+				n = r->pack->units->head;
+				while (n != (lstdln_t *)NULL) {
+					u = (caf_unit_t *)n->data;
+					switch (u->type) {
+					case CAF_UNIT_STRING:
+						v = caf_packet_getstr (u, ptr, buf->sz - pos);
+						break;
+					case CAF_UNIT_PSTRING:
+						v = caf_packet_getpstr (u, ptr, u->length);
+						break;
+					case CAF_UNIT_WORD_SZ:
+						v = caf_unit_value_new (u->type, u->length, ptr);
+						break;
+					case CAF_UNIT_DWORD_SZ:
+						v = caf_unit_value_new (u->type, u->length, ptr);
+						break;
+					case CAF_UNIT_QWORD_SZ:
+						v = caf_unit_value_new (u->type, u->length, ptr);
+						break;
+					default:
+						v = caf_unit_value_new (u->type, u->length,
+						                        (void *)ptr);
+						break;
+					}
+					if (v != (caf_unit_value_t *)NULL) {
+						lstdl_push (r->packets, v);
+						ptr = (void *)((size_t)ptr +
+						               caf_unit_get_size (u->type));
+					}
+					pos += v->sz;
+					n = n->next;
+				}
+			}
+		}
+	}
+	return CAF_ERROR;
+}
+
+
 cbuffer_t *
 caf_packet_translate (caf_packet_t *r) {
 	lstdln_t *un = (lstdln_t *)NULL;
@@ -456,6 +509,57 @@ caf_packet_translate (caf_packet_t *r) {
 							c64 = *((uint64_t *)u->data);
 							c64 = ntohll(c64);
 							memcpy ((void *)(pos), &c64, u->sz);
+							break;
+						default:
+							memcpy ((void *)(pos), u->data, u->sz);
+							break;
+						}
+						pos += u->sz;
+						un = un->next;
+					}
+				}
+			}
+		}
+	}
+	return buf;
+}
+
+
+cbuffer_t *
+caf_packet_translate_machine (caf_packet_t *r) {
+	lstdln_t *un = (lstdln_t *)NULL;
+	caf_unit_value_t *u = (caf_unit_value_t *)NULL;
+	cbuffer_t *buf = (cbuffer_t *)NULL;
+	size_t bsz = 0, pos = 0;
+	if (r != (caf_packet_t *)NULL && buf != (cbuffer_t *)NULL) {
+		if (r->pack != (caf_pack_t *)NULL && r->packets != (lstdl_t *)NULL) {
+			if (r->pack->units != (lstdl_t *)NULL) {
+				un = r->pack->units->head;
+				while (un != (lstdln_t *)NULL) {
+					bsz += ((caf_unit_t *)un->data)->length;
+					un = un->next;
+				}
+				if (bsz > 0) {
+					buf = cbuf_create (bsz);
+					un = r->packets->head;
+					pos = (size_t)buf->data;
+					while (un != (lstdln_t *)NULL) {
+						u = (caf_unit_value_t *)un->data;
+						switch (u->type) {
+						case CAF_UNIT_STRING:
+							memcpy ((void *)pos, u->data, u->sz);
+							break;
+						case CAF_UNIT_PSTRING:
+							memcpy ((void *)pos, u->data, u->sz);
+							break;
+						case CAF_UNIT_WORD_SZ:
+							memcpy ((void *)(pos), u->data, u->sz);
+							break;
+						case CAF_UNIT_DWORD_SZ:
+							memcpy ((void *)(pos), u->data, u->sz);
+							break;
+						case CAF_UNIT_QWORD_SZ:
+							memcpy ((void *)(pos), u->data, u->sz);
 							break;
 						default:
 							memcpy ((void *)(pos), u->data, u->sz);

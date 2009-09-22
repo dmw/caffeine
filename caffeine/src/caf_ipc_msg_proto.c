@@ -30,6 +30,7 @@ static char Id[] = "$Id$";
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <errno.h>
 
 #include <sys/types.h>
@@ -40,8 +41,10 @@ static char Id[] = "$Id$";
 #include <unistd.h>
 
 #include "caf/caf.h"
+#include "caf/caf_mem.h"
 #include "caf/caf_data_mem.h"
 #include "caf/caf_data_buffer.h"
+#include "caf/caf_data_lstdl.h"
 #include "caf/caf_ipc_msg.h"
 #include "caf/caf_ipc_msg_proto.h"
 #include "caf/caf_psm.h"
@@ -54,11 +57,30 @@ static char Id[] = "$Id$";
 static int caf_msg_svc_session_delete_cb(void *s);
 static int caf_msg_svc_session_compare_id(void *s, void *id);
 
+caf_dsm_return_t *dsm_packet_process(void *s_data,
+									 caf_dsm_return_t *s_return);
+
+caf_dsm_return_t *dsm_packet_process_error(void *s_data,
+										   caf_dsm_return_t *s_return);
+
+caf_psm_return_t *psm_packet_process(void *s_data,
+									 caf_psm_return_t *s_return);
+
+caf_psm_return_t *psm_packet_process_error(void *s_data,
+										   caf_psm_return_t *s_return);
+
+caf_ssm_return_t *ssm_packet_process(void *s_data,
+									 caf_ssm_return_t *s_return);
+
+caf_ssm_return_t *ssm_packet_process_error(void *s_data,
+										   caf_ssm_return_t *s_return);
+
 
 caf_msg_svc_t *
 caf_ipcmsg_svc_create (caf_msg_t *seed,
 					   caf_msg_svc_sm_t type,
-					   void *machine) {
+					   void *machine,
+					   caf_packet_t *parser) {
 	caf_msg_svc_t *r = (caf_msg_svc_t *)NULL;
 	if (seed == (caf_msg_t *)NULL) {
 		return r;
@@ -72,6 +94,7 @@ caf_ipcmsg_svc_create (caf_msg_t *seed,
 	r->snd_inc = 0;
 	r->rcv_inc = 0;
 	r->sessions = lstdl_create ();
+	r->parser = (caf_packet_t *)NULL;
 	if (r->sessions == (lstdl_t *)NULL) {
 		xfree (r);
 		r = (caf_msg_svc_t *)NULL;
@@ -83,6 +106,9 @@ caf_ipcmsg_svc_create (caf_msg_t *seed,
 	} else {
 		r->machine = NULL;
 		r->type = MSG_SVC_MACHINE_NONE;
+	}
+	if (parser != (caf_packet_t *)NULL) {
+		r->parser = parser;
 	}
 	return r;
 }
@@ -176,9 +202,162 @@ caf_ipcmsg_svc_process (caf_msg_svc_t *s,
 
 
 int
+caf_ipcmsg_svc_convert_pack (caf_msg_svc_t *s) {
+	caf_dsm_t *dsmt;
+	caf_dsm_state_t *dsm;
+	caf_dsm_runner_t *dsm_r;
+	caf_psm_t *psmt;
+	caf_psm_state_t *psm;
+	caf_psm_runner_t *psm_r;
+	caf_ssm_t *ssmt;
+	caf_ssm_state_t *ssm;
+	caf_ssm_runner_t *ssm_r;
+	size_t fsz, lsz;
+	if (s == (caf_msg_svc_t *)NULL) {
+		return CAF_ERROR;
+	}
+	if (s->parser == (caf_packet_t *)NULL) {
+		s->errno_v = EINVAL;
+		return CAF_ERROR;
+	}
+	if (s->machine == NULL) {
+		s->errno_v = EINVAL;
+		return CAF_ERROR;
+	}
+	switch (s->type) {
+	case MSG_SVC_MACHINE_STATIC:
+#if 0
+		ssm = caf_ssm_state_new (0, CAF_PSM_STATE_START,
+								 ssm_packet_process,
+								 ssm_packet_process_error);
+		ssm_r = (caf_ssm_runner_t *)s->machine;
+		if (s->machine == (caf_ssm_runner_t *)NULL
+			|| ((caf_ssm_runner_t *)s->machine)->r_machine == NULL) {
+			caf_ssm_state_delete(ssm);
+			s->errno_v = EINVAL;
+			return CAF_ERROR;
+		}
+		ssmt = ((caf_ssm_t *)((caf_ssm_runner_t *)s->machine)->r_machine);
+		lsz = ((size_t)(ssmt->last)) * (sizeof(caf_ssm_t));
+		fsz = lsz + (sizeof(caf_ssm_t));
+		ssmt->m_state = (caf_ssm_state_t **)realloc (ssmt->m_state, fsz);
+		xmemcpy((void *)((size_t)ssmt->m_state
+						 + sizeof(caf_ssm_t)), ssmt->m_state, lsz);
+		ssmt->m_state[0] = ssm;
+		ssmt->last++;
+		return CAF_OK;
+#endif /* SSM is not allowed to change */
+		s->errno_v = EINVAL;
+		return CAF_ERROR;
+	case MSG_SVC_MACHINE_PLUGABLE:
+		psm = caf_psm_state_new (0, CAF_PSM_STATE_START,
+								 psm_packet_process,
+								 psm_packet_process_error);
+		psm_r = (caf_psm_runner_t *)s->machine;
+		if (s->machine == (caf_psm_runner_t *)NULL
+			|| ((caf_psm_runner_t *)s->machine)->r_machine == NULL) {
+			caf_psm_state_delete(psm);
+			s->errno_v = EINVAL;
+			return CAF_ERROR;
+		}
+		psmt = ((caf_psm_t *)((caf_psm_runner_t *)s->machine)->r_machine);
+		lsz = ((size_t)(psmt->last)) * (sizeof(caf_psm_t));
+		fsz = lsz + (sizeof(caf_psm_t));
+		psmt->m_state = (caf_psm_state_t *)realloc (psmt->m_state, fsz);
+		xmemcpy((void *)((size_t)psmt->m_state
+						 + sizeof(caf_psm_t)), psmt->m_state, lsz);
+		psmt->m_state[0] = *psm;
+		psmt->last++;
+		return CAF_OK;
+	case MSG_SVC_MACHINE_DYNAMIC:
+		dsm = caf_dsm_state_new (0, CAF_DSM_STATE_START,
+								 dsm_packet_process,
+								 dsm_packet_process_error);
+		dsm_r = (caf_dsm_runner_t *)s->machine;
+		if (s->machine == (caf_dsm_runner_t *)NULL
+			|| ((caf_dsm_runner_t *)s->machine)->r_machine == NULL) {
+			caf_dsm_state_delete(dsm);
+			s->errno_v = EINVAL;
+			return CAF_ERROR;
+		}
+		dsmt = ((caf_dsm_t *)((caf_dsm_runner_t *)s->machine)->r_machine);
+		lstdl_insert(dsmt->m_state, 0, dsm);
+		return CAF_OK;
+	default:
+		s->errno_v = EINVAL;
+		return CAF_ERROR;
+	}
+}
+
+
+caf_dsm_return_t *dsm_packet_process(void *s_data,
+									 caf_dsm_return_t *s_return) {
+	return NULL;
+}
+
+
+caf_dsm_return_t *dsm_packet_process_error(void *s_data,
+										   caf_dsm_return_t *s_return) {
+	return NULL;
+}
+
+
+caf_psm_return_t *psm_packet_process(void *s_data,
+									 caf_psm_return_t *s_return) {
+	return NULL;
+}
+
+
+caf_psm_return_t *psm_packet_process_error(void *s_data,
+										   caf_psm_return_t *s_return) {
+	return NULL;
+}
+
+
+caf_ssm_return_t *ssm_packet_process(void *s_data,
+									 caf_ssm_return_t *s_return) {
+	return NULL;
+}
+
+
+caf_ssm_return_t *ssm_packet_process_error(void *s_data,
+										   caf_ssm_return_t *s_return) {
+	return NULL;
+}
+
+int
+caf_ipcmsg_svc_process_packer (caf_msg_svc_t *s,
+							   CAF_MSG_SVC_PCB(pcb)) {
+	int cnt = CAF_ERROR;
+	if (s == (caf_msg_svc_t *)NULL
+		|| pcb == NULL) {
+		return cnt;
+	}
+	if (s->sessions == (lstdl_t *)NULL) {
+		s->errno_v = EINVAL;
+		return cnt;
+	}
+	switch (s->type) {
+	case MSG_SVC_MACHINE_NONE:
+		return lstdl_map (s->sessions, pcb);
+	case MSG_SVC_MACHINE_STATIC:
+		return lstdl_map (s->sessions, caf_msg_svc_run_ssm);
+	case MSG_SVC_MACHINE_PLUGABLE:
+		return lstdl_map (s->sessions, caf_msg_svc_run_psm);
+	case MSG_SVC_MACHINE_DYNAMIC:
+		return lstdl_map (s->sessions, caf_msg_svc_run_dsm);
+	default:
+		return lstdl_map (s->sessions, pcb);
+		break;
+	}
+}
+
+
+int
 caf_msg_svc_run_ssm (void *data) {
 	caf_msg_session_t *ses = (caf_msg_session_t *)data;
 	caf_msg_svc_t *svc;
+	cbuffer_t *buf;
 	if (data == NULL) {
 		return CAF_ERROR;
 	}
@@ -186,7 +365,8 @@ caf_msg_svc_run_ssm (void *data) {
 	if (svc == (caf_msg_svc_t *)NULL) {
 		return CAF_ERROR;
 	}
-	return caf_ssm_runner_work ((caf_ssm_runner_t *)svc->machine, ses);
+	return caf_ssm_runner_work ((caf_ssm_runner_t *)svc->machine,
+								ses);
 }
 
 
@@ -201,7 +381,8 @@ caf_msg_svc_run_psm (void *data) {
 	if (svc == (caf_msg_svc_t *)NULL) {
 		return CAF_ERROR;
 	}
-	return caf_psm_runner_work ((caf_ssm_runner_t *)svc->machine, ses);
+	return caf_psm_runner_work ((caf_psm_runner_t *)svc->machine,
+								ses);
 }
 
 
@@ -216,7 +397,8 @@ caf_msg_svc_run_dsm (void *data) {
 	if (svc == (caf_msg_svc_t *)NULL) {
 		return CAF_ERROR;
 	}
-	return caf_dsm_runner_work ((caf_ssm_runner_t *)svc->machine, ses);
+	return caf_dsm_runner_work ((caf_dsm_runner_t *)svc->machine,
+								ses);
 }
 
 

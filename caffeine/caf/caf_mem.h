@@ -30,7 +30,6 @@
  */
 
 #include <caf/caf_data_mem.h>
-#include <caf/caf_data_var.h>
 
 #endif /* !CAF_MEM_H */
 /* caf_mem.h ends here */

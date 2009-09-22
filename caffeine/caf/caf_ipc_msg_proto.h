@@ -34,6 +34,7 @@
 #include <caf/caf_psm.h>
 #include <caf/caf_ssm.h>
 #include <caf/caf_dsm.h>
+#include <caf/caf_data_packer.h>
 
 /**
  * @defgroup      caf_ipc_msg_proto     IPC Messages Lightweight Protocol
@@ -169,6 +170,8 @@ struct caf_msg_svc_s {
 	void *machine;
 	/** Processing Machine Type */
 	caf_msg_svc_sm_t type;
+	/** The Packet parser using Data Packer @see caf_data_packer */
+	caf_packet_t *parser;
 	/** errno value for common operations */
 	int errno_v;
 };
@@ -176,7 +179,8 @@ struct caf_msg_svc_s {
 
 caf_msg_svc_t *caf_ipcmsg_svc_create (caf_msg_t *seed,
 									  caf_msg_svc_sm_t type,
-									  void *machine);
+									  void *machine,
+									  caf_packet_t *parser);
 
 int caf_ipcmsg_svc_release (caf_msg_svc_t *s);
 
