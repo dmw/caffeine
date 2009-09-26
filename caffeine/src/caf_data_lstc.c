@@ -245,6 +245,28 @@ lstc_set (lstcn_t *lst, int pos, void *data) {
 }
 
 
+int
+lstc_insert (lstcn_t *lst, int pos, void *data) {
+	lstcn_t *pn = lst; lstcn_t *nn;
+	int c = 0;
+	if (lst != (lstcn_t *)NULL) {
+		do {
+			if (pos == c) {
+				nn = (lstcn_t *)xmalloc (CAF_LSTC_SZ);
+				nn->prev = pn->prev;
+				nn->next = pn;
+				pn->prev = nn;
+				nn->data = data;
+				return pos;
+			}
+			pn = pn->next;
+			c++;
+		} while (pn != lst);
+	}
+	return CAF_ERROR_SUB;
+}
+
+
 void *
 lstc_get (lstcn_t *lst, int pos) {
 	lstcn_t *pn = lst;

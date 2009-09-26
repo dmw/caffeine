@@ -439,6 +439,51 @@ lstdlc_set (lstdlc_t *lst, int pos, void *data) {
 }
 
 
+int
+lstdlc_insert (lstdlc_t *lst, int pos, void *data) {
+	lstdlcn_t *pn; lstdlcn_t *nn;
+	int c;
+	if (lst != (lstdlc_t *)NULL) {
+		if (lstdlc_empty_list (lst) == CAF_OK) {
+			return CAF_ERROR_SUB;
+		} else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+			if (pos == 0) {
+				nn = (lstdlcn_t *)xmalloc (CAF_LSTDLCNODE_SZ);
+				nn->data = data;
+				nn->next = lst->head;
+				lst->head->prev = nn;
+				lst->head = nn;
+				return 0;
+			}
+			return CAF_ERROR_SUB;
+		} else {
+			c = 0;
+			pn = lst->head;
+			do {
+				if (pos == c) {
+					nn = (lstdlcn_t *)xmalloc (CAF_LSTDLCNODE_SZ);
+					nn->data = data;
+					nn->next = pn;
+					nn = pn->prev;
+					return pos;
+				}
+				pn = pn->next;
+				c++;
+			} while (pn != lst->tail);
+			if (pos == c) {
+				nn->data = data;
+				nn->next = lst->head;
+				nn->prev = lst->tail;
+				lst->tail->next = nn;
+				lst->head->prev = nn;
+				lst->tail = nn;
+			}
+		}
+	}
+	return CAF_ERROR_SUB;
+}
+
+
 void *
 lstdlc_get (lstdlc_t *lst, int pos) {
 	lstdlcn_t *pn;

@@ -351,6 +351,28 @@ int lstdlc_set (lstdlc_t *lst, int pos, void *data);
 
 /**
  *
+ * @brief    Inserts a data node in the list.
+ *
+ * Inserts a data node in the list through the position of the node
+ * in the list. Positions starts in zero. A posible failure in
+ * this function is that the data pointer is not NULL, then you
+ * must use lstdlc_replace function.
+ *
+ * @param[in]    lst    list where to set the node.
+ * @param[in]    pos    data node position.
+ * @return       int    the position if found, -1 on failure.
+ *
+ * @see    lstdlc_t
+ * @see    lstdlcn_t
+ * @see    lstdlc_first
+ * @see    lstdlc_push
+ * @see    lstdlc_pop
+ * @see    lstdlc_replace
+ */
+int lstdlc_insert (lstdlc_t *lst, int pos, void *data);
+
+/**
+ *
  * @brief    Apply a function to the list data nodes.
  *
  * This function crosses the list and apply the parameter function step

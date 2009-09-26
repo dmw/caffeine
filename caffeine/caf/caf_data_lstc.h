@@ -259,6 +259,28 @@ int lstc_set (lstcn_t *lst, int pos, void *data);
 
 /**
  *
+ * @brief    Inserts a data node in the list.
+ *
+ * Inserts a data node in the list through the position of the node
+ * in the list. Positions starts in zero. A posible failure in
+ * this function is that the data pointer is not NULL, then you
+ * must use lstc_replace function.
+ *
+ * @param[in]    lst    list where to set the node.
+ * @param[in]    pos    data node position.
+ * @param[in]    data   data pointer in the list.
+ * @return       int    the position if found, -1 on failure.
+ *
+ * @see    lstc_t
+ * @see    lstcn_t
+ * @see    lstc_push
+ * @see    lstc_pop
+ * @see    lstc_replace
+ */
+int lstc_insert (lstcn_t *lst, int pos, void *data);
+
+/**
+ *
  * @brief    Sets a data node in the list.
  *
  * Sets a data node in the list through the position of the node
