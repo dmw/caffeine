@@ -190,11 +190,11 @@ caf_msg_session_t *caf_ipcmsg_svc_addses (caf_msg_svc_t *s);
 
 int caf_ipcmsg_svc_removeses (caf_msg_svc_t *s, long sid);
 
-static int caf_msg_svc_session_delete_cb(void *s);
-
-static int caf_msg_svc_session_compare_id(void *s, void *id);
-
 int caf_ipcmsg_svc_process (caf_msg_svc_t *s, CAF_MSG_SVC_PCB(pcb));
+
+int caf_ipcmsg_svc_process_packer (caf_msg_svc_t *s, CAF_MSG_SVC_PCB(pcb));
+
+int caf_ipcmsg_svc_convert_pack (caf_msg_svc_t *s);
 
 int caf_msg_svc_run_ssm (void *data);
 
