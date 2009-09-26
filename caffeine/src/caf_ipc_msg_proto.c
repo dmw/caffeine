@@ -57,23 +57,16 @@ static char Id[] = "$Id$";
 static int caf_msg_svc_session_delete_cb(void *s);
 static int caf_msg_svc_session_compare_id(void *s, void *id);
 
+void *std_sm_packet_process (void *s_data, caf_dsm_return_t *s_return);
+
 caf_dsm_return_t *dsm_packet_process(void *s_data,
 									 caf_dsm_return_t *s_return);
-
-caf_dsm_return_t *dsm_packet_process_error(void *s_data,
-										   caf_dsm_return_t *s_return);
 
 caf_psm_return_t *psm_packet_process(void *s_data,
 									 caf_psm_return_t *s_return);
 
-caf_psm_return_t *psm_packet_process_error(void *s_data,
-										   caf_psm_return_t *s_return);
-
 caf_ssm_return_t *ssm_packet_process(void *s_data,
 									 caf_ssm_return_t *s_return);
-
-caf_ssm_return_t *ssm_packet_process_error(void *s_data,
-										   caf_ssm_return_t *s_return);
 
 
 caf_msg_svc_t *
@@ -209,9 +202,6 @@ caf_ipcmsg_svc_convert_pack (caf_msg_svc_t *s) {
 	caf_psm_t *psmt;
 	caf_psm_state_t *psm;
 	caf_psm_runner_t *psm_r;
-	caf_ssm_t *ssmt;
-	caf_ssm_state_t *ssm;
-	caf_ssm_runner_t *ssm_r;
 	size_t fsz, lsz;
 	if (s == (caf_msg_svc_t *)NULL) {
 		return CAF_ERROR;
@@ -229,7 +219,7 @@ caf_ipcmsg_svc_convert_pack (caf_msg_svc_t *s) {
 #if 0
 		ssm = caf_ssm_state_new (0, CAF_PSM_STATE_START,
 								 ssm_packet_process,
-								 ssm_packet_process_error);
+								 NULL);
 		ssm_r = (caf_ssm_runner_t *)s->machine;
 		if (s->machine == (caf_ssm_runner_t *)NULL
 			|| ((caf_ssm_runner_t *)s->machine)->r_machine == NULL) {
@@ -252,7 +242,7 @@ caf_ipcmsg_svc_convert_pack (caf_msg_svc_t *s) {
 	case MSG_SVC_MACHINE_PLUGABLE:
 		psm = caf_psm_state_new (0, CAF_PSM_STATE_START,
 								 psm_packet_process,
-								 psm_packet_process_error);
+								 NULL);
 		psm_r = (caf_psm_runner_t *)s->machine;
 		if (s->machine == (caf_psm_runner_t *)NULL
 			|| ((caf_psm_runner_t *)s->machine)->r_machine == NULL) {
@@ -272,7 +262,7 @@ caf_ipcmsg_svc_convert_pack (caf_msg_svc_t *s) {
 	case MSG_SVC_MACHINE_DYNAMIC:
 		dsm = caf_dsm_state_new (0, CAF_DSM_STATE_START,
 								 dsm_packet_process,
-								 dsm_packet_process_error);
+								 NULL);
 		dsm_r = (caf_dsm_runner_t *)s->machine;
 		if (s->machine == (caf_dsm_runner_t *)NULL
 			|| ((caf_dsm_runner_t *)s->machine)->r_machine == NULL) {
@@ -290,40 +280,61 @@ caf_ipcmsg_svc_convert_pack (caf_msg_svc_t *s) {
 }
 
 
-caf_dsm_return_t *dsm_packet_process(void *s_data,
-									 caf_dsm_return_t *s_return) {
+void *
+std_sm_packet_process (void *s_data, caf_dsm_return_t *s_return) {
+	caf_msg_session_t *s;
+	caf_dsm_return_t *r;
+	if (s_data == NULL) {
+		return NULL;
+	}
+	if (s_return == NULL) {
+		s = (caf_msg_session_t *)s_data;
+		if (s->svc == (caf_msg_svc_t *)NULL) {
+			return NULL;
+		}
+		if ((caf_packet_parse_machine (s->svc->parser,
+									   (cbuffer_t *)s_data))
+			== CAF_ERROR) {
+			return NULL;
+		}
+		r = (caf_dsm_return_t *)xmalloc (sizeof(caf_dsm_return_t));
+		if (r == NULL) {
+			return NULL;
+		}
+		r->r_control = CAF_DSM_CONTROL_FORWARD;
+		r->r_data = s_data;
+		r->r_return = s->svc->parser;
+		return (void *)r;
+	}
 	return NULL;
 }
 
 
-caf_dsm_return_t *dsm_packet_process_error(void *s_data,
-										   caf_dsm_return_t *s_return) {
-	return NULL;
+caf_dsm_return_t *dsm_packet_process (void *s_data,
+									  caf_dsm_return_t *s_return) {
+	caf_dsm_return_t *r;
+	r = (caf_dsm_return_t *)std_sm_packet_process (s_data, s_return);
+	return r;
 }
 
 
-caf_psm_return_t *psm_packet_process(void *s_data,
-									 caf_psm_return_t *s_return) {
-	return NULL;
+caf_psm_return_t *psm_packet_process (void *s_data,
+									  caf_psm_return_t *s_return) {
+	caf_psm_return_t *r;
+	r = (caf_psm_return_t *)std_sm_packet_process (s_data,
+												   (caf_dsm_return_t *)s_return);
+	return r;
 }
 
 
-caf_psm_return_t *psm_packet_process_error(void *s_data,
-										   caf_psm_return_t *s_return) {
-	return NULL;
+caf_ssm_return_t *ssm_packet_process (void *s_data,
+									  caf_ssm_return_t *s_return) {
+	caf_ssm_return_t *r;
+	r = (caf_ssm_return_t *)std_sm_packet_process (s_data,
+												   (caf_dsm_return_t *)s_return);
+	return r;
 }
 
-
-caf_ssm_return_t *ssm_packet_process(void *s_data,
-									 caf_ssm_return_t *s_return) {
-	return NULL;
-}
-
-
-caf_ssm_return_t *ssm_packet_process_error(void *s_data,
-										   caf_ssm_return_t *s_return) {
-	return NULL;
-}
 
 int
 caf_ipcmsg_svc_process_packer (caf_msg_svc_t *s,
@@ -357,7 +368,6 @@ int
 caf_msg_svc_run_ssm (void *data) {
 	caf_msg_session_t *ses = (caf_msg_session_t *)data;
 	caf_msg_svc_t *svc;
-	cbuffer_t *buf;
 	if (data == NULL) {
 		return CAF_ERROR;
 	}

@@ -2,6 +2,7 @@
 ### $Id$
 ### project
 project(caffeine C)
+cmake_minimum_required(VERSION 2.6)
 
 ### macro inclusions
 include(CheckSymbolExists)
@@ -240,6 +241,10 @@ if (CMAKE_USE_PTHREADS_INIT)
 	LINK_LIBRARIES ("${CMAKE_THREAD_LIBS_INIT}")
 endif (CMAKE_USE_PTHREADS_INIT)
 
+if (COMMAND cmake_policy)
+    cmake_policy(SET CMP0003 NEW)
+endif (COMMAND cmake_policy)
+
 ### build the executables
 add_executable (caf_lstdl ${CAF_LSTDL_SRCS})
 add_executable (caf_lstdlc ${CAF_LSTDLC_SRCS})
@@ -255,7 +260,6 @@ add_executable (caf_both_ptm ${CAF_BOTH_PTM_SRCS})
 add_executable (caf_pth_key ${CAF_PTH_KEY_SRCS})
 add_executable (caf_mutex ${CAF_PTH_MUTEX_SRCS})
 add_executable (caf_rwlock ${CAF_PTH_RWLOCK_SRCS})
-add_executable (caf_tail ${CAF_IO_TAIL_SRCS})
 add_executable (caf_base64 ${CAF_BASE64_SRCS})
 add_executable (caf_base64_file ${CAF_BASE64_FILE_SRCS})
 add_executable (caf_ipcmsg ${CAF_IPCMSG_SRCS})

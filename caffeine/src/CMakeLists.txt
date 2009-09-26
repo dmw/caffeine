@@ -2,6 +2,7 @@
 ### $Id$
 ### project
 project(caffeine C)
+cmake_minimum_required(VERSION 2.6)
 
 ### macro inclusions
 include(CheckSymbolExists)
@@ -352,15 +353,13 @@ endif (CAFFEINE_OPTLEVEL)
 ### caffeine library usage
 if (CMAKE_USE_PTHREADS_INIT)
 	set (CFLAGS_PROJECT "${CFLAGS_PROJECT} -pthread")
-	set (LINK_AGAINST_LIBRARIES
-		"${LINK_AGAINST_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}")
+	set (LINK_AGAINST_LIBRARIES	"${CMAKE_THREAD_LIBS_INIT}")
 else (CMAKE_USE_PTHREADS_INIT)
 	message (FATAL_ERROR "Thread support is required")
 endif (CMAKE_USE_PTHREADS_INIT)
 
 if (PCRE_LIB AND PCRE_INCLUDE)
-	set (LINK_AGAINST_LIBRARIES
-		"${LINK_AGAINST_LIBRARIES} -lpcre")
+	set (LINK_AGAINST_LIBRARIES "${LINK_AGAINST_LIBRARIES} -lpcre")
 else (PCRE_LIB AND PCRE_INCLUDE)
 	message (FATAL_ERROR "PCRE support is required")
 endif (PCRE_LIB AND PCRE_INCLUDE)
@@ -381,13 +380,13 @@ set_source_files_properties (
 link_libraries ("${LINK_AGAINST_LIBRARIES}")
 
 ### build the library
-add_library (caffeine SHARED ${SOURCE_FILES})
+add_library ("caffeine" SHARED ${SOURCE_FILES})
 
 ### link
 target_link_libraries (caffeine)
 
 ### dependencies
-add_dependencies (caffeine ${CAFFEINE_HEADERS})
+add_dependencies ("caffeine" ${CAFFEINE_HEADERS})
 
 ### debug information
 if (CAFFEINE_DEBUG)
