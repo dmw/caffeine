@@ -284,6 +284,9 @@ void *
 std_sm_packet_process (void *s_data, caf_dsm_return_t *s_return) {
 	caf_msg_session_t *s;
 	caf_dsm_return_t *r;
+	caf_msg_t *seed;
+	caf_msg_t *nmsg;
+	cbuffer_t *buf;
 	if (s_data == NULL) {
 		return NULL;
 	}
@@ -292,8 +295,22 @@ std_sm_packet_process (void *s_data, caf_dsm_return_t *s_return) {
 		if (s->svc == (caf_msg_svc_t *)NULL) {
 			return NULL;
 		}
+		if (s->msg == NULL) {
+			seed = s->svc->seed;
+			buf = cbuf_create (caf_packet_getsize(s->svc->parser));
+			cbuf_clean (buf);
+			nmsg = caf_ipcmsg_new ((key_t)seed->key, seed->msgflg, seed->perm,
+								   seed->msg.mtype, buf);
+			s->msg = nmsg;
+		} else {
+			nmsg = s->msg;
+			cbuf_clean (s->msg->data);
+		}
+		if ((caf_ipcmsg_recv (s->msg)) == CAF_ERROR) {
+			return NULL;
+		}
 		if ((caf_packet_parse_machine (s->svc->parser,
-									   (cbuffer_t *)s_data))
+									   (cbuffer_t *)s->msg->data))
 			== CAF_ERROR) {
 			return NULL;
 		}

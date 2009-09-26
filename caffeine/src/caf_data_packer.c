@@ -348,6 +348,31 @@ caf_packet_getstr (caf_unit_t *u, void *b, size_t p) {
 }
 
 
+size_t
+caf_packet_getsize (caf_packet_t *r) {
+	lstdl_t *l;
+	lstdln_t *n;
+	caf_unit_t *u;
+	size_t sz = 0;
+	if (r == (caf_packet_t *)NULL) {
+		return 0;
+	}
+	if (r->pack == (caf_pack_t *)NULL) {
+		return 0;
+	}
+	l = r->pack->units;
+	if (l != (lstdl_t *)NULL) {
+		n = l->head;
+		while (n != (lstdln_t *)NULL) {
+			u = (caf_unit_t *)n->data;
+			sz += (u->su_sz + u->eu_sz + u->length);
+			n = n->next;
+		}
+	}
+	return sz;
+}
+
+
 int
 caf_packet_parse (caf_packet_t *r, cbuffer_t *buf) {
 	lstdln_t *n = (lstdln_t *)NULL;

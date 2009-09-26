@@ -117,6 +117,8 @@ struct caf_msg_session_s {
 	pid_t server;
 	/** Lock */
 	int locked;
+	/** Message storage */
+	caf_msg_t *msg;
 	/** Service holder */
 	caf_msg_svc_t *svc;
 };

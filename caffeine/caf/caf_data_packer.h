@@ -437,6 +437,17 @@ caf_unit_value_t *caf_packet_getpstr(caf_unit_t *u, void *b, size_t p);
 caf_unit_value_t *caf_packet_getstr(caf_unit_t *u, void *b, size_t p);
 
 /**
+ * @brief		Gets the unit size for the given packet
+ *
+ * Calculates the unit size for the given packet.
+ *
+ * @param r				the packet to parse.
+ *
+ * @return		The unit size.
+ */
+size_t caf_packet_getsize (caf_packet_t *r);
+
+/**
  * @brief		Parses a packet from the given input buffer.
  *
  * Parses a packet from the input given buffer. A packet is defined
