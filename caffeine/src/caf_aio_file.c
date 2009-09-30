@@ -53,7 +53,7 @@ static char Id[] = "$Id$";
 
 
 caf_aio_file_t *
-caf_aio_fopen (const char *path, const int flg, const mode_t md,
+caf_aio_fopen (const char *path, const u_int flg, const mode_t md,
 			   int fs, size_t bsz) {
 	int prev_errno;
 	caf_aio_file_t *r = (caf_aio_file_t *)NULL;
@@ -88,11 +88,11 @@ caf_aio_fopen (const char *path, const int flg, const mode_t md,
 					r = (caf_aio_file_t *)NULL;
 				}
 			}
-			r->buf = cbuf_create (fs == CAF_OK ? r->sd.st_blksize : bsz);
+			r->buf = cbuf_create ((fs == CAF_OK ? (size_t)r->sd.st_blksize : bsz));
 			if (r->buf != (cbuffer_t *)NULL) {
 				cbuf_clean (r->buf);
 				r->iocb.aio_buf = r->buf->data;
-				r->iocb.aio_nbytes = fs == CAF_OK ? r->sd.st_blksize : r->buf->sz;
+				r->iocb.aio_nbytes = (fs == CAF_OK ? (size_t)r->sd.st_blksize : r->buf->sz);
 				r->iocb.aio_offset = 0;
 				CAF_AIO_CLEAN(r);
 			} else {

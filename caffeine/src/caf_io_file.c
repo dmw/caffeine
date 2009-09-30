@@ -212,7 +212,7 @@ io_flseek (caf_io_file_t *r, off_t o, int w) {
 
 
 int
-io_can_open (const char *path, int oflg) {
+io_can_open (const char *path, u_long oflg) {
 	int r = CAF_ERROR, s = -1;
 	int old_errno = 0;
 	char *dn = (char *)NULL;

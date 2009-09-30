@@ -47,6 +47,8 @@ static char Id[] = "$Id$";
 #include "caf/caf_data_conv.h"
 #include "caf/caf_data_pidfile.h"
 
+#define CAF_PIDFILE_MSK							\
+	((S_IRUSR | S_IWUSR) & 0x0000)
 
 int
 pidfile_create (const char *path, pid_t pid) {
@@ -58,7 +60,7 @@ pidfile_create (const char *path, pid_t pid) {
 	}
 	memset ((void *)pid_str, (int)NULL, 64);
 	snprintf (pid_str, (size_t)64, "%d", pid);
-	fd = open (path, O_WRONLY | O_CREAT);
+	fd = open (path, O_WRONLY | O_CREAT, CAF_PIDFILE_MSK);
 	if (fd >= 0) {
 		fchmod (fd, 0600);
 		sz = write (fd, (const void *)pid_str, strlen(pid_str));

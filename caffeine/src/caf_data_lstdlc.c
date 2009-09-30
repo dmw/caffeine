@@ -471,6 +471,7 @@ lstdlc_insert (lstdlc_t *lst, int pos, void *data) {
 				c++;
 			} while (pn != lst->tail);
 			if (pos == c) {
+				nn = (lstdlcn_t *)xmalloc (CAF_LSTDLCNODE_SZ);
 				nn->data = data;
 				nn->next = lst->head;
 				nn->prev = lst->tail;

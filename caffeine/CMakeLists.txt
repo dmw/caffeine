@@ -4,6 +4,13 @@
 PROJECT(caffeine C)
 cmake_minimum_required(VERSION 2.6)
 
+### macro inclusions
+include(CheckSymbolExists)
+include(CheckIncludeFiles)
+include(CheckTypeSize)
+include(CheckLibraryExists)
+include(FindThreads)
+
 SUBDIRS(
 	caf
 	src

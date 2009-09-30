@@ -236,8 +236,7 @@ struct caf_aio_file_lst_s {
  * @see caf_buffer_t
  */
 caf_aio_file_t *caf_aio_fopen (const char *path,
-
- const int flg,
+							   const u_int flg,
 							   const mode_t md, int fs, size_t bsz);
 
 /**

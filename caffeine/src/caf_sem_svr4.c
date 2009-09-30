@@ -205,7 +205,7 @@ caf_sem_svr4_lock (caf_sem_svr4_t *r) {
 			for (i = 0; i < r->nsems; i++) {
 				sb[i].sem_num = i;
 				sb[i].sem_op = (u_short)CAF_SEM_SVR4_LOCK;
-				sb[i].sem_flg = (u_short)NULL;
+				sb[i].sem_flg = (u_short)0;
 			}
 			i = semop (r->id, sb, (size_t)r->nsems);
 			xfree (sb);
@@ -234,7 +234,7 @@ caf_sem_svr4_unlock (caf_sem_svr4_t *r) {
 			for (i = 0; i < r->nsems; i++) {
 				sb[i].sem_num = i;
 				sb[i].sem_op = (u_short)CAF_SEM_SVR4_UNLOCK;
-				sb[i].sem_flg = (u_short)NULL;
+				sb[i].sem_flg = (u_short)0;
 			}
 			i = semop (r->id, sb, (size_t)r->nsems);
 			xfree (sb);

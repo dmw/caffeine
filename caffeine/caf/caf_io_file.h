@@ -74,7 +74,7 @@ ssize_t io_write (caf_io_file_t *r, cbuffer_t *b);
 int io_pipe (caf_io_file_t *r);
 int io_fcntl (caf_io_file_t *r, int cmd, int *arg);
 int io_flseek (caf_io_file_t *r, off_t o, int w);
-int io_can_open (const char *path, int oflg);
+int io_can_open (const char *path, u_long oflg);
 int io_check_stat_flags (const struct stat *sd, int flg);
 
 #ifdef __cplusplus

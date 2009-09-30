@@ -122,123 +122,185 @@ option (CAFFEINE_DEBUG
 
 ### operating systems
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-	set (CFLAGS_DEFAULT "${CFLAGS_DEFAULT} -D_GNU_SOURCE -DLINUX_SYSTEM=1")
+	set (CFLAGS_DEFAULT " ${CFLAGS_DEFAULT} -D_GNU_SOURCE -DLINUX_SYSTEM=1")
+	check_library_exists (
+		"dl"
+		"dlopen"
+		"/lib:/usr/lib:/usr/local/lib:/opt/lib"
+		HAVE_LIB_DL)
+	check_library_exists (
+		"rt"
+		"aio_read"
+		"/lib:/usr/lib:/usr/local/lib:/opt/lib"
+		HAVE_LIB_RT)
+	if (HAVE_LIB_DL)
+		set (LINK_FLAGS	" ${LINK_FLAGS} -ldl")
+		link_libraries (" ${LINK_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
+	else (HAVA_LIB_DL)
+		message (FATAL_ERROR "AIO support is required")
+	endif (HAVE_LIB_DL)
+	if (HAVE_LIB_RT)
+		set (LINK_FLAGS " ${LINK_FLAGS} -lrt")
+		link_libraries (" ${LINK_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
+	else (HAVA_LIB_RT)
+		message (FATAL_ERROR "RT support is required")
+	endif (HAVE_LIB_RT)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|NetBSD|OpenBSD")
-	set (CFLAGS_DEFAULT "${CFLAGS_DEFAULT} -DBSD_SYSTEM=1")
-endif (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|NetBSD|OpenBSD")
+if (${CMAKE_SYSTEM_NAME} MATCHES " FreeBSD|NetBSD|OpenBSD")
+	set (CFLAGS_DEFAULT " ${CFLAGS_DEFAULT} -DBSD_SYSTEM=1")
+endif (${CMAKE_SYSTEM_NAME} MATCHES " FreeBSD|NetBSD|OpenBSD")
 
 ### debug caffeine
 if (CAFFEINE_DEBUG)
-	set (CFLAGS_PROJECT "${CFLAGS_DEFAULT} ${CFLAGS_DEBUG}")
-	set (LINK_FLAGS "${LINK_FLAGS} -g3 -pg")
+	set (CFLAGS_PROJECT " ${CFLAGS_DEFAULT} ${CFLAGS_DEBUG}")
+	set (LINK_FLAGS " ${LINK_FLAGS} -g3 -pg")
 else (CAFFEINE_DEBUG)
-	set (CFLAGS_PROJECT "${CFLAGS_DEFAULT}")
+	set (CFLAGS_PROJECT " ${CFLAGS_DEFAULT}")
 endif (CAFFEINE_DEBUG)
 
 ### caffeine optimizations
 if (CAFFEINE_ARCH)
-	set (CFLAGS_PROJECT "${CFLAGS_PROJECT} -march=${CAFFEINE_ARCH}")
+	set (CFLAGS_PROJECT " ${CFLAGS_PROJECT} -march=${CAFFEINE_ARCH}")
 endif (CAFFEINE_ARCH)
 
 if (CAFFEINE_OPTLEVEL)
-	set (CFLAGS_PROJECT "${CFLAGS_PROJECT} -O${CAFFEINE_OPTLEVEL}")
+	set (CFLAGS_PROJECT " ${CFLAGS_PROJECT} -O${CAFFEINE_OPTLEVEL}")
 endif (CAFFEINE_OPTLEVEL)
+
+### caffeine library usage
+if (CMAKE_USE_PTHREADS_INIT)
+	set (CFLAGS_PROJECT " ${CFLAGS_PROJECT} -pthread")
+	set (LINK_FLAGS	" ${LINK_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
+	link_libraries (" ${LINK_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
+else (CMAKE_USE_PTHREADS_INIT)
+	message (FATAL_ERROR "Thread support is required")
+endif (CMAKE_USE_PTHREADS_INIT)
+
+if (PCRE_LIB AND PCRE_INCLUDE)
+	set (LINK_FLAGS " ${LINK_FLAGS} -lpcre")
+	link_libraries (" ${LINK_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
+else (PCRE_LIB AND PCRE_INCLUDE)
+	message (FATAL_ERROR "PCRE support is required")
+endif (PCRE_LIB AND PCRE_INCLUDE)
 
 ### source files compile flags
 set_source_files_properties (
 	${CAF_LSTDL_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_LSTDLC_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_LSTC_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_BUFFER_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_PIDFILE_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_DSM_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_HASH_STR_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_HASHTABLE_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_PPM_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_TPM_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_BOTH_PTM_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_PTH_KEY_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_PTH_MUTEX_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_PTH_RWLOCK_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_IO_TAIL_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_BASE64_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
+
+set_source_files_properties (
+	${CAF_BASE64_SRCS}
+	PROPERTIES
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_BASE64_FILE_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 set_source_files_properties (
 	${CAF_IPCMSG_SRCS}
 	PROPERTIES
-	COMPILE_FLAGS "${CFLAGS_PROJECT}")
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${CFLAGS_PROJECT}")
 
 if (CMAKE_USE_PTHREADS_INIT)
-	LINK_LIBRARIES ("${CMAKE_THREAD_LIBS_INIT}")
+	LINK_LIBRARIES (" ${CMAKE_THREAD_LIBS_INIT}")
 endif (CMAKE_USE_PTHREADS_INIT)
 
 if (COMMAND cmake_policy)
@@ -264,27 +326,27 @@ add_executable (caf_base64 ${CAF_BASE64_SRCS})
 add_executable (caf_base64_file ${CAF_BASE64_FILE_SRCS})
 add_executable (caf_ipcmsg ${CAF_IPCMSG_SRCS})
 
-if (CAFFEINE_DEBUG)
-	set (CAFFEINE_TEST_TARGETS
-		caf_lstdl
-		caf_lstdlc
-		caf_lstc
-		caf_buffer
-		caf_dsm
-		caf_hash_str
-		caf_hashtable
-		caf_tail
-		caf_ppm
-		caf_tpm
-		caf_both_ptm
-		caf_pth_key
-		caf_mutex
-		caf_rwlock
-		caf_tail
-		caf_base64
-		caf_base64_file)
-	set_target_properties (
-		${CAFFEINE_TEST_TARGETS}
-		PROPERTIES
-		LINK_FLAGS ${LINK_FLAGS})
-endif (CAFFEINE_DEBUG)
+set (CAFFEINE_TEST_TARGETS
+	caf_lstdl
+	caf_lstdlc
+	caf_lstc
+	caf_buffer
+	caf_dsm
+	caf_hash_str
+	caf_hashtable
+	caf_tail
+	caf_ppm
+	caf_tpm
+	caf_both_ptm
+	caf_pth_key
+	caf_mutex
+	caf_rwlock
+	caf_tail
+	caf_base64
+	caf_base64_file)
+
+set_target_properties (
+	${CAFFEINE_TEST_TARGETS}
+	PROPERTIES
+	LINK_FLAGS " ${LINK_FLAGS}"
+	COMPILE_FLAGS " ${LINK_FLAGS}")

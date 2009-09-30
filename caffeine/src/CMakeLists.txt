@@ -158,10 +158,14 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	if (HAVE_LIB_DL)
 		set (LINK_AGAINST_LIBRARIES
 			"${LINK_AGAINST_LIBRARIES} -ldl")
+	else (HAVA_LIB_DL)
+		message (FATAL_ERROR "AIO support is required")
 	endif (HAVE_LIB_DL)
 	if (HAVE_LIB_RT)
 		set (LINK_AGAINST_LIBRARIES
 			"${LINK_AGAINST_LIBRARIES} -lrt")
+	else (HAVA_LIB_RT)
+		message (FATAL_ERROR "RT support is required")
 	endif (HAVE_LIB_RT)
 	set (LINK_AGAINST_LIBRARIES
 		"${LINK_AGAINST_LIBRARIES}")
