@@ -35,7 +35,7 @@ static char Id[] = "$Id$";
 
 #include "caf/caf.h"
 #include "caf/caf_data_mem.h"
-#include "caf/caf_data_lstdl.h"
+#include "caf/caf_data_deque.h"
 #include "caf/caf_dsm.h"
 
 
@@ -49,8 +49,8 @@ caf_dsm_new (int id, int cycle) {
 	if (id > 0) {
 		r = (caf_dsm_t *)xmalloc (CAF_DSM_SZ);
 		if (r != (caf_dsm_t *)NULL) {
-			r->m_state = lstdl_create ();
-			if (r->m_state != (lstdl_t *)NULL) {
+			r->m_state = deque_create ();
+			if (r->m_state != (deque_t *)NULL) {
 				r->m_id = id;
 				r->m_cycle = cycle;
 			} else {
@@ -66,8 +66,8 @@ caf_dsm_new (int id, int cycle) {
 int
 caf_dsm_delete (caf_dsm_t *r) {
 	if (r != (caf_dsm_t *)NULL) {
-		if (r->m_state != (lstdl_t *)NULL) {
-			if ((lstdl_delete (r->m_state, caf_dsm_delete_callback))
+		if (r->m_state != (deque_t *)NULL) {
+			if ((deque_delete (r->m_state, caf_dsm_delete_callback))
 				== CAF_OK) {
 				xfree (r);
 				return CAF_OK;
@@ -112,7 +112,7 @@ caf_dsm_state_delete (caf_dsm_state_t *r) {
 int
 caf_dsm_add (caf_dsm_t *m, caf_dsm_state_t *s) {
 	if (s != (caf_dsm_state_t *)NULL && m != (caf_dsm_t *)NULL) {
-		if ((lstdl_push (m->m_state, (void *)s)) != (lstdl_t *)NULL) {
+		if ((deque_push (m->m_state, (void *)s)) != (deque_t *)NULL) {
 			return CAF_OK;
 		}
 	}
@@ -123,7 +123,7 @@ caf_dsm_add (caf_dsm_t *m, caf_dsm_state_t *s) {
 int
 caf_dsm_remove (caf_dsm_t *m, caf_dsm_state_t *s) {
 	if (s != (caf_dsm_state_t *)NULL && m != (caf_dsm_t *)NULL) {
-		return lstdl_node_delete_by_data (m->m_state, (void *)s,
+		return deque_node_delete_by_data (m->m_state, (void *)s,
 		                                  caf_dsm_state_delete_callback);
 	}
 	return CAF_ERROR;
@@ -143,7 +143,7 @@ caf_dsm_runner_new (caf_dsm_t *m, int r_id, caf_dsm_state_control_t ctrl) {
 			r->r_call = (void *)NULL;
 			r->r_data = (void *)NULL;
 			r->r_return = (void *)NULL;
-			r->l_current = (lstdln_t *)NULL;
+			r->l_current = (caf_dequen_t *)NULL;
 			return r;
 		}
 	}
@@ -166,14 +166,14 @@ caf_dsm_runner_work (caf_dsm_runner_t *r, void *r_data) {
 	caf_dsm_t *m = (caf_dsm_t *)NULL;
 	caf_dsm_state_t *s = (caf_dsm_state_t *)NULL;
 	caf_dsm_return_t *rt = (caf_dsm_return_t *)NULL;
-	lstdln_t *n = (lstdln_t *)NULL;
+	caf_dequen_t *n = (caf_dequen_t *)NULL;
 	int passed = CAF_ERROR;
 	if (r != (caf_dsm_runner_t *)NULL
 		&& r->r_machine != (caf_dsm_t *)NULL) {
 		m = r->r_machine;
-		if (m->m_state != (lstdl_t *)NULL) {
+		if (m->m_state != (deque_t *)NULL) {
 			n = m->m_state->head;
-			while (n != (lstdln_t *)NULL) {
+			while (n != (caf_dequen_t *)NULL) {
 				s = (caf_dsm_state_t *)n->data;
 				if (passed != CAF_OK) {
 					rt = (caf_dsm_return_t *)s->s_call (r_data,
@@ -192,15 +192,15 @@ caf_dsm_runner_work (caf_dsm_runner_t *r, void *r_data) {
 				case CAF_DSM_CONTROL_FORWARD:
 					break;
 				case CAF_DSM_CONTROL_BACKWARD:
-					if (n->prev != (lstdln_t *)NULL) {
+					if (n->prev != (caf_dequen_t *)NULL) {
 						n = n->prev;
-						if (n->prev != (lstdln_t *)NULL) {
+						if (n->prev != (caf_dequen_t *)NULL) {
 							n = n->prev;
 						}
 					}
 					break;
 				case CAF_DSM_CONTROL_STAY:
-					if (n->prev != (lstdln_t *)NULL) {
+					if (n->prev != (caf_dequen_t *)NULL) {
 						n = n->prev;
 					}
 					break;
@@ -209,9 +209,9 @@ caf_dsm_runner_work (caf_dsm_runner_t *r, void *r_data) {
 						rt = s->s_error (rt->r_data, rt->r_return);
 						r->r_call = s->s_error;
 						r->l_current = n;
-						if (n->prev != (lstdln_t *)NULL) {
+						if (n->prev != (caf_dequen_t *)NULL) {
 							n = n->prev;
-							if (n->prev != (lstdln_t *)NULL) {
+							if (n->prev != (caf_dequen_t *)NULL) {
 								n = n->prev;
 							}
 						}

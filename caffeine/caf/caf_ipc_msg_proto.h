@@ -167,7 +167,7 @@ struct caf_msg_svc_s {
 	/** Receiver identifier increment */
 	u_long rcv_inc;
 	/** List of sessions */
-	lstdl_t *sessions;
+	deque_t *sessions;
 	/** Processing Machine */
 	void *machine;
 	/** Processing Machine Type */

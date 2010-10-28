@@ -27,7 +27,7 @@
 
 #include "caf/caf_tool_macro.h"
 #include "caf/caf_data_mem.h"
-#include "caf/caf_data_lstdl.h"
+#include "caf/caf_data_deque.h"
 #include "caf/caf_data_buffer.h"
 
 void test_new (void);
@@ -90,7 +90,7 @@ test_split (void) {
 	char str2[] = "buffer one\n\x01\x02\nend buffer\n";
 	char str3[] = "buffer two\n\x01\x02\nend buffer\n";
 
-	lstdl_t *split = (lstdl_t *)NULL;
+	deque_t *split = (deque_t *)NULL;
 
 	cbuffer_t *buf1 = (cbuffer_t *)NULL;
 	cbuffer_t *buf2 = (cbuffer_t *)NULL;
@@ -105,16 +105,16 @@ test_split (void) {
 	cbuf_import (buf3, str3, strlen (str3));
 
 	split = cbuf_split (buf1, (void *)str0, 1);
-	printf ("test_split(): len = %d\n", lstdl_length (split));
+	printf ("test_split(): len = %d\n", deque_length (split));
 
-	lstdl_push (split, buf2);
-	printf ("test_split(): len = %d\n", lstdl_length (split));
+	deque_push (split, buf2);
+	printf ("test_split(): len = %d\n", deque_length (split));
 
-	lstdl_push (split, buf3);
-	printf ("test_split(): len = %d\n", lstdl_length (split));
+	deque_push (split, buf3);
+	printf ("test_split(): len = %d\n", deque_length (split));
 
 	cbuf_delete (buf1);
-	lstdl_delete (split, cbuf_delete_callback);
+	deque_delete (split, cbuf_delete_callback);
 }
 
 void
@@ -216,7 +216,7 @@ test_cut (void) {
 void
 test_search (void) {
 	char str1[] = "\x01\x01x234x\x01\x01y\x01\x01xy123\x01\x01";
-	lstdl_t *lst = (lstdl_t *)NULL;
+	deque_t *lst = (deque_t *)NULL;
 
 	cbuffer_t *buf1 = (cbuffer_t *)NULL;
 	buf1 = cbuf_new();
@@ -224,9 +224,9 @@ test_search (void) {
 
 	lst = cbuf_search (buf1, "\x01", 1);
 
-	printf ("test_search(): len = %d\n", lstdl_length (lst));
+	printf ("test_search(): len = %d\n", deque_length (lst));
 
-	lstdl_delete_nocb (lst);
+	deque_delete_nocb (lst);
 	cbuf_delete (buf1);
 }
 

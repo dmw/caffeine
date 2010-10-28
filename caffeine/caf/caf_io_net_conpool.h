@@ -53,7 +53,7 @@ struct caf_conpool_s {
 	int con_num;
 	int *con_fds;
 	caf_conn_t *con_seed;
-	lstdl_t *con_lst;
+	deque_t *con_lst;
 };
 
 caf_conpool_t *caf_conpool_new (int id, int num, caf_conn_t *seed);

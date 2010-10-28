@@ -27,7 +27,7 @@
 
 #include <sys/types.h>
 #include <caf/caf_tool_macro.h>
-#include <caf/caf_data_lstdl.h>
+#include <caf/caf_data_deque.h>
 
 /**
  * @defgroup      caf_data_buffer    Data Buffer
@@ -267,7 +267,7 @@ cbuffer_t *cbuf_paste (cbuffer_t *dst, const cbuffer_t *src,
  * @param[in]        pattern        the divisor pattern.
  * @return           a DLL with the pieces.
  */
-lstdl_t *cbuf_split (cbuffer_t *src, const void *pattern, size_t patsz);
+deque_t *cbuf_split (cbuffer_t *src, const void *pattern, size_t patsz);
 
 /**
  *
@@ -278,14 +278,14 @@ lstdl_t *cbuf_split (cbuffer_t *src, const void *pattern, size_t patsz);
  * @param[out]       lst            the list containings the buffers.
  * @return           a Caffeine Buffer with the joined buffers.
  */
-cbuffer_t *cbuf_join (lstdl_t *lst);
+cbuffer_t *cbuf_join (deque_t *lst);
 
 /**
  *
  * @brief    Search Data in Buffers.
  *
  * Searches for Data in Buffers, returning a list containing the pointers
- * to the search ocurrences. The list must be deleted with lstdl_delete_nocb
+ * to the search ocurrences. The list must be deleted with deque_delete_nocb
  * function, because any pointer in the list can not be free.
  *
  * @param[in]        src            the buffer to modify.
@@ -293,9 +293,9 @@ cbuffer_t *cbuf_join (lstdl_t *lst);
  * @param[in]        srchsz         size of data to search.
  * @return           a new created buffer with replaced data.
  *
- * @see lstdl_delete_nocb
+ * @see deque_delete_nocb
  */
-lstdl_t *cbuf_search (cbuffer_t *src, void *srch, size_t srchsz);
+deque_t *cbuf_search (cbuffer_t *src, void *srch, size_t srchsz);
 
 /**
  *

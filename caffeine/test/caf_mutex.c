@@ -61,7 +61,7 @@ main (void) {
 				if ((mutex_init ()) == 0) {
 					pth_pool = pth_pool_create (attr, pth_rtn, 3, (void *)NULL);
 					printf ("%d: threads: %d\n", getpid (),
-					        lstdl_length (pth_pool->threads));
+					        deque_length (pth_pool->threads));
 					for (cnt = 0; cnt < 3; cnt++) {
 						printf ("join: %d\n", cnt);
 						pth_pool_join (pth_pool);

@@ -26,7 +26,7 @@
 #define CAF_THREAD_KEY_H 1
 
 #include <pthread.h>
-#include <caf/caf_data_lstdl.h>
+#include <caf/caf_data_deque.h>
 
 /**
  * @defgroup      caf_thread_key    Thread Key
@@ -106,7 +106,7 @@ struct pth_kpool_s {
 	/** The Asociated Thread */
 	pthread_t *thr;
 	/** The Key List */
-	lstdl_t *keys;
+	deque_t *keys;
 };
 
 

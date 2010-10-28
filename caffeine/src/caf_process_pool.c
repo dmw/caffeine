@@ -42,7 +42,7 @@ static char Id[] = "$Id$";
 
 
 proc_info_t *
-ppm_pinfo_new (int num, pid_t pid, pid_t pgrp, lstdl_t *lst,
+ppm_pinfo_new (int num, pid_t pid, pid_t pgrp, deque_t *lst,
                CAF_ENTRY_POINT(point)) {
 	proc_info_t *nfo = (proc_info_t *)NULL;
 	if (pid > 0 && point) {
@@ -68,7 +68,7 @@ ppm_info_delete (proc_info_t *nfo) {
 
 
 proc_info_t *
-ppm_daemonize (int num, pid_t pgrp, lstdl_t *lst, CAF_ENTRY_POINT(pt)) {
+ppm_daemonize (int num, pid_t pgrp, deque_t *lst, CAF_ENTRY_POINT(pt)) {
 	proc_info_t *nfo = (proc_info_t *)NULL;
 	pid_t pid = 0;
 	if (pt) {
@@ -108,19 +108,19 @@ ppm_kill (proc_info_t *nfo, int sig) {
 }
 
 
-lstdl_t *
-ppm_pool_create (int c, lstdl_t *plst, CAF_ENTRY_POINT(pt)) {
+deque_t *
+ppm_pool_create (int c, deque_t *plst, CAF_ENTRY_POINT(pt)) {
 	int count = 0;
-	lstdl_t *lst = (lstdl_t *)NULL;
+	deque_t *lst = (deque_t *)NULL;
 	proc_info_t *nfo = (proc_info_t *)NULL;
 	pid_t pgrp = 0;
 	if (c > 0 && pt) {
 		pgrp = setsid ();
-		lst = lstdl_create ();
+		lst = deque_create ();
 		for (count = 1; count <= c; count++) {
 			nfo = ppm_daemonize (count, pgrp, plst, pt);
 			if (nfo != (proc_info_t *)NULL) {
-				lstdl_push (lst, nfo);
+				deque_push (lst, nfo);
 			}
 		}
 	}
@@ -129,13 +129,13 @@ ppm_pool_create (int c, lstdl_t *plst, CAF_ENTRY_POINT(pt)) {
 
 
 int
-ppm_kill_pool (lstdl_t *lst, int sig) {
+ppm_kill_pool (deque_t *lst, int sig) {
 	int c = 0;
-	lstdln_t *n;
+	caf_dequen_t *n;
 	proc_info_t *nfo;
-	if (lst != (lstdl_t *)NULL && sig > 0) {
+	if (lst != (deque_t *)NULL && sig > 0) {
 		n = lst->head;
-		while (n != (lstdln_t *)NULL) {
+		while (n != (caf_dequen_t *)NULL) {
 			nfo = (proc_info_t *)n->data;
 			ppm_kill (nfo, sig);
 			n = n->next;

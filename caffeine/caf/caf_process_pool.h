@@ -48,14 +48,14 @@ CAF_BEGIN_C_EXTERNS
 #define CAF_ENTRY_POINT(pt)     int (*pt)(void *p)
 #define CAF_PINFO_SZ            sizeof(proc_info_t)
 
-#include <caf/caf_data_lstdl.h>
+#include <caf/caf_data_deque.h>
 
 typedef struct proc_info_s proc_info_t;
 struct proc_info_s {
 	int number;
 	pid_t pid;
 	pid_t pgrp;
-	lstdl_t *lst;
+	deque_t *lst;
 	CAF_ENTRY_POINT(point);
 };
 
@@ -75,7 +75,7 @@ struct proc_info_s {
  *
  * @see      proc_info_t
  */
-proc_info_t *ppm_pinfo_new (int num, pid_t pid, pid_t pgrp, lstdl_t *lst,
+proc_info_t *ppm_pinfo_new (int num, pid_t pid, pid_t pgrp, deque_t *lst,
 							CAF_ENTRY_POINT(point));
 
 /**
@@ -105,7 +105,7 @@ void ppm_info_delete (proc_info_t *nfo);
  *
  * @see      proc_info_t
  */
-proc_info_t *ppm_daemonize (int num, pid_t pgrp, lstdl_t *,
+proc_info_t *ppm_daemonize (int num, pid_t pgrp, deque_t *,
 							CAF_ENTRY_POINT(pt));
 
 /**
@@ -146,12 +146,12 @@ int ppm_kill_group (int sig);
  * @param[in]    c                  process count to daemonize.
  * @param[in]    plst               parameters for process entry point.
  * @param[in]    pt                 process entry point.
- * @return       lstdl_t            the proc_info_t list.
+ * @return       deque_t            the proc_info_t list.
  *
  * @see      proc_info_t
- * @see      lstdl_t
+ * @see      deque_t
  */
-lstdl_t *ppm_pool_create (int c, lstdl_t *plst, CAF_ENTRY_POINT(pt));
+deque_t *ppm_pool_create (int c, deque_t *plst, CAF_ENTRY_POINT(pt));
 
 /**
  *
@@ -165,12 +165,12 @@ lstdl_t *ppm_pool_create (int c, lstdl_t *plst, CAF_ENTRY_POINT(pt));
  * @param[in]    c                  process count to daemonize.
  * @param[in]    plst               parameters for process entry point.
  * @param[in]    pt                 process entry point.
- * @return       lstdl_t            the proc_info_t list.
+ * @return       deque_t            the proc_info_t list.
  *
  * @see      proc_info_t
- * @see      lstdl_t
+ * @see      deque_t
  */
-int ppm_kill_pool (lstdl_t *lst, int sig);
+int ppm_kill_pool (deque_t *lst, int sig);
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS

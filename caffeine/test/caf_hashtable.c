@@ -50,7 +50,7 @@ main () {
 		printf ("remove: %d\n", caf_hash_table_remove (table, "hello",
 													   strlen("hello") + 1));
 		caf_hash_table_dump (stdout, table);
-		lstdlc_dump_ptr (stdout, table->hashes);
+		deque_dump_ptr (stdout, table->hashes);
 		caf_hash_table_delete (table);
 	}
 	return 0;

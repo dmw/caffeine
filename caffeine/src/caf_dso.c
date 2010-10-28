@@ -41,7 +41,7 @@ static char Id[] = "$Id$";
 
 #include "caf/caf.h"
 #include "caf/caf_data_mem.h"
-#include "caf/caf_data_lstdl.h"
+#include "caf/caf_data_deque.h"
 #include "caf/caf_hash_str.h"
 #include "caf/caf_hash_table.h"
 #include "caf/caf_dso.h"

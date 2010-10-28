@@ -34,17 +34,17 @@ static char Id[] = "$Id: caf_data_lstdl.c 8 2007-05-03 00:50:25Z damowe $";
 
 #include "caf/caf.h"
 #include "caf/caf_data_mem.h"
-#include "caf/caf_data_lstdlc.h"
+#include "caf/caf_data_cdeque.h"
 
 
-lstdlc_t *
-lstdlc_new (void *data) {
-	lstdlc_t *lst;
-	lstdlcn_t *n;
-	lst = (lstdlc_t *)xmalloc (CAF_LSTDLC_SZ);
+cdeque_t *
+cdeque_new (void *data) {
+	cdeque_t *lst;
+	caf_cdequen_t *n;
+	lst = (cdeque_t *)xmalloc (CAF_CDEQUE_SZ);
 	if (lst != NULL) {
-		n = (lstdlcn_t *)xmalloc (CAF_LSTDLCNODE_SZ);
-		if (n != (lstdlcn_t *)NULL) {
+		n = (caf_cdequen_t *)xmalloc (CAF_LSTDLCNODE_SZ);
+		if (n != (caf_cdequen_t *)NULL) {
 			if (data != (void *)NULL) {
 				n->data = data;
 			}
@@ -55,21 +55,21 @@ lstdlc_new (void *data) {
 			lst->size = 1;
 		} else {
 			free (lst);
-			lst = (lstdlc_t *)NULL;
-			n = (lstdlcn_t *)NULL;
+			lst = (cdeque_t *)NULL;
+			n = (caf_cdequen_t *)NULL;
 		}
 	}
 	return lst;
 }
 
 
-lstdlc_t *
-lstdlc_create (void) {
-	lstdlc_t *lst;
-	lst = (lstdlc_t *)xmalloc (CAF_LSTDLC_SZ);
+cdeque_t *
+cdeque_create (void) {
+	cdeque_t *lst;
+	lst = (cdeque_t *)xmalloc (CAF_CDEQUE_SZ);
 	if (lst != NULL) {
-		lst->head = (lstdlcn_t *)NULL;
-		lst->tail = (lstdlcn_t *)NULL;
+		lst->head = (caf_cdequen_t *)NULL;
+		lst->tail = (caf_cdequen_t *)NULL;
 		lst->size = 0;
 	}
 	return lst;
@@ -77,15 +77,15 @@ lstdlc_create (void) {
 
 
 int
-lstdlc_delete (lstdlc_t *lst, CAF_LSTDLCNODE_CBDEL(del)) {
-	lstdlcn_t *cur, *destroy;
-	if (lst != (lstdlc_t *)NULL) {
-		if (lst->head != (lstdlcn_t *)NULL
-			&& lst->tail != (lstdlcn_t *)NULL) {
-			if (lstdlc_empty_list (lst) == CAF_OK) {
+cdeque_delete (cdeque_t *lst, CAF_LSTDLCNODE_CBDEL(del)) {
+	caf_cdequen_t *cur, *destroy;
+	if (lst != (cdeque_t *)NULL) {
+		if (lst->head != (caf_cdequen_t *)NULL
+			&& lst->tail != (caf_cdequen_t *)NULL) {
+			if (cdeque_empty_list (lst) == CAF_OK) {
 				xfree (lst);
 				return CAF_OK;
-			} else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+			} else if (cdeque_oneitem_list (lst) == CAF_OK) {
 				if (del (lst->head->data) == CAF_OK) {
 					xfree (lst->head);
 					xfree (lst);
@@ -107,7 +107,7 @@ lstdlc_delete (lstdlc_t *lst, CAF_LSTDLCNODE_CBDEL(del)) {
 					xfree (lst->tail);
 				}
 				xfree(lst);
-				lst = (lstdlc_t *)NULL;
+				lst = (cdeque_t *)NULL;
 				return CAF_OK;
 			}
 		} else {
@@ -119,15 +119,15 @@ lstdlc_delete (lstdlc_t *lst, CAF_LSTDLCNODE_CBDEL(del)) {
 
 
 int
-lstdlc_delete_nocb (lstdlc_t *lst) {
-	lstdlcn_t *cur, *destroy;
-	if (lst != (lstdlc_t *)NULL) {
-		if (lst->head != (lstdlcn_t *)NULL
-			&& lst->tail != (lstdlcn_t *)NULL) {
-			if (lstdlc_empty_list (lst) == CAF_OK) {
+cdeque_delete_nocb (cdeque_t *lst) {
+	caf_cdequen_t *cur, *destroy;
+	if (lst != (cdeque_t *)NULL) {
+		if (lst->head != (caf_cdequen_t *)NULL
+			&& lst->tail != (caf_cdequen_t *)NULL) {
+			if (cdeque_empty_list (lst) == CAF_OK) {
 				xfree (lst);
 				return CAF_OK;
-			} else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+			} else if (cdeque_oneitem_list (lst) == CAF_OK) {
 				xfree (lst->head);
 				xfree (lst);
 				return CAF_OK;
@@ -151,20 +151,20 @@ lstdlc_delete_nocb (lstdlc_t *lst) {
 
 
 int
-lstdlc_node_delete (lstdlc_t *lst, lstdlcn_t *n, CAF_LSTDLCNODE_CBDEL(del)) {
-	lstdlcn_t *nr;
-	lstdlcn_t *prev;
-	lstdlcn_t *next;
-	if (lst != (lstdlc_t *)NULL && n != (void *)NULL && del != NULL) {
+cdeque_node_delete (cdeque_t *lst, caf_cdequen_t *n, CAF_LSTDLCNODE_CBDEL(del)) {
+	caf_cdequen_t *nr;
+	caf_cdequen_t *prev;
+	caf_cdequen_t *next;
+	if (lst != (cdeque_t *)NULL && n != (void *)NULL && del != NULL) {
 		nr = lst->head;
-		if (nr != (lstdlcn_t *)NULL) {
-			if (lstdlc_empty_list (lst) == CAF_OK) {
+		if (nr != (caf_cdequen_t *)NULL) {
+			if (cdeque_empty_list (lst) == CAF_OK) {
 				return CAF_ERROR;
-			} else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+			} else if (cdeque_oneitem_list (lst) == CAF_OK) {
 				if ((del (lst->head->data)) == CAF_OK) {
 					xfree (lst->head);
-					lst->head = (lstdlcn_t *)NULL;
-					lst->tail = (lstdlcn_t *)NULL;
+					lst->head = (caf_cdequen_t *)NULL;
+					lst->tail = (caf_cdequen_t *)NULL;
 					return CAF_OK;
 				}
 			} else {
@@ -214,21 +214,21 @@ lstdlc_node_delete (lstdlc_t *lst, lstdlcn_t *n, CAF_LSTDLCNODE_CBDEL(del)) {
 
 
 int
-lstdlc_node_delete_by_data (lstdlc_t *lst, void *n,
+cdeque_node_delete_by_data (cdeque_t *lst, void *n,
 							CAF_LSTDLCNODE_CBDEL(del)) {
-	lstdlcn_t *nr;
-	lstdlcn_t *prev;
-	lstdlcn_t *next;
-	if (lst != (lstdlc_t *)NULL && n != (void *)NULL && del != NULL) {
+	caf_cdequen_t *nr;
+	caf_cdequen_t *prev;
+	caf_cdequen_t *next;
+	if (lst != (cdeque_t *)NULL && n != (void *)NULL && del != NULL) {
 		nr = lst->head;
-		if (nr != (lstdlcn_t *)NULL) {
-			if (lstdlc_empty_list (lst) == CAF_OK) {
+		if (nr != (caf_cdequen_t *)NULL) {
+			if (cdeque_empty_list (lst) == CAF_OK) {
 				return CAF_ERROR;
-			} else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+			} else if (cdeque_oneitem_list (lst) == CAF_OK) {
 				if ((del (lst->head->data)) == CAF_OK) {
 					xfree (lst->head);
-					lst->head = (lstdlcn_t *)NULL;
-					lst->tail = (lstdlcn_t *)NULL;
+					lst->head = (caf_cdequen_t *)NULL;
+					lst->tail = (caf_cdequen_t *)NULL;
 					return CAF_OK;
 				}
 			} else {
@@ -278,9 +278,9 @@ lstdlc_node_delete_by_data (lstdlc_t *lst, void *n,
 
 
 int
-lstdlc_empty_list (lstdlc_t *lst) {
-	if (lst != (lstdlc_t *)NULL) {
-		return ((lst->tail == lst->head && lst->head == (lstdlcn_t *)NULL)
+cdeque_empty_list (cdeque_t *lst) {
+	if (lst != (cdeque_t *)NULL) {
+		return ((lst->tail == lst->head && lst->head == (caf_cdequen_t *)NULL)
 		        ? CAF_OK : CAF_ERROR);
 	}
 	return CAF_ERROR;
@@ -288,9 +288,9 @@ lstdlc_empty_list (lstdlc_t *lst) {
 
 
 int
-lstdlc_oneitem_list (lstdlc_t *lst) {
-	if (lst != (lstdlc_t *)NULL) {
-		return ((lst->tail == lst->head && lst->head != (lstdlcn_t *)NULL)
+cdeque_oneitem_list (cdeque_t *lst) {
+	if (lst != (cdeque_t *)NULL) {
+		return ((lst->tail == lst->head && lst->head != (caf_cdequen_t *)NULL)
 		        ? CAF_OK : CAF_ERROR);
 	}
 	return CAF_ERROR;
@@ -298,12 +298,12 @@ lstdlc_oneitem_list (lstdlc_t *lst) {
 
 
 int
-lstdlc_length (lstdlc_t *lst) {
+cdeque_length (cdeque_t *lst) {
 	int c;
-	lstdlcn_t *cur;
-	if (lst != (lstdlc_t *)NULL) {
-		if (lst->head != (lstdlcn_t *)NULL
-			&& lst->tail != (lstdlcn_t *)NULL) {
+	caf_cdequen_t *cur;
+	if (lst != (cdeque_t *)NULL) {
+		if (lst->head != (caf_cdequen_t *)NULL
+			&& lst->tail != (caf_cdequen_t *)NULL) {
 			cur = lst->head;
 			c = 0;
 			do {
@@ -317,15 +317,15 @@ lstdlc_length (lstdlc_t *lst) {
 }
 
 
-lstdlc_t *
-lstdlc_push (lstdlc_t *lst, void *data) {
-	lstdlcn_t *tail = (lstdlcn_t *)NULL, *head = (lstdlcn_t *)NULL;
-	lstdlcn_t *xnew = (lstdlcn_t *)NULL;
-	if (lst != (lstdlc_t *)NULL) {
-		xnew = (lstdlcn_t *)xmalloc (CAF_LSTDLCNODE_SZ);
-		if (xnew != (lstdlcn_t *)NULL) {
+cdeque_t *
+cdeque_push (cdeque_t *lst, void *data) {
+	caf_cdequen_t *tail = (caf_cdequen_t *)NULL, *head = (caf_cdequen_t *)NULL;
+	caf_cdequen_t *xnew = (caf_cdequen_t *)NULL;
+	if (lst != (cdeque_t *)NULL) {
+		xnew = (caf_cdequen_t *)xmalloc (CAF_LSTDLCNODE_SZ);
+		if (xnew != (caf_cdequen_t *)NULL) {
 			xnew->data = data;
-			if (lstdlc_empty_list (lst) == CAF_OK) {
+			if (cdeque_empty_list (lst) == CAF_OK) {
 				xnew->prev = xnew;
 				xnew->next = xnew;
 				lst->tail = xnew;
@@ -345,22 +345,22 @@ lstdlc_push (lstdlc_t *lst, void *data) {
 			}
 		}
 	}
-	return (lstdlc_t *)NULL;
+	return (cdeque_t *)NULL;
 }
 
 
-lstdlcn_t *
-lstdlc_pop (lstdlc_t *lst) {
-	lstdlcn_t *ret = (lstdlcn_t *)NULL;
-	lstdlcn_t *ex = (lstdlcn_t *)NULL;
+caf_cdequen_t *
+cdeque_pop (cdeque_t *lst) {
+	caf_cdequen_t *ret = (caf_cdequen_t *)NULL;
+	caf_cdequen_t *ex = (caf_cdequen_t *)NULL;
 	;
-	if (lst != (lstdlc_t *)NULL) {
-		if (lstdlc_empty_list (lst) == CAF_OK) {
+	if (lst != (cdeque_t *)NULL) {
+		if (cdeque_empty_list (lst) == CAF_OK) {
 			return ret;
-		} else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+		} else if (cdeque_oneitem_list (lst) == CAF_OK) {
 			ret = lst->tail;
-			lst->head = (lstdlcn_t *)NULL;
-			lst->tail = (lstdlcn_t *)NULL;
+			lst->head = (caf_cdequen_t *)NULL;
+			lst->tail = (caf_cdequen_t *)NULL;
 			ret->next = (void *)NULL;
 			ret->prev = (void *)NULL;
 			lst->size--;
@@ -378,17 +378,17 @@ lstdlc_pop (lstdlc_t *lst) {
 }
 
 
-lstdlcn_t *
-lstdlc_first (lstdlc_t *lst) {
-	lstdlcn_t *ret = (lstdlcn_t *)NULL;
-	lstdlcn_t *ex;
-	if (lst != (lstdlc_t *)NULL) {
-		if (lstdlc_empty_list (lst) == CAF_OK) {
+caf_cdequen_t *
+cdeque_first (cdeque_t *lst) {
+	caf_cdequen_t *ret = (caf_cdequen_t *)NULL;
+	caf_cdequen_t *ex;
+	if (lst != (cdeque_t *)NULL) {
+		if (cdeque_empty_list (lst) == CAF_OK) {
 			return ret;
-		} else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+		} else if (cdeque_oneitem_list (lst) == CAF_OK) {
 			ret = lst->head;
-			lst->head = (lstdlcn_t *)NULL;
-			lst->tail = (lstdlcn_t *)NULL;
+			lst->head = (caf_cdequen_t *)NULL;
+			lst->tail = (caf_cdequen_t *)NULL;
 			ret->next = (void *)NULL;
 			ret->prev = (void *)NULL;
 			lst->size--;
@@ -407,13 +407,13 @@ lstdlc_first (lstdlc_t *lst) {
 
 
 int
-lstdlc_set (lstdlc_t *lst, int pos, void *data) {
-	lstdlcn_t *pn;
+cdeque_set (cdeque_t *lst, int pos, void *data) {
+	caf_cdequen_t *pn;
 	int c;
-	if (lst != (lstdlc_t *)NULL) {
-		if (lstdlc_empty_list (lst) == CAF_OK) {
+	if (lst != (cdeque_t *)NULL) {
+		if (cdeque_empty_list (lst) == CAF_OK) {
 			return CAF_ERROR_SUB;
-		} else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+		} else if (cdeque_oneitem_list (lst) == CAF_OK) {
 			if (pos == 0) {
 				lst->head->data = data;
 				return 0;
@@ -440,15 +440,15 @@ lstdlc_set (lstdlc_t *lst, int pos, void *data) {
 
 
 int
-lstdlc_insert (lstdlc_t *lst, int pos, void *data) {
-	lstdlcn_t *pn; lstdlcn_t *nn;
+cdeque_insert (cdeque_t *lst, int pos, void *data) {
+	caf_cdequen_t *pn; caf_cdequen_t *nn;
 	int c;
-	if (lst != (lstdlc_t *)NULL) {
-		if (lstdlc_empty_list (lst) == CAF_OK) {
+	if (lst != (cdeque_t *)NULL) {
+		if (cdeque_empty_list (lst) == CAF_OK) {
 			return CAF_ERROR_SUB;
-		} else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+		} else if (cdeque_oneitem_list (lst) == CAF_OK) {
 			if (pos == 0) {
-				nn = (lstdlcn_t *)xmalloc (CAF_LSTDLCNODE_SZ);
+				nn = (caf_cdequen_t *)xmalloc (CAF_LSTDLCNODE_SZ);
 				nn->data = data;
 				nn->next = lst->head;
 				lst->head->prev = nn;
@@ -461,7 +461,7 @@ lstdlc_insert (lstdlc_t *lst, int pos, void *data) {
 			pn = lst->head;
 			do {
 				if (pos == c) {
-					nn = (lstdlcn_t *)xmalloc (CAF_LSTDLCNODE_SZ);
+					nn = (caf_cdequen_t *)xmalloc (CAF_LSTDLCNODE_SZ);
 					nn->data = data;
 					nn->next = pn;
 					nn = pn->prev;
@@ -471,7 +471,7 @@ lstdlc_insert (lstdlc_t *lst, int pos, void *data) {
 				c++;
 			} while (pn != lst->tail);
 			if (pos == c) {
-				nn = (lstdlcn_t *)xmalloc (CAF_LSTDLCNODE_SZ);
+				nn = (caf_cdequen_t *)xmalloc (CAF_LSTDLCNODE_SZ);
 				nn->data = data;
 				nn->next = lst->head;
 				nn->prev = lst->tail;
@@ -486,13 +486,13 @@ lstdlc_insert (lstdlc_t *lst, int pos, void *data) {
 
 
 void *
-lstdlc_get (lstdlc_t *lst, int pos) {
-	lstdlcn_t *pn;
+cdeque_get (cdeque_t *lst, int pos) {
+	caf_cdequen_t *pn;
 	int c = 0;
-	if (lst != (lstdlc_t *)NULL) {
-		if ((lstdlc_empty_list (lst) == CAF_OK)) {
+	if (lst != (cdeque_t *)NULL) {
+		if ((cdeque_empty_list (lst) == CAF_OK)) {
 			return (void *)NULL;
-		} else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+		} else if (cdeque_oneitem_list (lst) == CAF_OK) {
 			return ((c == 0) ? lst->head->data : (void *)NULL);
 		} else {
 			c = 0;
@@ -512,13 +512,13 @@ lstdlc_get (lstdlc_t *lst, int pos) {
 
 
 int
-lstdlc_map (lstdlc_t *lst, CAF_LSTDLCNODE_CBMAP(step)) {
+cdeque_map (cdeque_t *lst, CAF_LSTDLCNODE_CBMAP(step)) {
 	int c = 0;
-	lstdlcn_t *n;
-	if (lst != (lstdlc_t *)NULL) {
-		if (lstdlc_empty_list (lst) == CAF_OK) {
+	caf_cdequen_t *n;
+	if (lst != (cdeque_t *)NULL) {
+		if (cdeque_empty_list (lst) == CAF_OK) {
 			return 0;
-		} else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+		} else if (cdeque_oneitem_list (lst) == CAF_OK) {
 			step (lst->head->data);
 			return 0;
 		} else {
@@ -536,13 +536,13 @@ lstdlc_map (lstdlc_t *lst, CAF_LSTDLCNODE_CBMAP(step)) {
 
 
 int
-lstdlc_map_checked (lstdlc_t *lst, CAF_LSTDLCNODE_CBMAP(step)) {
+cdeque_map_checked (cdeque_t *lst, CAF_LSTDLCNODE_CBMAP(step)) {
 	int c = 0;
-	lstdlcn_t *n;
-	if (lst != (lstdlc_t *)NULL) {
-		if (lstdlc_empty_list (lst) == CAF_OK) {
+	caf_cdequen_t *n;
+	if (lst != (cdeque_t *)NULL) {
+		if (cdeque_empty_list (lst) == CAF_OK) {
 			return 0;
-		} else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+		} else if (cdeque_oneitem_list (lst) == CAF_OK) {
 			if (step (lst->head->data) == CAF_OK) {
 				c++;
 				return c;
@@ -567,20 +567,20 @@ lstdlc_map_checked (lstdlc_t *lst, CAF_LSTDLCNODE_CBMAP(step)) {
 
 
 void *
-lstdlc_search (lstdlc_t *lst, void *data, CAF_LSTDLCNODE_CBSRCH(srch)) {
+cdeque_search (cdeque_t *lst, void *data, CAF_LSTDLCNODE_CBSRCH(srch)) {
 	int c = 0;
-	lstdlcn_t *n;
-	if (lst != (lstdlc_t *)NULL) {
-		if (lstdlc_empty_list (lst) == CAF_OK) {
+	caf_cdequen_t *n;
+	if (lst != (cdeque_t *)NULL) {
+		if (cdeque_empty_list (lst) == CAF_OK) {
 			return (void *)NULL;
-		} else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+		} else if (cdeque_oneitem_list (lst) == CAF_OK) {
 			if (srch (lst->head->data, data) == CAF_OK) {
 				return lst->head->data;
 			}
 		} else {
 			n = lst->head;
 			do {
-				if (n != (lstdlcn_t *)NULL) {
+				if (n != (caf_cdequen_t *)NULL) {
 					if ((srch (n->data, data)) == CAF_OK) {
 						return n->data;
 					}
@@ -597,14 +597,14 @@ lstdlc_search (lstdlc_t *lst, void *data, CAF_LSTDLCNODE_CBSRCH(srch)) {
 }
 
 
-lstdlcn_t *
-lstdlc_search_node (lstdlc_t *lst, void *data) {
+caf_cdequen_t *
+cdeque_search_node (cdeque_t *lst, void *data) {
 	int c = 0;
-	lstdlcn_t *n;
-	if (lst != (lstdlc_t *)NULL) {
-		if (lstdlc_empty_list (lst) == CAF_OK) {
+	caf_cdequen_t *n;
+	if (lst != (cdeque_t *)NULL) {
+		if (cdeque_empty_list (lst) == CAF_OK) {
 			return (void *)NULL;
-		} else if (lstdlc_oneitem_list (lst) == CAF_OK) {
+		} else if (cdeque_oneitem_list (lst) == CAF_OK) {
 			if (lst->head->data == data) {
 				return lst->head->data;
 			}
@@ -622,30 +622,30 @@ lstdlc_search_node (lstdlc_t *lst, void *data) {
 			}
 		}
 	}
-	return (lstdlcn_t *)NULL;
+	return (caf_cdequen_t *)NULL;
 }
 
 
 int
-lstdlc_delete_cb (void *ptr) {
+cdeque_delete_cb (void *ptr) {
 	xfree(ptr);
 	return CAF_OK;
 }
 
 
 int
-lstdlc_str_delete_cb (void *ptr) {
+cdeque_str_delete_cb (void *ptr) {
 	xstrdestroy(ptr);
 	return CAF_OK;
 }
 
 
 void
-lstdlc_dump (FILE *out, lstdlc_t *lst, CAF_LSTDLCNODE_CBDUMP(dmp)) {
-	lstdlcn_t *cur;
-	if (lst != (lstdlc_t *)NULL) {
-		if ((lstdlc_empty_list (lst) != CAF_OK)
-			&& (lstdlc_oneitem_list (lst) == CAF_OK)) {
+cdeque_dump (FILE *out, cdeque_t *lst, CAF_LSTDLCNODE_CBDUMP(dmp)) {
+	caf_cdequen_t *cur;
+	if (lst != (cdeque_t *)NULL) {
+		if ((cdeque_empty_list (lst) != CAF_OK)
+			&& (cdeque_oneitem_list (lst) == CAF_OK)) {
 			dmp(out, lst->head->data);
 		} else {
 			cur = lst->head;
@@ -659,11 +659,11 @@ lstdlc_dump (FILE *out, lstdlc_t *lst, CAF_LSTDLCNODE_CBDUMP(dmp)) {
 
 
 int
-lstdlc_dump_ptr (FILE *out, lstdlc_t *lst) {
+cdeque_dump_ptr (FILE *out, cdeque_t *lst) {
 	int c = 0, a = 0;
-	lstdlcn_t *cur;
-	if (lst != (lstdlc_t *)NULL && out != (FILE *)NULL) {
-		if ((lstdlc_empty_list (lst)) != CAF_OK) {
+	caf_cdequen_t *cur;
+	if (lst != (cdeque_t *)NULL && out != (FILE *)NULL) {
+		if ((cdeque_empty_list (lst)) != CAF_OK) {
 			cur = lst->head;
 			do {
 				c++;
@@ -680,7 +680,7 @@ lstdlc_dump_ptr (FILE *out, lstdlc_t *lst) {
 
 
 int
-lstdlc_dump_str_cb (FILE *o, void *data) {
+cdeque_dump_str_cb (FILE *o, void *data) {
 	if (data != (void *)NULL) {
 		return fprintf (o, "%p = [len: %d] \"%s\"\n", data,
 		                (int)strlen((char *)data), (char *)data);
@@ -689,5 +689,5 @@ lstdlc_dump_str_cb (FILE *o, void *data) {
 	}
 }
 
-/* caf_data_lstdlc.c ends here */
+/* caf_data_cdeque.c ends here */
 

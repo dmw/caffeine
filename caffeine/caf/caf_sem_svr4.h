@@ -32,7 +32,7 @@
 #include <sys/ipc.h>
 #include <sys/sem.h>
 
-#include <caf/caf_data_lstdl.h>
+#include <caf/caf_data_deque.h>
 
 /**
  * @defgroup      caf_sem_svr4        SVr4 Semaphores

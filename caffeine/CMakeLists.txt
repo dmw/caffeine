@@ -1,4 +1,4 @@
-### -*- mode: cmake; indent-tabs-mode: t; tab-width: 4; cmake-tab-width: 4; -*-
+### -*- mode: cmake; -*-
 ### $Id$
 ### project
 PROJECT(caffeine C)

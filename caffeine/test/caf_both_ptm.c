@@ -42,25 +42,25 @@ int test_pt (void *p);
 void *pth_rtn (void *p);
 void test_signal_handler (int sig);
 
-lstdl_t *pool;
+deque_t *pool;
 int exit_success;
 
 int
 main (void) {
-	extern lstdl_t *pool;
+	extern deque_t *pool;
 	extern int exit_success;
 	exit_success = 0;
 
-	pool = ppm_pool_create (3, (lstdl_t *)NULL, test_pt);
+	pool = ppm_pool_create (3, (deque_t *)NULL, test_pt);
 	sleep (20);
 	ppm_kill_pool (pool, SIGHUP);
-	lstdl_delete (pool, lstdl_delete_cb);
+	deque_delete (pool, deque_delete_cb);
 	return 0;
 }
 
 int
 test_pt (void *p) {
-	extern lstdl_t *pool;
+	extern deque_t *pool;
 	extern int exit_success;
 	int rt = 0;
 	pth_attri_t *attr = (pth_attri_t *)NULL;
@@ -77,7 +77,7 @@ test_pt (void *p) {
 				printf ("%d: attr PTHDR_ATTR_DETACHED = %d\n", getpid (), rt);
 				pth_pool = pth_pool_create (attr, pth_rtn, 3, (void *)NULL);
 				printf ("%d: threads: %d\n", getpid (),
-				        lstdl_length (pth_pool->threads));
+				        deque_length (pth_pool->threads));
 			}
 		}
 	}
@@ -90,7 +90,7 @@ test_pt (void *p) {
 		sleep (1);
 		printf ("pid: %d (%p)\n", getpid (), p);
 	}
-	lstdl_delete (pool, lstdl_delete_cb);
+	deque_delete (pool, deque_delete_cb);
 	pthread_exit (NULL);
 	return 0;
 }

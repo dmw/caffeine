@@ -13,29 +13,29 @@
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
+  Lesser General Public License for more denexts.
 
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
   MA 02110-1301 USA
 
-  $Id: caf_data_lstdl.h 8 2007-05-03 00:50:25Z damowe $
+  $Id$
 */
-#ifndef CAF_DATA_LSTDLC_H
-#define CAF_DATA_LSTDLC_H 1
+#ifndef CAF_DATA_DEQUE_H
+#define CAF_DATA_DEQUE_H 1
 
 #include <stdio.h>
 
 /**
- * @defgroup      caf_dlnkc_list    Double Linked Circular List
+ * @defgroup      caf_dlnk_list    Double Linked List
  * @ingroup       caf_data_struct
- * @addtogroup    caf_dlnkc_list
+ * @addtogroup    caf_dlnk_list
  * @{
  *
- * @brief     Caffeine Double Linked Circular List Functions.
- * @date      $Date: 2007-05-02 20:50:25 -0400 (Wed, 02 May 2007) $
- * @version   $Revision: 8 $
+ * @brief     Caffeine Double Linked List Functions.
+ * @date      $Date$
+ * @version   $Revision$
  * @author    Daniel Molina Wegener <dmw@coder.cl>
  *
  * List management functions. These are function to manage Double
@@ -49,17 +49,17 @@ CAF_BEGIN_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** Computes de list structure size */
-#define CAF_LSTDLC_SZ                   (sizeof (lstdlc_t))
+#define CAF_DEQUE_SZ                   (sizeof(deque_t))
 /** Computes de list node structure size */
-#define CAF_LSTDLCNODE_SZ               (sizeof (lstdlcn_t))
+#define CAF_CAF_DEQUENODE_SZ               (sizeof(caf_dequen_t))
 /** Declares a deletion callback to use with list nodes */
-#define CAF_LSTDLCNODE_CBDEL(del)       int (*del)(void *ptr)
+#define CAF_CAF_DEQUENODE_CBDEL(del)       int (*del)(void *ptr)
 /** Declares a dump callback to use with list nodes */
-#define CAF_LSTDLCNODE_CBDUMP(dmp)      int (*dmp)(FILE *out, void *ptr)
+#define CAF_CAF_DEQUENODE_CBDUMP(dmp)      int (*dmp)(FILE *out, void *ptr)
 /** Declares a walk callback to use with list nodes */
-#define CAF_LSTDLCNODE_CBMAP(map)       int (*map)(void *ptr)
+#define CAF_CAF_DEQUENODE_CBMAP(map)       int (*map)(void *ptr)
 /** Declares a search callback to use with list nodes */
-#define CAF_LSTDLCNODE_CBSRCH(srch)     int (*srch)(void *ndata, void *data)
+#define CAF_CAF_DEQUENODE_CBSRCH(srch)     int (*srch)(void *ndata, void *data)
 
 /**
  *
@@ -67,20 +67,20 @@ CAF_BEGIN_C_EXTERNS
  * The type of a double linked list node.
  * @see      caf_lst_node
  */
-typedef struct caf_lstcdlc_node_s lstdlcn_t;
+typedef struct caf_deque_node_s caf_dequen_t;
 
 /**
  *
  * @brief    Caffeine double linked list node structure.
  * The double linked list node structure stores a pointer data,
  * a pointer to de previous node and a pointer to the next node.
- * @see      lstdlcn_t
+ * @see      caf_dequen_t
  */
-struct caf_lstcdlc_node_s {
+struct caf_deque_node_s {
 	/** Pointer to the previous node in the list */
-	lstdlcn_t *prev;
+	caf_dequen_t *prev;
 	/** Pointer to the next node in the list */
-	lstdlcn_t *next;
+	caf_dequen_t *next;
 	/** Pointer to the data in the list node */
 	void *data;
 };
@@ -93,7 +93,7 @@ struct caf_lstcdlc_node_s {
  *
  * @see      caf_lst
  */
-typedef struct caf_lstdlc_s lstdlc_t;
+typedef struct caf_deque_s deque_t;
 /**
  *
  * @brief    Caffeine double linked list structure.
@@ -102,12 +102,12 @@ typedef struct caf_lstdlc_s lstdlc_t;
  * first list node, a pointer to de second list node and an integer
  * with the list size.
  *
- * @see      lstdlcn_t
- * @see      lstdlc_t
+ * @see      caf_dequen_t
+ * @see      deque_t
  */
-struct caf_lstdlc_s {
-	lstdlcn_t *head;
-	lstdlcn_t *tail;
+struct caf_deque_s {
+	caf_dequen_t *head;
+	caf_dequen_t *tail;
 	int size;
 };
 
@@ -119,12 +119,12 @@ struct caf_lstdlc_s {
  * parameter to store in the first node.
  *
  * @param[in]    data            first node data.
- * @return       lstdlc_t *     the allocated list.
+ * @return       deque_t *     the allocated list.
  *
- * @see      lstdlc_t
- * @see      lstdlcn_t
+ * @see      deque_t
+ * @see      caf_dequen_t
  */
-lstdlc_t *lstdlc_new (void *data);
+deque_t *deque_new (void *data);
 
 /**
  *
@@ -134,12 +134,12 @@ lstdlc_t *lstdlc_new (void *data);
  * parameter to store in the first node.
  *
  * @param[in]    data            first node data.
- * @return       lstdlc_t *     the allocated list.
+ * @return       deque_t *     the allocated list.
  *
- * @see      lstdlc_t
- * @see      lstdlcn_t
+ * @see      deque_t
+ * @see      caf_dequen_t
  */
-lstdlc_t *lstdlc_create (void);
+deque_t *deque_create (void);
 
 /**
  *
@@ -155,10 +155,10 @@ lstdlc_t *lstdlc_create (void);
  * @param[in]    lst    the Caffeine Double Linked List.
  * @param[in]    del    the callback function to free the list nodes.
  *
- * @see      lstdlc_t
- * @see      lstdlcn_t
+ * @see      deque_t
+ * @see      caf_dequen_t
  */
-int lstdlc_delete (lstdlc_t *lst, CAF_LSTDLCNODE_CBDEL(del));
+int deque_delete (deque_t *lst, CAF_CAF_DEQUENODE_CBDEL(del));
 
 /**
  *
@@ -169,10 +169,10 @@ int lstdlc_delete (lstdlc_t *lst, CAF_LSTDLCNODE_CBDEL(del));
  * @param[in]    lst    the Caffeine Double Linked List.
  * @param[in]    del    the callback function to free the list nodes.
  *
- * @see      lstdlc_t
- * @see      lstdlcn_t
+ * @see      deque_t
+ * @see      caf_dequen_t
  */
-int lstdlc_delete_nocb (lstdlc_t *lst);
+int deque_delete_nocb (deque_t *lst);
 
 /**
  *
@@ -186,10 +186,10 @@ int lstdlc_delete_nocb (lstdlc_t *lst);
  * @param[in]    n        the list node.
  * @param[in]    del      the callback function to free the node data.
  *
- * @see      lstdlc_t
- * @see      lstdlcn_t
+ * @see      deque_t
+ * @see      caf_dequen_t
  */
-int lstdlc_node_delete (lstdlc_t *lst, lstdlcn_t *n, CAF_LSTDLCNODE_CBDEL(del));
+int deque_node_delete (deque_t *lst, caf_dequen_t *n, CAF_CAF_DEQUENODE_CBDEL(del));
 
 /**
  *
@@ -203,11 +203,11 @@ int lstdlc_node_delete (lstdlc_t *lst, lstdlcn_t *n, CAF_LSTDLCNODE_CBDEL(del));
  * @param[in]    n        the list node.
  * @param[in]    del      the callback function to free the node data.
  *
- * @see      lstdlc_t
- * @see      lstdlcn_t
+ * @see      deque_t
+ * @see      caf_dequen_t
  */
-int lstdlc_node_delete_by_data (lstdlc_t *lst, void *n,
-								CAF_LSTDLCNODE_CBDEL(del));
+int deque_node_delete_by_data (deque_t *lst, void *n,
+							   CAF_CAF_DEQUENODE_CBDEL(del));
 
 /**
  *
@@ -218,9 +218,10 @@ int lstdlc_node_delete_by_data (lstdlc_t *lst, void *n,
  * @param[in]    lst    The list to get length
  * @return       CAF_OK if is empty, CAF_ERROR if not.
  *
- * @see    lstc_t
+ * @see    deque_t
+ * @see    caf_dequen_t
  */
-int lstdlc_empty_list (lstdlc_t *lst);
+int deque_empty_list (deque_t *lst);
 
 /**
  *
@@ -231,9 +232,10 @@ int lstdlc_empty_list (lstdlc_t *lst);
  * @param[in]    lst    The list to get length
  * @return       CAF_OK if does have one item, CAF_ERROR if not.
  *
- * @see    lstc_t
+ * @see    deque_t
+ * @see    caf_dequen_t
  */
-int lstdlc_oneitem_list (lstdlc_t *lst);
+int deque_oneitem_list (deque_t *lst);
 
 /**
  *
@@ -243,9 +245,9 @@ int lstdlc_oneitem_list (lstdlc_t *lst);
  *
  * @param[in]    lst    The list to get length
  *
- * @see    lstdlc_t
+ * @see    deque_t
  */
-int lstdlc_length (lstdlc_t *lst);
+int deque_length (deque_t *lst);
 
 /**
  *
@@ -256,15 +258,15 @@ int lstdlc_length (lstdlc_t *lst);
  *
  * @param[in]    lst            the list to push a node.
  * @param[in]    data           the data to link in the list.
- * @return       lstdlc_t *     the pointer to the list.
+ * @return       deque_t *     the pointer to the list.
  *
- * @see    lstdlc_t
- * @see    lstdlcn_t
- * @see    lstdlc_pop
- * @see    lstdlc_first
- * @see    lstdlc_replace
+ * @see    deque_t
+ * @see    caf_dequen_t
+ * @see    deque_pop
+ * @see    deque_first
+ * @see    deque_replace
  */
-lstdlc_t *lstdlc_push (lstdlc_t *lst, void *data);
+deque_t *deque_push (deque_t *lst, void *data);
 
 /**
  *
@@ -274,16 +276,16 @@ lstdlc_t *lstdlc_push (lstdlc_t *lst, void *data);
  * gets and removes from the list the tail element.
  *
  * @param[in]    lst            the list to pop an element.
- * @return       lstdlcn_t *    the node to get from the list.
+ * @return       caf_dequen_t *    the node to get from the list.
  *
- * @see    lstdlc_t
- * @see    lstdlcn_t
- * @see    lstdlc_first
- * @see    lstdlc_push
- * @see    lstdlc_replace
- * @see    lstdlc_set
+ * @see    deque_t
+ * @see    caf_dequen_t
+ * @see    deque_first
+ * @see    deque_push
+ * @see    deque_replace
+ * @see    deque_set
  */
-lstdlcn_t *lstdlc_pop (lstdlc_t *lst);
+caf_dequen_t *deque_pop (deque_t *lst);
 
 /**
  *
@@ -293,16 +295,16 @@ lstdlcn_t *lstdlc_pop (lstdlc_t *lst);
  * first node.
  *
  * @param[in]    lst            list to get the first element.
- * @return       lstdlcn_t *    first node pointer.
+ * @return       caf_dequen_t *    first node pointer.
  *
- * @see    lstdlc_t
- * @see    lstdlcn_t
- * @see    lstdlc_pop
- * @see    lstdlc_push
- * @see    lstdlc_replace
- * @see    lstdlc_set
+ * @see    deque_t
+ * @see    caf_dequen_t
+ * @see    deque_pop
+ * @see    deque_push
+ * @see    deque_replace
+ * @see    deque_set
  */
-lstdlcn_t *lstdlc_first (lstdlc_t *lst);
+caf_dequen_t *deque_first (deque_t *lst);
 
 /**
  *
@@ -311,21 +313,21 @@ lstdlcn_t *lstdlc_first (lstdlc_t *lst);
  * Sets a data node in the list through the position of the node
  * in the list. Positions starts in zero. A posible failure in
  * this function is that the data pointer is not NULL, then you
- * must use lstdlc_replace function.
+ * must use deque_replace function.
  *
  * @param[in]    lst    list where to set the node.
  * @param[in]    pos    data node position.
  * @param[in]    data   data pointer in the list.
  * @return       int    the position if found, -1 on failure.
  *
- * @see    lstdlc_t
- * @see    lstdlcn_t
- * @see    lstdlc_first
- * @see    lstdlc_push
- * @see    lstdlc_pop
- * @see    lstdlc_replace
+ * @see    deque_t
+ * @see    caf_dequen_t
+ * @see    deque_first
+ * @see    deque_push
+ * @see    deque_pop
+ * @see    deque_replace
  */
-void *lstdlc_get (lstdlc_t *lst, int pos);
+void *deque_get (deque_t *lst, int pos);
 
 /**
  *
@@ -334,20 +336,20 @@ void *lstdlc_get (lstdlc_t *lst, int pos);
  * Sets a data node in the list through the position of the node
  * in the list. Positions starts in zero. A posible failure in
  * this function is that the data pointer is not NULL, then you
- * must use lstdlc_replace function.
+ * must use deque_replace function.
  *
  * @param[in]    lst    list where to set the node.
  * @param[in]    pos    data node position.
  * @return       int    the position if found, -1 on failure.
  *
- * @see    lstdlc_t
- * @see    lstdlcn_t
- * @see    lstdlc_first
- * @see    lstdlc_push
- * @see    lstdlc_pop
- * @see    lstdlc_replace
+ * @see    deque_t
+ * @see    caf_dequen_t
+ * @see    deque_first
+ * @see    deque_push
+ * @see    deque_pop
+ * @see    deque_replace
  */
-int lstdlc_set (lstdlc_t *lst, int pos, void *data);
+int deque_set (deque_t *lst, int pos, void *data);
 
 /**
  *
@@ -356,20 +358,20 @@ int lstdlc_set (lstdlc_t *lst, int pos, void *data);
  * Inserts a data node in the list through the position of the node
  * in the list. Positions starts in zero. A posible failure in
  * this function is that the data pointer is not NULL, then you
- * must use lstdlc_replace function.
+ * must use deque_replace function.
  *
  * @param[in]    lst    list where to set the node.
  * @param[in]    pos    data node position.
  * @return       int    the position if found, -1 on failure.
  *
- * @see    lstdlc_t
- * @see    lstdlcn_t
- * @see    lstdlc_first
- * @see    lstdlc_push
- * @see    lstdlc_pop
- * @see    lstdlc_replace
+ * @see    deque_t
+ * @see    caf_dequen_t
+ * @see    deque_first
+ * @see    deque_push
+ * @see    deque_pop
+ * @see    deque_replace
  */
-int lstdlc_insert (lstdlc_t *lst, int pos, void *data);
+int deque_insert (deque_t *lst, int pos, void *data);
 
 /**
  *
@@ -384,10 +386,10 @@ int lstdlc_insert (lstdlc_t *lst, int pos, void *data);
  * @param[in]    step       the function to apply.
  * @return       int        the number of afected nodes.
  *
- * @see      lstdlc_t
- * @see      lstdlcn_t
+ * @see      deque_t
+ * @see      caf_dequen_t
  */
-int lstdlc_map (lstdlc_t *lst, CAF_LSTDLCNODE_CBMAP(step));
+int deque_map (deque_t *lst, CAF_CAF_DEQUENODE_CBMAP(step));
 
 /**
  *
@@ -403,10 +405,10 @@ int lstdlc_map (lstdlc_t *lst, CAF_LSTDLCNODE_CBMAP(step));
  * @param[in]    step       the function to apply.
  * @return       int        the number of afected nodes.
  *
- * @see      lstdlc_t
- * @see      lstdlcn_t
+ * @see      deque_t
+ * @see      caf_dequen_t
  */
-int lstdlc_map_checked (lstdlc_t *lst, CAF_LSTDLCNODE_CBMAP(step));
+int deque_map_checked (deque_t *lst, CAF_CAF_DEQUENODE_CBMAP(step));
 
 /**
  *
@@ -421,10 +423,10 @@ int lstdlc_map_checked (lstdlc_t *lst, CAF_LSTDLCNODE_CBMAP(step));
  * @param[in]    srch       the comparision callback.
  * @return       void *     the data pointed by the result and NULL on error.
  *
- * @see      lstdlc_t
- * @see      lstdlcn_t
+ * @see      deque_t
+ * @see      caf_dequen_t
  */
-void *lstdlc_search (lstdlc_t *lst, void *data, CAF_LSTDLCNODE_CBSRCH(srch));
+void *deque_search (deque_t *lst, void *data, CAF_CAF_DEQUENODE_CBSRCH(srch));
 
 /**
  *
@@ -438,10 +440,10 @@ void *lstdlc_search (lstdlc_t *lst, void *data, CAF_LSTDLCNODE_CBSRCH(srch));
  * @param[in]    step       the function to apply.
  * @return       int        the number of afected nodes.
  *
- * @see      lstdlc_t
- * @see      lstdlcn_t
+ * @see      deque_t
+ * @see      caf_dequen_t
  */
-lstdlcn_t *lstdlc_search_node (lstdlc_t *lst, void *data);
+caf_dequen_t *deque_search_node (deque_t *lst, void *data);
 
 /**
  *
@@ -454,10 +456,10 @@ lstdlcn_t *lstdlc_search_node (lstdlc_t *lst, void *data);
  * @param[in]    ptr        the data pointer.
  * @return       int        1 on success, 0 on failure.
  *
- * @see      lstdlc_t
- * @see      lstdlcn_t
+ * @see      deque_t
+ * @see      caf_dequen_t
  */
-int lstdlc_delete_cb (void *ptr);
+int deque_delete_cb (void *ptr);
 
 /**
  *
@@ -471,10 +473,10 @@ int lstdlc_delete_cb (void *ptr);
  * @param[in]    str        the string pointer.
  * @return       int        1 on success, 0 on failure.
  *
- * @see      lstdlc_t
- * @see      lstdlcn_t
+ * @see      deque_t
+ * @see      caf_dequen_t
  */
-int lstdlc_str_delete_cb (void *ptr);
+int deque_str_delete_cb (void *ptr);
 
 /**
  *
@@ -482,16 +484,16 @@ int lstdlc_str_delete_cb (void *ptr);
  *
  * Dumps the Double Linked List to the given output FILE stream.
  * Gives as parameters the output FILE stream, the list to dump
- * and the lstdlcn_t dumper callback function.
+ * and the caf_dequen_t dumper callback function.
  *
  * @param[in]    out        FILE output stream.
- * @param[in]    lst        lstdlc_t pointer to dump.
- * @param[in]    dmp        lstdlcn_t callback dumper.
+ * @param[in]    lst        deque_t pointer to dump.
+ * @param[in]    dmp        caf_dequen_t callback dumper.
  *
- * @see      lstdlc_t
- * @see      lstdlcn_t
+ * @see      deque_t
+ * @see      caf_dequen_t
  */
-void lstdlc_dump (FILE *out, lstdlc_t *lst, CAF_LSTDLCNODE_CBDUMP(dmp));
+void deque_dump (FILE *out, deque_t *lst, CAF_CAF_DEQUENODE_CBDUMP(dmp));
 
 /**
  *
@@ -503,9 +505,9 @@ void lstdlc_dump (FILE *out, lstdlc_t *lst, CAF_LSTDLCNODE_CBDUMP(dmp));
  * @param[in]    out    FILE output stream to dump the list.
  * @param[in]    lst    list to dump.
  *
- * @see      lstdlc_t
+ * @see      deque_t
  */
-int lstdlc_dump_ptr (FILE *out, lstdlc_t *lst);
+int deque_dump_ptr (FILE *out, deque_t *lst);
 
 /**
  *
@@ -516,16 +518,16 @@ int lstdlc_dump_ptr (FILE *out, lstdlc_t *lst);
  *
  * @param[in]    data    a pointer to a string.
  *
- * @see      lstdlc_t
- * @see      lstdlcn_t
+ * @see      deque_t
+ * @see      caf_dequen_t
  */
-int lstdlc_dump_str_cb (FILE *o, void *data);
+int deque_dump_str_cb (FILE *o, void *data);
 
 #ifdef __cplusplus
 CAF_END_C_EXTERNS
 #endif /* !__cplusplus */
 
 /** }@ */
-#endif /* !CAF_DATA_LSTDLC_H */
-/* caf_data_lstdl.h ends here */
+#endif /* !CAF_DATA_DEQUE_H */
+/* caf_data_deque.h ends here */
 

@@ -29,7 +29,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
-#include <caf/caf_data_lstdl.h>
+#include <caf/caf_data_deque.h>
 
 /**
  * @defgroup      caf_ipc_shm        IPC Shared Memmory
@@ -77,11 +77,11 @@ typedef struct caf_shm_alloc_s caf_shm_alloc_t;
  * allocation flags <b>flags</b>, ipc <b>key</b> of type
  * <b>key_t</b>, allocation size <b>sz</b> and allocation
  * pointer <b>ptr</b>.</p>
- * 
+ *
  * <p>This structure is designed to work with the
  * <b>caf_shm_seg_*</b> interface set.
- * 
- * @see caf_shm_alloc_t 
+ *
+ * @see caf_shm_alloc_t
  */
 struct caf_shm_alloc_s {
 	/** Block Identifier */
@@ -120,32 +120,32 @@ struct caf_shm_pool_s {
 	/** Common Allocation Size */
 	size_t sz;
 	/** List of Blocks */
-	lstdl_t *pool;
+	deque_t *pool;
 };
 
-/** 
+/**
  * @brief Allocates a new SHM Pool
  *
  * Allocates a new SHM Pool, with an empty list, ready to
  * add SHM allocations <b>caf_shm_alloc_t</b>.
- * 
+ *
  * @return caf_shm_pool_t *		a new allocated SHM pool
  */
 caf_shm_pool_t *caf_shm_pool_new ();
 
-/** 
+/**
  * @brief Deallocates a SHM Pool
- * 
+ *
  * Deallocates a SHM Poll, this means deallocation of the
- * <b>lstdl_t</b> list of <b>caf_shm_alloc_t</b> structures.
+ * <b>deque_t</b> list of <b>caf_shm_alloc_t</b> structures.
  *
  * @param s[in]			pool to deallocate
- * 
+ *
  * @return int			CAF_OK on success, CAF_ERROR on failure
  */
 int caf_shm_pool_delete (caf_shm_pool_t *s);
 
-/** 
+/**
  * @brief Adds an allocation block to the given pool
  *
  * Adds the given allocation block structure <b>a</b> to
@@ -154,40 +154,40 @@ int caf_shm_pool_delete (caf_shm_pool_t *s);
  *
  * @param s[in]			SHM Pool
  * @param a[in]			allocation block
- * 
+ *
  * @return[int]			CAF_OK on success, CAF_ERROR on failure
  */
 int caf_shm_pool_add (caf_shm_pool_t *s, caf_shm_alloc_t *a);
 
-/** 
+/**
  * @brief Creates a new allocation block
  *
  * Creates (allocate) a new allocation block storing data
  * about the allocation block in the returned structure
  * pointer <b>caf_shm_alloc_t</b>.
- * 
+ *
  * @param k[in]			IPC key
  * @param sz[in]		block size
  * @param flg[in]		<b>shmget(2)</b> flags
- * 
+ *
  * @return caf_shm_alloc_t *		new pointer, NULL on failure
  */
 caf_shm_alloc_t *caf_shm_seg_new (key_t k, size_t sz, int flg);
 
-/** 
+/**
  * @brief Deletes an allocation block
- * 
+ *
  * Deletes (deallocates) the given allocation block <b>s</b>.
  *
  * @param s[in]			the allocation block to delete
- * 
+ *
  * @return int			CAF_OK on success, CAF_ERROR on failure
  */
 int caf_shm_seg_delete (caf_shm_alloc_t *s);
 
-/** 
+/**
  * @brief Attach a pointer form the given allocation block
- * 
+ *
  * <p>
  * This interface attaches the SHM segment to the calling
  * process.</p>
@@ -197,14 +197,14 @@ int caf_shm_seg_delete (caf_shm_alloc_t *s);
  * using the <b>caffeine</b> interface <b>caf_shm_seg_new</b>.</p>
  *
  * @param s[in]			allocation block from where attach a segment
- * 
+ *
  * @return void *		a pointer to the block
  */
 void *caf_shm_seg_attach (caf_shm_alloc_t *s);
 
-/** 
+/**
  * @brief Detaches memory from the given allocation block
- * 
+ *
  * <p>
  * This interface deattaches the SHM segment to the calling
  * process.</p>
@@ -214,14 +214,14 @@ void *caf_shm_seg_attach (caf_shm_alloc_t *s);
  * using the <b>caffeine</b> interface <b>caf_shm_seg_new</b>.</p>
  *
  * @param s[in]			allocation block from where dettach
- * 
+ *
  * @return int			CAF_OK on success, CAF_ERROR on failure
  */
 int caf_shm_seg_detach (caf_shm_alloc_t *s);
 
-/** 
+/**
  * @brief Caffeine interface to the <b>shmctl(2)</b> system call.
- * 
+ *
  * Operates over the given allocation block <b>s</b> using the
  * system call <b>shmctl(2)</b>. For further information read the
  * manual page of <b>shmctl(2)</b>.
@@ -229,7 +229,7 @@ int caf_shm_seg_detach (caf_shm_alloc_t *s);
  * @param s[in]			allocation block to work on
  * @param cmd[in]		<b>shmctl(2)</b> command
  * @param buf[in]		<b>shmctl(2)</b> operation
- * 
+ *
  * @return int	the result of the <b>shmctl(2)</b> interface
  */
 int caf_shm_seg_ctrl (caf_shm_alloc_t *s, int cmd, struct shmid_ds *buf);

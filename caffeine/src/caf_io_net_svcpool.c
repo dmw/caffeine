@@ -61,7 +61,7 @@ caf_svcpool_new (int id, int num, caf_conn_t *seed) {
 int
 caf_svcpool_delete (caf_svcpool_t *svc) {
 	if (svc != (caf_svcpool_t *)NULL) {
-		if ((lstdl_delete (svc->svc_lst, caf_svcpool_delete_callback)) ==
+		if ((deque_delete (svc->svc_lst, caf_svcpool_delete_callback)) ==
 			CAF_OK) {
 			xfree (svc->svc_fds);
 			xfree (svc);
@@ -90,9 +90,9 @@ caf_svcpool_init (caf_svcpool_t *svc) {
 	if (svc != (caf_svcpool_t *)NULL) {
 		if (svc->svc_seed != (caf_conn_t *)NULL) {
 			svc->svc_fds = (int *)xmalloc ((size_t)svc->svc_num * sizeof (int));
-			svc->svc_lst = lstdl_create ();
+			svc->svc_lst = deque_create ();
 			if (svc->svc_fds != (int *)NULL &&
-				svc->svc_lst != (lstdl_t *)NULL) {
+				svc->svc_lst != (deque_t *)NULL) {
 				memset (svc->svc_fds, (int)NULL,
 				        (size_t)svc->svc_num * sizeof (int));
 				fds = svc->svc_fds;
@@ -107,10 +107,10 @@ caf_svcpool_init (caf_svcpool_t *svc) {
 							i->flags = sc->flags;
 							i->dom = sc->dom;
 							i->type = sc->type;
-							lstdl_push (svc->svc_lst, (void *)i);
+							deque_push (svc->svc_lst, (void *)i);
 						}
 					} else {
-						lstdl_push (svc->svc_lst, (void *)NULL);
+						deque_push (svc->svc_lst, (void *)NULL);
 					}
 				}
 				return CAF_OK;
@@ -125,7 +125,7 @@ int
 caf_svcpool_stop (caf_svcpool_t *svc) {
 	int c, fd, r;
 	if (svc != (caf_svcpool_t *)NULL) {
-		if (svc->svc_fds != (int *)NULL && svc->svc_lst != (lstdl_t *)NULL) {
+		if (svc->svc_fds != (int *)NULL && svc->svc_lst != (deque_t *)NULL) {
 			for (c = 0; c <= svc->svc_num; c++) {
 				fd = svc->svc_fds[c];
 				if (fd > -1) {
@@ -142,7 +142,7 @@ int
 caf_svcpool_close (caf_svcpool_t *svc) {
 	int c, fd, r;
 	if (svc != (caf_svcpool_t *)NULL) {
-		if (svc->svc_fds != (int *)NULL && svc->svc_lst != (lstdl_t *)NULL) {
+		if (svc->svc_fds != (int *)NULL && svc->svc_lst != (deque_t *)NULL) {
 			for (c = 0; c <= svc->svc_num; c++) {
 				fd = svc->svc_fds[c];
 				if (fd > -1) {
@@ -159,7 +159,7 @@ int
 caf_svcpool_finalize (caf_svcpool_t *svc) {
 	int c, fd, r;
 	if (svc != (caf_svcpool_t *)NULL) {
-		if (svc->svc_fds != (int *)NULL && svc->svc_lst != (lstdl_t *)NULL) {
+		if (svc->svc_fds != (int *)NULL && svc->svc_lst != (deque_t *)NULL) {
 			for (c = 0; c <= svc->svc_num; c++) {
 				fd = svc->svc_fds[c];
 				if (fd > -1) {
@@ -176,14 +176,14 @@ caf_svcpool_finalize (caf_svcpool_t *svc) {
 int
 caf_svcpool_reopen (caf_svcpool_t *svc) {
 	int c = 0, fd = -1, r = 0;
-	lstdln_t *n;
+	caf_dequen_t *n;
 	caf_conn_t *cc;
 	if (svc != (caf_svcpool_t *)NULL) {
-		if (svc->svc_fds != (int *)NULL && svc->svc_lst != (lstdl_t *)NULL &&
+		if (svc->svc_fds != (int *)NULL && svc->svc_lst != (deque_t *)NULL &&
 			svc->svc_seed != (caf_conn_t *)NULL) {
 			n = svc->svc_lst->head;
 			c = 0;
-			while (n != (lstdln_t *)NULL) {
+			while (n != (caf_dequen_t *)NULL) {
 				cc = (caf_conn_t *)n->data;
 				if (svc->svc_fds[c] > -1) {
 					if ((fd = dup (svc->svc_seed->sock)) > -1) {

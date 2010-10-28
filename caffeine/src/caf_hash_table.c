@@ -99,8 +99,8 @@ caf_hash_table_new (const int id, CAF_HASH_STR_FUNCTION(f1),
 			r->id = id;
 			r->f1 = f1;
 			r->f2 = f2;
-			r->hashes = lstdlc_create ();
-			if (r->hashes == (lstdlc_t *)NULL) {
+			r->hashes = cdeque_create ();
+			if (r->hashes == (cdeque_t *)NULL) {
 				xfree (r);
 				r = (caf_hash_table_t *)NULL;
 			}
@@ -113,7 +113,7 @@ caf_hash_table_new (const int id, CAF_HASH_STR_FUNCTION(f1),
 int
 caf_hash_table_delete (caf_hash_table_t *table) {
 	if (table != (caf_hash_table_t *)NULL) {
-		if ((lstdlc_delete (table->hashes, caf_hash_delete_callback)) ==
+		if ((cdeque_delete (table->hashes, caf_hash_delete_callback)) ==
 			CAF_OK) {
 			xfree (table);
 			return CAF_OK;
@@ -131,14 +131,14 @@ caf_hash_table_add (caf_hash_table_t *table, const void *key,
 	if (table != (caf_hash_table_t *)NULL && key != (const void *)NULL &&
 		ksz > 0 && data != (const void *)NULL) {
 		hash_new = caf_hash_new_nodata (key, ksz, table->f1, table->f2);
-		hash = (caf_hash_t *)lstdlc_search (table->hashes, (void *)hash_new,
+		hash = (caf_hash_t *)cdeque_search (table->hashes, (void *)hash_new,
 		                                    caf_hash_search_callback);
 		if (hash == (caf_hash_t *)NULL) {
 			hash = caf_hash_new (key, ksz, data, table->f1, table->f2);
 			if (hash != (caf_hash_t *)NULL) {
 				caf_hash_delete (hash_new);
-				return ((lstdlc_push (table->hashes, (void *)hash))
-				        != (lstdlc_t *)NULL) ? CAF_OK : CAF_ERROR;
+				return ((cdeque_push (table->hashes, (void *)hash))
+				        != (cdeque_t *)NULL) ? CAF_OK : CAF_ERROR;
 			}
 		} else {
 			hash->key = (void *)key;
@@ -162,11 +162,11 @@ caf_hash_table_remove (caf_hash_table_t *table, const void *key,
 	if (table != (caf_hash_table_t *)NULL && key != (const void *)NULL &&
 		ksz > 0) {
 		hash_new = caf_hash_new_nodata (key, ksz, table->f1, table->f2);
-		hash = (caf_hash_t *)lstdlc_search (table->hashes, (void *)hash_new,
+		hash = (caf_hash_t *)cdeque_search (table->hashes, (void *)hash_new,
 		                                    caf_hash_search_callback);
 		if (hash != (caf_hash_t *)NULL) {
 			caf_hash_delete (hash_new);
-			return lstdlc_node_delete_by_data (table->hashes, (void *)hash,
+			return cdeque_node_delete_by_data (table->hashes, (void *)hash,
 			                                   caf_hash_delete_callback);
 		}
 	}
@@ -183,7 +183,7 @@ caf_hash_table_get (caf_hash_table_t *table, const void *key,
 	if (table != (caf_hash_table_t *)NULL && key != (const void *)NULL &&
 		ksz > 0) {
 		hash_new = caf_hash_new_nodata (key, ksz, table->f1, table->f2);
-		if ((hash = (caf_hash_t *)lstdlc_search (table->hashes,
+		if ((hash = (caf_hash_t *)cdeque_search (table->hashes,
 												 (void *)hash_new,
 												 caf_hash_search_callback))
 			!= (caf_hash_t *)NULL) {
@@ -203,7 +203,7 @@ caf_hash_table_set (caf_hash_table_t *table, const void *key,
 	if (table != (caf_hash_table_t *)NULL && key != (const void *)NULL &&
 		ksz > 0) {
 		hash_new = caf_hash_new_nodata (key, ksz, table->f1, table->f2);
-		if ((hash = (caf_hash_t *)lstdlc_search (table->hashes,
+		if ((hash = (caf_hash_t *)cdeque_search (table->hashes,
 												 (void *)hash_new,
 												 caf_hash_search_callback))
 			!= (caf_hash_t *)NULL) {
@@ -224,7 +224,7 @@ void
 caf_hash_table_dump (FILE *out, caf_hash_table_t *table) {
 	if (table != (caf_hash_table_t *)NULL) {
 		fprintf (out, "[%p] Hash Table\n", (void *)table);
-		lstdlc_dump (out, table->hashes, caf_hash_dump);
+		cdeque_dump (out, table->hashes, caf_hash_dump);
 	}
 }
 

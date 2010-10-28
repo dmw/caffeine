@@ -32,7 +32,7 @@
 
 #include "caf/caf_tool_macro.h"
 #include "caf/caf_data_mem.h"
-#include "caf/caf_data_lstdl.h"
+#include "caf/caf_data_deque.h"
 #include "caf/caf_dsm.h"
 
 static caf_dsm_return_t *call_1 (void *s_data, caf_dsm_return_t *s_return);
@@ -106,7 +106,7 @@ init_dsm () {
 	}
 	printf (">>>----------------------------------------------------------\n");
 	printf (msg, m1);
-	lstdl_dump_ptr (stdout, m1->m_state);
+	deque_dump_ptr (stdout, m1->m_state);
 	printf ("<<<----------------------------------------------------------\n");
 }
 

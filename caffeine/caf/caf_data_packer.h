@@ -42,7 +42,7 @@
 #include <caf/caf.h>
 #include <caf/caf_data_mem.h>
 #include <caf/caf_data_buffer.h>
-#include <caf/caf_data_lstdl.h>
+#include <caf/caf_data_deque.h>
 
 #ifdef __cplusplus
 CAF_BEGIN_C_EXTERNS
@@ -175,7 +175,7 @@ struct caf_pack_s {
 	/** Pack/Packet Name */
 	char *name;
 	/** Units conforming the packet (do not add units directly) */
-	lstdl_t *units;
+	deque_t *units;
 };
 
 
@@ -200,7 +200,7 @@ struct caf_packet_s {
 	/** Packet Definition */
 	caf_pack_t *pack;
 	/** Parsed Packets */
-	lstdl_t *packets;
+	deque_t *packets;
 };
 
 

@@ -44,7 +44,7 @@ static char Id[] = "$Id$";
 #include "caf/caf_mem.h"
 #include "caf/caf_data_mem.h"
 #include "caf/caf_data_buffer.h"
-#include "caf/caf_data_lstdl.h"
+#include "caf/caf_data_deque.h"
 #include "caf/caf_ipc_msg.h"
 #include "caf/caf_ipc_msg_proto.h"
 #include "caf/caf_psm.h"
@@ -86,9 +86,9 @@ caf_ipcmsg_svc_create (caf_msg_t *seed,
 	r->session_inc = 0;
 	r->snd_inc = 0;
 	r->rcv_inc = 0;
-	r->sessions = lstdl_create ();
+	r->sessions = deque_create ();
 	r->parser = (caf_packet_t *)NULL;
-	if (r->sessions == (lstdl_t *)NULL) {
+	if (r->sessions == (deque_t *)NULL) {
 		xfree (r);
 		r = (caf_msg_svc_t *)NULL;
 	}
@@ -113,10 +113,10 @@ caf_ipcmsg_svc_release (caf_msg_svc_t *s) {
 	if (s == (caf_msg_svc_t *)NULL) {
 		return CAF_ERROR;
 	}
-	if (s->sessions != (lstdl_t *)NULL) {
-		rdel = lstdl_delete (s->sessions, caf_msg_svc_session_delete_cb);
+	if (s->sessions != (deque_t *)NULL) {
+		rdel = deque_delete (s->sessions, caf_msg_svc_session_delete_cb);
 		if (rdel == CAF_OK) {
-			s->sessions = (lstdl_t *)NULL;
+			s->sessions = (deque_t *)NULL;
 		} else {
 			return CAF_ERROR;
 		}
@@ -143,7 +143,7 @@ caf_ipcmsg_svc_addses (caf_msg_svc_t *s) {
 	r->rcv_cnt = 0;
 	r->client = (pid_t)0;
 	r->server = getpid();
-	lstdl_push(s->sessions, (void *)r);
+	deque_push(s->sessions, (void *)r);
 	return r;
 }
 
@@ -155,11 +155,11 @@ caf_ipcmsg_svc_removeses (caf_msg_svc_t *s, long sid) {
 	if (s == (caf_msg_svc_t *)NULL) {
 		return r;
 	}
-	f = lstdl_search (s->sessions, &sid, CAF_MSG_SVC_SRCH_CB);
+	f = deque_search (s->sessions, &sid, CAF_MSG_SVC_SRCH_CB);
 	if (f == (caf_msg_session_t *)NULL) {
 		return r;
 	}
-	r = lstdl_node_delete_by_data (s->sessions, (void *)f,
+	r = deque_node_delete_by_data (s->sessions, (void *)f,
 								   caf_msg_svc_session_delete_cb);
 	return r;
 }
@@ -174,21 +174,21 @@ caf_ipcmsg_svc_process (caf_msg_svc_t *s,
 		s->errno_v = EINVAL;
 		return cnt;
 	}
-	if (s->sessions == (lstdl_t *)NULL) {
+	if (s->sessions == (deque_t *)NULL) {
 		s->errno_v = EINVAL;
 		return cnt;
 	}
 	switch (s->type) {
 	case MSG_SVC_MACHINE_NONE:
-		return lstdl_map (s->sessions, pcb);
+		return deque_map (s->sessions, pcb);
 	case MSG_SVC_MACHINE_STATIC:
-		return lstdl_map (s->sessions, caf_msg_svc_run_ssm);
+		return deque_map (s->sessions, caf_msg_svc_run_ssm);
 	case MSG_SVC_MACHINE_PLUGABLE:
-		return lstdl_map (s->sessions, caf_msg_svc_run_psm);
+		return deque_map (s->sessions, caf_msg_svc_run_psm);
 	case MSG_SVC_MACHINE_DYNAMIC:
-		return lstdl_map (s->sessions, caf_msg_svc_run_dsm);
+		return deque_map (s->sessions, caf_msg_svc_run_dsm);
 	default:
-		return lstdl_map (s->sessions, pcb);
+		return deque_map (s->sessions, pcb);
 		break;
 	}
 }
@@ -271,7 +271,7 @@ caf_ipcmsg_svc_convert_pack (caf_msg_svc_t *s) {
 			return CAF_ERROR;
 		}
 		dsmt = ((caf_dsm_t *)((caf_dsm_runner_t *)s->machine)->r_machine);
-		lstdl_insert(dsmt->m_state, 0, dsm);
+		deque_insert(dsmt->m_state, 0, dsm);
 		return CAF_OK;
 	default:
 		s->errno_v = EINVAL;
@@ -361,21 +361,21 @@ caf_ipcmsg_svc_process_packer (caf_msg_svc_t *s,
 		|| pcb == NULL) {
 		return cnt;
 	}
-	if (s->sessions == (lstdl_t *)NULL) {
+	if (s->sessions == (deque_t *)NULL) {
 		s->errno_v = EINVAL;
 		return cnt;
 	}
 	switch (s->type) {
 	case MSG_SVC_MACHINE_NONE:
-		return lstdl_map (s->sessions, pcb);
+		return deque_map (s->sessions, pcb);
 	case MSG_SVC_MACHINE_STATIC:
-		return lstdl_map (s->sessions, caf_msg_svc_run_ssm);
+		return deque_map (s->sessions, caf_msg_svc_run_ssm);
 	case MSG_SVC_MACHINE_PLUGABLE:
-		return lstdl_map (s->sessions, caf_msg_svc_run_psm);
+		return deque_map (s->sessions, caf_msg_svc_run_psm);
 	case MSG_SVC_MACHINE_DYNAMIC:
-		return lstdl_map (s->sessions, caf_msg_svc_run_dsm);
+		return deque_map (s->sessions, caf_msg_svc_run_dsm);
 	default:
-		return lstdl_map (s->sessions, pcb);
+		return deque_map (s->sessions, pcb);
 		break;
 	}
 }

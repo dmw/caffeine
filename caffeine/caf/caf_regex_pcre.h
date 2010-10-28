@@ -64,7 +64,7 @@ typedef struct regex_pcre_pool_s regex_pcre_pool_t;
 struct regex_pcre_pool_s {
 	int id;
 	char *name;
-	lstdl_t *pool;
+	deque_t *pool;
 };
 
 

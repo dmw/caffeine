@@ -40,7 +40,7 @@ static char Id[] = "$Id$";
 #include "caf/caf_data_mem.h"
 #include "caf/caf_ipc_shm.h"
 
-#include <caf/caf_data_lstdl.h>
+#include <caf/caf_data_deque.h>
 
 
 static int caf_shm_pool_delete_callback (void *data);
@@ -53,8 +53,8 @@ caf_shm_pool_new () {
 	if (r != (caf_shm_pool_t *)NULL) {
 		r->count = 0;
 		r->sz = 0;
-		r->pool = lstdl_create ();
-		if (r->pool == (lstdl_t *)NULL) {
+		r->pool = deque_create ();
+		if (r->pool == (deque_t *)NULL) {
 			xfree (r);
 			r = (caf_shm_pool_t *)NULL;
 		}
@@ -66,7 +66,7 @@ caf_shm_pool_new () {
 int
 caf_shm_pool_delete (caf_shm_pool_t *s) {
 	if (s != (caf_shm_pool_t *)NULL) {
-		if ((lstdl_delete (s->pool, caf_shm_pool_delete_callback)) ==
+		if ((deque_delete (s->pool, caf_shm_pool_delete_callback)) ==
 			s->count) {
 			xfree (s);
 			return CAF_OK;
@@ -79,7 +79,7 @@ caf_shm_pool_delete (caf_shm_pool_t *s) {
 int
 caf_shm_pool_add (caf_shm_pool_t *s, caf_shm_alloc_t *a) {
 	if (s != (caf_shm_pool_t *)NULL && a != (caf_shm_alloc_t *)NULL) {
-		if ((lstdl_push (s->pool, (void *)a)) != (lstdl_t *)NULL) {
+		if ((deque_push (s->pool, (void *)a)) != (deque_t *)NULL) {
 			s->sz += a->sz;
 			s->count++;
 			return CAF_OK;
@@ -118,12 +118,12 @@ caf_shm_alloc_delete_callback (void *data) {
 int
 caf_shm_pool_remove (caf_shm_pool_t *s, int id) {
 	caf_shm_alloc_t *found;
-	if (s != (caf_shm_pool_t *)NULL && s->pool != (lstdl_t *)NULL) {
+	if (s != (caf_shm_pool_t *)NULL && s->pool != (deque_t *)NULL) {
 		if ((found = (caf_shm_alloc_t *)
-			 lstdl_search (s->pool, (void *)id,
+			 deque_search (s->pool, (void *)id,
 						   caf_shm_alloc_search_callback))
 			!= (caf_shm_alloc_t *)NULL) {
-			if ((lstdl_node_delete_by_data (s->pool, (void *)found,
+			if ((deque_node_delete_by_data (s->pool, (void *)found,
 											caf_shm_alloc_delete_callback))
 				== CAF_OK) {
 				s->sz -= found->sz;

@@ -26,7 +26,7 @@
 #define CAF_THREAD_ATTR_H 1
 
 #include <pthread.h>
-#include <caf/caf_data_lstdl.h>
+#include <caf/caf_data_deque.h>
 
 /**
  * @defgroup      caf_thread_attr    Thread Attributes

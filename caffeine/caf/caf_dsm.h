@@ -40,7 +40,7 @@
  */
 
 #include <caf/caf.h>
-#include <caf/caf_data_lstdl.h>
+#include <caf/caf_data_deque.h>
 
 #ifdef __cplusplus
 CAF_BEGIN_C_EXTERNS
@@ -75,7 +75,7 @@ typedef struct caf_dsm_s caf_dsm_t;
 struct caf_dsm_s {
 	int m_id;
 	int m_cycle;
-	lstdl_t *m_state;
+	deque_t *m_state;
 };
 
 /**
@@ -211,7 +211,7 @@ struct caf_dsm_runner_s {
 	/** State Return Data */
 	void *r_return;
 	/** Current Node in State List */
-	lstdln_t *l_current;
+	caf_dequen_t *l_current;
 };
 
 /**

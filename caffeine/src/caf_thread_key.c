@@ -99,7 +99,7 @@ pth_kpool_new (int id, pthread_t *thr) {
 		if (res != (pth_kpool_t *)NULL) {
 			res->id = id;
 			res->thr = thr;
-			res->keys = lstdl_create ();
+			res->keys = deque_create ();
 		}
 	}
 	return res;
@@ -109,7 +109,7 @@ pth_kpool_new (int id, pthread_t *thr) {
 void
 pth_kpool_delete (pth_kpool_t *kpool) {
 	if (kpool != (pth_kpool_t *)NULL) {
-		lstdl_delete (kpool->keys, pth_kpool_remove_callback);
+		deque_delete (kpool->keys, pth_kpool_remove_callback);
 		xfree (kpool);
 		kpool = (pth_kpool_t *)NULL;
 	}
@@ -120,7 +120,7 @@ void *
 pth_kpool_add (pth_kpool_t *pool, pth_key_t *key) {
 	if (pool != (pth_kpool_t *)NULL
 		&& key != (pth_key_t *)NULL) {
-		return lstdl_push(pool->keys, (void *)key);
+		return deque_push(pool->keys, (void *)key);
 	}
 	return (void *)NULL;
 }
@@ -129,12 +129,12 @@ pth_kpool_add (pth_kpool_t *pool, pth_key_t *key) {
 pth_key_t *
 pth_kpool_get_key (pth_kpool_t *pool, int id) {
 	pth_key_t *k = (pth_key_t *)NULL;
-	lstdln_t *n;
+	caf_dequen_t *n;
 	if (pool != (pth_kpool_t *)NULL
-		&& pool->keys != (lstdl_t *)NULL) {
+		&& pool->keys != (deque_t *)NULL) {
 		n = pool->keys->head;
-		if (n != (lstdln_t *)NULL) {
-			while (n != (lstdln_t *)NULL) {
+		if (n != (caf_dequen_t *)NULL) {
+			while (n != (caf_dequen_t *)NULL) {
 				k = (pth_key_t *)n->data;
 				if (k->id == id) {
 					return k;
@@ -150,12 +150,12 @@ pth_kpool_get_key (pth_kpool_t *pool, int id) {
 void *
 pth_kpool_get (pth_kpool_t *pool, int id) {
 	pth_key_t *k = (pth_key_t *)NULL;
-	lstdln_t *n;
+	caf_dequen_t *n;
 	if (pool != (pth_kpool_t *)NULL
-		&& pool->keys != (lstdl_t *)NULL) {
+		&& pool->keys != (deque_t *)NULL) {
 		n = pool->keys->head;
-		if (n != (lstdln_t *)NULL) {
-			while (n != (lstdln_t *)NULL) {
+		if (n != (caf_dequen_t *)NULL) {
+			while (n != (caf_dequen_t *)NULL) {
 				k = (pth_key_t *)n->data;
 				if (k->id == id) {
 					return pth_key_get (k);
@@ -171,15 +171,15 @@ pth_kpool_get (pth_kpool_t *pool, int id) {
 void
 pth_kpool_remove_by_id (pth_kpool_t *pool, int id) {
 	pth_key_t *k = (pth_key_t *)NULL;
-	lstdln_t *n;
+	caf_dequen_t *n;
 	if (pool != (pth_kpool_t *)NULL
-		&& pool->keys != (lstdl_t *)NULL) {
+		&& pool->keys != (deque_t *)NULL) {
 		n = pool->keys->head;
-		if (n != (lstdln_t *)NULL) {
-			while (n != (lstdln_t *)NULL) {
+		if (n != (caf_dequen_t *)NULL) {
+			while (n != (caf_dequen_t *)NULL) {
 				k = (pth_key_t *)n->data;
 				if (k->id == id) {
-					lstdl_node_delete (pool->keys, n,
+					deque_node_delete (pool->keys, n,
 									   pth_kpool_remove_callback);
 				}
 				n = n->next;
@@ -193,8 +193,8 @@ void
 pth_kpool_remove (pth_kpool_t *pool, pth_key_t *key) {
 	if (pool != (pth_kpool_t *)NULL
 		&& key != (pth_key_t *)NULL
-		&& pool->keys != (lstdl_t *)NULL) {
-		lstdl_node_delete_by_data (pool->keys, (void *)key,
+		&& pool->keys != (deque_t *)NULL) {
+		deque_node_delete_by_data (pool->keys, (void *)key,
 								   pth_kpool_remove_callback);
 	}
 }

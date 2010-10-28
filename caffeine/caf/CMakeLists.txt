@@ -1,4 +1,4 @@
-### -*- mode: cmake; indent-tabs-mode: t; tab-width: 4; cmake-tab-width: 4; -*-
+### -*- mode: cmake; -*-
 ### $Id$
 ### project
 project(caffeine C)
@@ -19,8 +19,6 @@ link_directories (
     /usr/lib
     /usr/local/lib
     /usr/X11R6/lib
-    .
-    ..
 	)
 
 ### includes
@@ -39,8 +37,8 @@ set (CAFFEINE_HEADERS
     caf_data_buffer.h
     caf_data_conv.h
     caf_data_lstc.h
-    caf_data_lstdl.h
-    caf_data_lstdlc.h
+    caf_data_deque.h
+    caf_data_cdeque.h
     caf_data_mem.h
     caf_data_packer.h
     caf_data_pidfile.h

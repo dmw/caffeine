@@ -49,11 +49,11 @@ pth_pool_new (pth_attri_t *attrs, CAF_PT_PROTOTYPE(rtn), int count) {
 		if (ptp != (pth_pool_t *)NULL && count > 0) {
 			ptp->attri = attrs;
 			ptp->rtn = rtn;
-			ptp->threads = lstdl_create ();
+			ptp->threads = deque_create ();
 			for (c = 1; c <= count; c++) {
 				thr = (pthread_t *)xmalloc (sizeof(pthread_t));
 				if (thr != (pthread_t *)NULL) {
-					if ((lstdl_push (ptp->threads, thr)) != (lstdl_t *)NULL) {
+					if ((deque_push (ptp->threads, thr)) != (deque_t *)NULL) {
 						rc++;
 					}
 				}
@@ -68,8 +68,8 @@ pth_pool_new (pth_attri_t *attrs, CAF_PT_PROTOTYPE(rtn), int count) {
 void
 pth_pool_delete (pth_pool_t *p) {
 	if (p != (pth_pool_t *)NULL) {
-		if (p->threads != (lstdl_t *)NULL) {
-			lstdl_delete (p->threads, pth_pool_delete_callback);
+		if (p->threads != (deque_t *)NULL) {
+			deque_delete (p->threads, pth_pool_delete_callback);
 		}
 		xfree (p);
 		p = (pth_pool_t *)NULL;
@@ -95,15 +95,15 @@ pth_pool_t *
 pth_pool_create (pth_attri_t *attrs, CAF_PT_PROTOTYPE(rtn), int cnt, void *arg) {
 	pth_pool_t *pool = (pth_pool_t *)NULL;
 	int rt = 0;
-	lstdln_t *n;
+	caf_dequen_t *n;
 	pthread_t *thr;
 	if (rtn != NULL && cnt > 0) {
 		pool = pth_pool_new (attrs, rtn, cnt);
 		if (pool != (pth_pool_t *)NULL) {
-			if (pool->threads != (lstdl_t *)NULL) {
+			if (pool->threads != (deque_t *)NULL) {
 				n = pool->threads->head;
-				if (n != (lstdln_t *)NULL) {
-					while (n != (lstdln_t *)NULL) {
+				if (n != (caf_dequen_t *)NULL) {
+					while (n != (caf_dequen_t *)NULL) {
 						thr = (pthread_t *)n->data;
 						rt = pthread_create (thr, &(pool->attri->attr), rtn,
 						                     arg);
@@ -125,7 +125,7 @@ pth_pool_add (pth_pool_t *p, pth_attri_t *attrs, CAF_PT_PROTOTYPE(rtn),
 	pthread_t *thr;
 	if (rtn != NULL
 		&& p != (pth_pool_t *)NULL
-		&& p->threads != (lstdl_t *)NULL) {
+		&& p->threads != (deque_t *)NULL) {
 		thr = (pthread_t *)xmalloc (sizeof (pthread_t));
 		if (thr != (pthread_t *)NULL) {
 			if (attrs != (pth_attri_t *)NULL) {
@@ -136,7 +136,7 @@ pth_pool_add (pth_pool_t *p, pth_attri_t *attrs, CAF_PT_PROTOTYPE(rtn),
 									 arg);
 			}
 			if (rt == 0) {
-				lstdl_push (pool->threads, thr);
+				deque_push (pool->threads, thr);
 			}
 		}
 	}
@@ -149,17 +149,17 @@ pth_pool_join (pth_pool_t *pool) {
 	pth_attri_t *attri = (pth_attri_t *)NULL;
 	int rt = 0, ds = 0, final = 0, jn = 0;
 	void *thread_stat = (void *)NULL;
-	lstdln_t *n;
+	caf_dequen_t *n;
 	pthread_t *thr;
 	if (pool != (pth_pool_t *)NULL
-		&& pool->threads != (lstdl_t *)NULL) {
+		&& pool->threads != (deque_t *)NULL) {
 		attri = (pth_attri_t *)pool->attri;
 		if (attri->at & PTH_ATTR_JOINABLE) {
 			jn = pth_attri_set(attri, PTH_ATTR_JOINABLE, (void *)&ds);
 			if (jn == 0) {
 				n = pool->threads->head;
-				if (n != (lstdln_t *)NULL) {
-					while (n != (lstdln_t *)NULL) {
+				if (n != (caf_dequen_t *)NULL) {
+					while (n != (caf_dequen_t *)NULL) {
 						thr = (pthread_t *)n->data;
 						thread_stat = (void *)NULL;
 						rt = pthread_join (*thr, (void **)&thread_stat);
@@ -180,17 +180,17 @@ int
 pth_pool_detach (pth_pool_t *pool) {
 	pth_attri_t *attri = (pth_attri_t *)NULL;
 	int rt = 0, ds = 0, final = 0, jn = 0;
-	lstdln_t *n;
+	caf_dequen_t *n;
 	pthread_t *thr;
 	if (pool != (pth_pool_t *)NULL
-		&& pool->threads != (lstdl_t *)NULL) {
+		&& pool->threads != (deque_t *)NULL) {
 		attri = (pth_attri_t *)pool->attri;
 		if (attri->at & PTH_ATTR_JOINABLE) {
 			jn = pth_attri_set(attri, PTH_ATTR_JOINABLE, (void *)&ds);
 			if (jn != 0) {
 				n = pool->threads->head;
-				if (n != (lstdln_t *)NULL) {
-					while (n != (lstdln_t *)NULL) {
+				if (n != (caf_dequen_t *)NULL) {
+					while (n != (caf_dequen_t *)NULL) {
 						thr = (pthread_t *)n->data;
 						rt = pthread_detach (*thr);
 						final += rt;
@@ -207,13 +207,13 @@ pth_pool_detach (pth_pool_t *pool) {
 int
 pth_pool_cancel (pth_pool_t *pool) {
 	int rt = 0, final = 0;
-	lstdln_t *n;
+	caf_dequen_t *n;
 	pthread_t *thr;
 	if (pool != (pth_pool_t *)NULL
-		&& pool->threads != (lstdl_t *)NULL) {
+		&& pool->threads != (deque_t *)NULL) {
 		n = pool->threads->head;
-		if (n != (lstdln_t *)NULL) {
-			while (n != (lstdln_t *)NULL) {
+		if (n != (caf_dequen_t *)NULL) {
+			while (n != (caf_dequen_t *)NULL) {
 				thr = (pthread_t *)n->data;
 				rt = pthread_cancel (*thr);
 				final += rt;

@@ -40,7 +40,7 @@
  */
 
 #include <caf/caf.h>
-#include <caf/caf_data_lstdl.h>
+#include <caf/caf_data_deque.h>
 
 #ifdef __cplusplus
 CAF_BEGIN_C_EXTERNS

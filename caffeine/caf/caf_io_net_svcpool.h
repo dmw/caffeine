@@ -53,7 +53,7 @@ struct caf_svcpool_s {
 	int svc_num;
 	int *svc_fds;
 	caf_conn_t *svc_seed;
-	lstdl_t *svc_lst;
+	deque_t *svc_lst;
 };
 
 caf_svcpool_t *caf_svcpool_new (int id, int num, caf_conn_t *seed);

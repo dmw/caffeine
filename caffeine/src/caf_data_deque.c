@@ -34,17 +34,17 @@ static char Id[] = "$Id$";
 
 #include "caf/caf.h"
 #include "caf/caf_data_mem.h"
-#include "caf/caf_data_lstdl.h"
+#include "caf/caf_data_deque.h"
 
 
-lstdl_t *
-lstdl_new (void *data) {
-	lstdl_t *lst;
-	lstdln_t *n;
-	lst = (lstdl_t *)xmalloc (CAF_LSTDL_SZ);
+deque_t *
+deque_new (void *data) {
+	deque_t *lst;
+	caf_dequen_t *n;
+	lst = (deque_t *)xmalloc (CAF_DEQUE_SZ);
 	if (lst != NULL) {
-		n = (lstdln_t *)xmalloc (CAF_LSTDLNODE_SZ);
-		if (n != (lstdln_t *)NULL) {
+		n = (caf_dequen_t *)xmalloc (CAF_CAF_DEQUENODE_SZ);
+		if (n != (caf_dequen_t *)NULL) {
 			if (data != (void *)NULL) {
 				n->data = data;
 			}
@@ -55,21 +55,21 @@ lstdl_new (void *data) {
 			lst->size = 1;
 		} else {
 			free (lst);
-			lst = (lstdl_t *)NULL;
-			n = (lstdln_t *)NULL;
+			lst = (deque_t *)NULL;
+			n = (caf_dequen_t *)NULL;
 		}
 	}
 	return lst;
 }
 
 
-lstdl_t *
-lstdl_create (void) {
-	lstdl_t *lst;
-	lst = (lstdl_t *)xmalloc (CAF_LSTDL_SZ);
+deque_t *
+deque_create (void) {
+	deque_t *lst;
+	lst = (deque_t *)xmalloc (CAF_DEQUE_SZ);
 	if (lst != NULL) {
-		lst->head = (lstdln_t *)NULL;
-		lst->tail = (lstdln_t *)NULL;
+		lst->head = (caf_dequen_t *)NULL;
+		lst->tail = (caf_dequen_t *)NULL;
 		lst->size = 0;
 	}
 	return lst;
@@ -77,12 +77,12 @@ lstdl_create (void) {
 
 
 int
-lstdl_delete (lstdl_t *lst, CAF_LSTDLNODE_CBDEL(del)) {
-	lstdln_t *cur, *destroy;
+deque_delete (deque_t *lst, CAF_CAF_DEQUENODE_CBDEL(del)) {
+	caf_dequen_t *cur, *destroy;
 	int cnt = 0;
-	if (lst != (lstdl_t *)NULL) {
+	if (lst != (deque_t *)NULL) {
 		cur = lst->head;
-		while (cur != (lstdln_t *)NULL) {
+		while (cur != (caf_dequen_t *)NULL) {
 			destroy = cur;
 			cur = cur->next;
 			if ((del (destroy->data)) == CAF_OK) {
@@ -93,7 +93,7 @@ lstdl_delete (lstdl_t *lst, CAF_LSTDLNODE_CBDEL(del)) {
 				return cnt;
 			}
 		}
-		if (cur != (lstdln_t *)NULL) {
+		if (cur != (caf_dequen_t *)NULL) {
 			if ((del (cur->data)) == CAF_OK) {
 				xfree (cur);
 				cnt++;
@@ -103,7 +103,7 @@ lstdl_delete (lstdl_t *lst, CAF_LSTDLNODE_CBDEL(del)) {
 			}
 		}
 		xfree(lst);
-		lst = (lstdl_t *)NULL;
+		lst = (deque_t *)NULL;
 		return CAF_OK;
 	}
 	return CAF_ERROR_SUB;
@@ -111,18 +111,18 @@ lstdl_delete (lstdl_t *lst, CAF_LSTDLNODE_CBDEL(del)) {
 
 
 int
-lstdl_delete_nocb (lstdl_t *lst) {
-	lstdln_t *cur, *destroy;
+deque_delete_nocb (deque_t *lst) {
+	caf_dequen_t *cur, *destroy;
 	int cnt = 0;
-	if (lst != (lstdl_t *)NULL) {
+	if (lst != (deque_t *)NULL) {
 		cur = lst->head;
-		while (cur != (lstdln_t *)NULL) {
+		while (cur != (caf_dequen_t *)NULL) {
 			cnt++;
 			destroy = cur;
 			cur = cur->next;
 			xfree(destroy);
 		}
-		if (cur != (lstdln_t *)NULL) {
+		if (cur != (caf_dequen_t *)NULL) {
 			cnt++;
 			xfree (cur);
 		}
@@ -134,25 +134,25 @@ lstdl_delete_nocb (lstdl_t *lst) {
 
 
 int
-lstdl_node_delete (lstdl_t *lst, lstdln_t *n, CAF_LSTDLNODE_CBDEL(del)) {
-	lstdln_t *nr;
-	lstdln_t *prev;
-	lstdln_t *next;
-	if (lst != (lstdl_t *)NULL && n != (void *)NULL && del != NULL) {
+deque_node_delete (deque_t *lst, caf_dequen_t *n, CAF_CAF_DEQUENODE_CBDEL(del)) {
+	caf_dequen_t *nr;
+	caf_dequen_t *prev;
+	caf_dequen_t *next;
+	if (lst != (deque_t *)NULL && n != (void *)NULL && del != NULL) {
 		nr = lst->head;
-		if (nr != (lstdln_t *)NULL) {
-			while (nr != (lstdln_t *)NULL) {
-				if (nr != (lstdln_t *)NULL) {
+		if (nr != (caf_dequen_t *)NULL) {
+			while (nr != (caf_dequen_t *)NULL) {
+				if (nr != (caf_dequen_t *)NULL) {
 					if (nr == n) {
 						if ((del (nr->data)) == CAF_OK) {
 							prev = nr->prev;
 							next = nr->next;
-							if (prev != (lstdln_t *)NULL &&
-								next != (lstdln_t *)NULL) {
+							if (prev != (caf_dequen_t *)NULL &&
+								next != (caf_dequen_t *)NULL) {
 								prev->next = next;
 								next->prev = prev;
-							} else if (prev != (lstdln_t *)NULL &&
-							           next == (lstdln_t *)NULL) {
+							} else if (prev != (caf_dequen_t *)NULL &&
+							           next == (caf_dequen_t *)NULL) {
 								prev->next = next;
 							} else {
 								next->prev = prev;
@@ -172,25 +172,25 @@ lstdl_node_delete (lstdl_t *lst, lstdln_t *n, CAF_LSTDLNODE_CBDEL(del)) {
 
 
 int
-lstdl_node_delete_by_data (lstdl_t *lst, void *n, CAF_LSTDLNODE_CBDEL(del)) {
-	lstdln_t *nr;
-	lstdln_t *prev;
-	lstdln_t *next;
-	if (lst != (lstdl_t *)NULL && n != (void *)NULL && del != NULL) {
+deque_node_delete_by_data (deque_t *lst, void *n, CAF_CAF_DEQUENODE_CBDEL(del)) {
+	caf_dequen_t *nr;
+	caf_dequen_t *prev;
+	caf_dequen_t *next;
+	if (lst != (deque_t *)NULL && n != (void *)NULL && del != NULL) {
 		nr = lst->head;
-		if (nr != (lstdln_t *)NULL) {
-			while (nr != (lstdln_t *)NULL) {
-				if (nr != (lstdln_t *)NULL) {
+		if (nr != (caf_dequen_t *)NULL) {
+			while (nr != (caf_dequen_t *)NULL) {
+				if (nr != (caf_dequen_t *)NULL) {
 					if (nr->data == n) {
 						if ((del (nr->data)) == CAF_OK) {
 							prev = nr->prev;
 							next = nr->next;
-							if (prev != (lstdln_t *)NULL &&
-								next != (lstdln_t *)NULL) {
+							if (prev != (caf_dequen_t *)NULL &&
+								next != (caf_dequen_t *)NULL) {
 								prev->next = next;
 								next->prev = prev;
-							} else if (prev != (lstdln_t *)NULL &&
-							           next == (lstdln_t *)NULL) {
+							} else if (prev != (caf_dequen_t *)NULL &&
+							           next == (caf_dequen_t *)NULL) {
 								prev->next = next;
 							} else {
 								next->prev = prev;
@@ -210,9 +210,9 @@ lstdl_node_delete_by_data (lstdl_t *lst, void *n, CAF_LSTDLNODE_CBDEL(del)) {
 
 
 int
-lstdl_empty_list (lstdl_t *lst) {
-	if (lst != (lstdl_t *)NULL) {
-		return ((lst->tail == lst->head && lst->tail == (lstdln_t *)NULL)
+deque_empty_list (deque_t *lst) {
+	if (lst != (deque_t *)NULL) {
+		return ((lst->tail == lst->head && lst->tail == (caf_dequen_t *)NULL)
 		        ? CAF_OK : CAF_ERROR);
 	}
 	return CAF_ERROR;
@@ -220,9 +220,9 @@ lstdl_empty_list (lstdl_t *lst) {
 
 
 int
-lstdl_oneitem_list (lstdl_t *lst) {
-	if (lst != (lstdl_t *)NULL) {
-		return ((lst->tail == lst->head && lst->tail != (lstdln_t *)NULL)
+deque_oneitem_list (deque_t *lst) {
+	if (lst != (deque_t *)NULL) {
+		return ((lst->tail == lst->head && lst->tail != (caf_dequen_t *)NULL)
 		        ? CAF_OK : CAF_ERROR);
 	}
 	return CAF_ERROR;
@@ -230,13 +230,13 @@ lstdl_oneitem_list (lstdl_t *lst) {
 
 
 int
-lstdl_length (lstdl_t *lst) {
+deque_length (deque_t *lst) {
 	int c;
-	lstdln_t *cur;
-	if (lst != (lstdl_t *)NULL) {
+	caf_dequen_t *cur;
+	if (lst != (deque_t *)NULL) {
 		cur = lst->head;
 		c = 0;
-		while (cur != (lstdln_t *)NULL) {
+		while (cur != (caf_dequen_t *)NULL) {
 			cur = cur->next;
 			c++;
 		}
@@ -246,24 +246,24 @@ lstdl_length (lstdl_t *lst) {
 }
 
 
-lstdl_t *
-lstdl_push (lstdl_t *lst, void *data) {
-	lstdln_t *tail, *xnew;
-	if (lst != (lstdl_t *)NULL) {
-		xnew = (lstdln_t *)xmalloc (CAF_LSTDLNODE_SZ);
-		if (xnew != (lstdln_t *)NULL) {
-			if (lst->tail != (lstdln_t *)NULL &&
-				lst->head != (lstdln_t *)NULL) {
+deque_t *
+deque_push (deque_t *lst, void *data) {
+	caf_dequen_t *tail, *xnew;
+	if (lst != (deque_t *)NULL) {
+		xnew = (caf_dequen_t *)xmalloc (CAF_CAF_DEQUENODE_SZ);
+		if (xnew != (caf_dequen_t *)NULL) {
+			if (lst->tail != (caf_dequen_t *)NULL &&
+				lst->head != (caf_dequen_t *)NULL) {
 				tail = lst->tail;
 				tail->next = xnew;
 				xnew->prev = tail;
-				xnew->next = (lstdln_t *)NULL;
+				xnew->next = (caf_dequen_t *)NULL;
 				xnew->data = data;
 				lst->tail = xnew;
 				lst->size++;
 			} else {
-				xnew->prev = (lstdln_t *)NULL;
-				xnew->next = (lstdln_t *)NULL;
+				xnew->prev = (caf_dequen_t *)NULL;
+				xnew->next = (caf_dequen_t *)NULL;
 				xnew->data = data;
 				lst->head = xnew;
 				lst->tail = xnew;
@@ -272,19 +272,19 @@ lstdl_push (lstdl_t *lst, void *data) {
 			return lst;
 		}
 	}
-	return (lstdl_t *)NULL;
+	return (deque_t *)NULL;
 }
 
 
-lstdln_t *
-lstdl_pop (lstdl_t *lst) {
-	lstdln_t *ret = (lstdln_t *)NULL;
-	lstdln_t *ex;
-	if (lst != (lstdl_t *)NULL) {
+caf_dequen_t *
+deque_pop (deque_t *lst) {
+	caf_dequen_t *ret = (caf_dequen_t *)NULL;
+	caf_dequen_t *ex;
+	if (lst != (deque_t *)NULL) {
 		ret = lst->tail;
-		if (ret != (lstdln_t *)NULL) {
+		if (ret != (caf_dequen_t *)NULL) {
 			ex = ret->prev;
-			if (ex != (lstdln_t *)NULL) {
+			if (ex != (caf_dequen_t *)NULL) {
 				ret->next = (void *)NULL;
 				ret->prev = (void *)NULL;
 				ex->next = (void *)NULL;
@@ -297,15 +297,15 @@ lstdl_pop (lstdl_t *lst) {
 }
 
 
-lstdln_t *
-lstdl_first (lstdl_t *lst) {
-	lstdln_t *ret = (lstdln_t *)NULL;
-	lstdln_t *ex;
-	if (lst != (lstdl_t *)NULL) {
+caf_dequen_t *
+deque_first (deque_t *lst) {
+	caf_dequen_t *ret = (caf_dequen_t *)NULL;
+	caf_dequen_t *ex;
+	if (lst != (deque_t *)NULL) {
 		ret = lst->head;
-		if (ret != (lstdln_t *)NULL) {
+		if (ret != (caf_dequen_t *)NULL) {
 			ex = ret->next;
-			if (ex != (lstdln_t *)NULL) {
+			if (ex != (caf_dequen_t *)NULL) {
 				ret->next = (void *)NULL;
 				ret->prev = (void *)NULL;
 				ex->prev = (void *)NULL;
@@ -319,13 +319,13 @@ lstdl_first (lstdl_t *lst) {
 
 
 int
-lstdl_set (lstdl_t *lst, int pos, void *data) {
-	lstdln_t *pn;
+deque_set (deque_t *lst, int pos, void *data) {
+	caf_dequen_t *pn;
 	int c;
-	if (lst != (lstdl_t *)NULL) {
+	if (lst != (deque_t *)NULL) {
 		c = 0;
 		pn = lst->head;
-		while (pn != (lstdln_t *)NULL) {
+		while (pn != (caf_dequen_t *)NULL) {
 			if (pos == c) {
 				pn->data = data;
 				return pos;
@@ -339,15 +339,15 @@ lstdl_set (lstdl_t *lst, int pos, void *data) {
 
 
 int
-lstdl_insert (lstdl_t *lst, int pos, void *data) {
-	lstdln_t *pn, *xnew;
+deque_insert (deque_t *lst, int pos, void *data) {
+	caf_dequen_t *pn, *xnew;
 	int c;
-	if (lst != (lstdl_t *)NULL) {
+	if (lst != (deque_t *)NULL) {
 		c = 0;
 		pn = lst->head;
-		while (pn != (lstdln_t *)NULL) {
+		while (pn != (caf_dequen_t *)NULL) {
 			if (pos == c) {
-				xnew = (lstdln_t *)xmalloc (CAF_LSTDLNODE_SZ);
+				xnew = (caf_dequen_t *)xmalloc (CAF_CAF_DEQUENODE_SZ);
 				xnew->data = data;
 				xnew->prev = pn->prev;
 				xnew->next = pn;
@@ -363,13 +363,13 @@ lstdl_insert (lstdl_t *lst, int pos, void *data) {
 
 
 void *
-lstdl_get (lstdl_t *lst, int pos) {
-	lstdln_t *pn;
+deque_get (deque_t *lst, int pos) {
+	caf_dequen_t *pn;
 	int c;
-	if (lst != (lstdl_t *)NULL) {
+	if (lst != (deque_t *)NULL) {
 		c = 0;
 		pn = lst->head;
-		while (pn != (lstdln_t *)NULL) {
+		while (pn != (caf_dequen_t *)NULL) {
 			if (pos == c) {
 				return pn->data;
 			}
@@ -382,12 +382,12 @@ lstdl_get (lstdl_t *lst, int pos) {
 
 
 int
-lstdl_map (lstdl_t *lst, CAF_LSTDLNODE_CBMAP(step)) {
+deque_map (deque_t *lst, CAF_CAF_DEQUENODE_CBMAP(step)) {
 	int c = 0;
-	lstdln_t *n;
-	if (lst != (lstdl_t *)NULL) {
+	caf_dequen_t *n;
+	if (lst != (deque_t *)NULL) {
 		n = lst->head;
-		while (n != (lstdln_t *)NULL) {
+		while (n != (caf_dequen_t *)NULL) {
 			step (n->data);
 			n = n->next;
 			c++;
@@ -399,12 +399,12 @@ lstdl_map (lstdl_t *lst, CAF_LSTDLNODE_CBMAP(step)) {
 
 
 int
-lstdl_map_checked (lstdl_t *lst, CAF_LSTDLNODE_CBMAP(step)) {
+deque_map_checked (deque_t *lst, CAF_CAF_DEQUENODE_CBMAP(step)) {
 	int c = 0;
-	lstdln_t *n;
-	if (lst != (lstdl_t *)NULL) {
+	caf_dequen_t *n;
+	if (lst != (deque_t *)NULL) {
 		n = lst->head;
-		while (n != (lstdln_t *)NULL) {
+		while (n != (caf_dequen_t *)NULL) {
 			if ((step (n->data)) == CAF_OK) {
 				n = n->next;
 				c++;
@@ -419,12 +419,12 @@ lstdl_map_checked (lstdl_t *lst, CAF_LSTDLNODE_CBMAP(step)) {
 
 
 void *
-lstdl_search (lstdl_t *lst, void *data, CAF_LSTDLNODE_CBSRCH(srch)) {
+deque_search (deque_t *lst, void *data, CAF_CAF_DEQUENODE_CBSRCH(srch)) {
 	int c = 0;
-	lstdln_t *n;
-	if (lst != (lstdl_t *)NULL) {
+	caf_dequen_t *n;
+	if (lst != (deque_t *)NULL) {
 		n = lst->head;
-		while (n != (lstdln_t *)NULL) {
+		while (n != (caf_dequen_t *)NULL) {
 			if ((srch (n->data, data)) == CAF_OK) {
 				return n->data;
 			}
@@ -436,46 +436,46 @@ lstdl_search (lstdl_t *lst, void *data, CAF_LSTDLNODE_CBSRCH(srch)) {
 }
 
 
-lstdln_t *
-lstdl_search_node (lstdl_t *lst, void *data) {
+caf_dequen_t *
+deque_search_node (deque_t *lst, void *data) {
 	int c = 0;
-	lstdln_t *n;
-	if (lst != (lstdl_t *)NULL) {
+	caf_dequen_t *n;
+	if (lst != (deque_t *)NULL) {
 		n = lst->head;
-		while (n != (lstdln_t *)NULL) {
+		while (n != (caf_dequen_t *)NULL) {
 			if (n->data == data) {
 				return n;
 			}
 			n = n->next;
 			c++;
 		}
-		return (lstdln_t *)NULL;
+		return (caf_dequen_t *)NULL;
 	}
-	return (lstdln_t *)NULL;
+	return (caf_dequen_t *)NULL;
 }
 
 
 int
-lstdl_delete_cb (void *ptr) {
+deque_delete_cb (void *ptr) {
 	xfree(ptr);
 	return CAF_OK;
 }
 
 
 int
-lstdl_str_delete_cb (void *ptr) {
+deque_str_delete_cb (void *ptr) {
 	xstrdestroy(ptr);
 	return CAF_OK;
 }
 
 
 void
-lstdl_dump (FILE *out, lstdl_t *lst, CAF_LSTDLNODE_CBDUMP(dmp)) {
-	lstdln_t *cur;
-	if (lst != (lstdl_t *)NULL) {
+deque_dump (FILE *out, deque_t *lst, CAF_CAF_DEQUENODE_CBDUMP(dmp)) {
+	caf_dequen_t *cur;
+	if (lst != (deque_t *)NULL) {
 		cur = lst->head;
 		dmp(out, cur->data);
-		while (cur != (lstdln_t *)NULL) {
+		while (cur != (caf_dequen_t *)NULL) {
 			dmp(out, cur->data);
 			cur = cur->next;
 		}
@@ -484,14 +484,14 @@ lstdl_dump (FILE *out, lstdl_t *lst, CAF_LSTDLNODE_CBDUMP(dmp)) {
 
 
 int
-lstdl_dump_ptr (FILE *out, lstdl_t *lst) {
+deque_dump_ptr (FILE *out, deque_t *lst) {
 	int c = 0, a = 0;
-	lstdln_t *cur;
-	if (lst != (lstdl_t *)NULL && out != (FILE *)NULL) {
+	caf_dequen_t *cur;
+	if (lst != (deque_t *)NULL && out != (FILE *)NULL) {
 		cur = lst->head;
 		a += fprintf (out, "%d: %p < %p > %p : %p\n", c, (void *)cur->prev,
 		              (void *)cur, (void *)cur->next, cur->data);
-		while ((cur = cur->next) != (lstdln_t *)NULL) {
+		while ((cur = cur->next) != (caf_dequen_t *)NULL) {
 			c++;
 			a += fprintf (out, "%d: %p < %p > %p : %p\n", c, (void *)cur->prev,
 			              (void *)cur, (void *)cur->next, cur->data);
@@ -502,10 +502,10 @@ lstdl_dump_ptr (FILE *out, lstdl_t *lst) {
 
 
 int
-lstdl_dump_str_cb (FILE *o, void *data) {
+deque_dump_str_cb (FILE *o, void *data) {
 	return fprintf (o, "%p = [len: %d] \"%s\"\n", data,
 	                (int)strlen((char *)data), (char *)data);
 }
 
-/* caf_data_lstdl.c ends here */
+/* caf_data_deque.c ends here */
 

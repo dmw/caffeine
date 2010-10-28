@@ -28,7 +28,7 @@
 #include <sys/types.h>
 #include <pthread.h>
 #include <caf/caf_thread_mutex.h>
-#include <caf/caf_data_lstdl.h>
+#include <caf/caf_data_deque.h>
 
 /**
  * @defgroup      caf_thread_cond    Thread Condition Variables

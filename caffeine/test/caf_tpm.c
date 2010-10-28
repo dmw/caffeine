@@ -54,7 +54,7 @@ main (void) {
 				printf ("%d: attr PTHDR_ATTR_DETACHED = %d\n", getpid (), rt);
 				pth_pool = pth_pool_create (attr, pth_rtn, 3, (void *)NULL);
 				printf ("%d: threads: %d\n", getpid (),
-				        lstdl_length (pth_pool->threads));
+				        deque_length (pth_pool->threads));
 			}
 		}
 	}

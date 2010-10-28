@@ -35,7 +35,7 @@ static char Id[] = "$Id$";
 
 #include "caf/caf.h"
 #include "caf/caf_data_mem.h"
-#include "caf/caf_data_lstdl.h"
+#include "caf/caf_data_deque.h"
 #include "caf/caf_regex_pcre.h"
 
 #define REGEX_PCRE_OV_SZ				256
@@ -149,8 +149,8 @@ regex_pcre_pool_new (const int id, const char *name) {
 	if (r != (regex_pcre_pool_t *)NULL) {
 		r->id = (int)id;
 		r->name = strdup (name);
-		r->pool = lstdl_create ();
-		if (r->pool == (lstdl_t *)NULL) {
+		r->pool = deque_create ();
+		if (r->pool == (deque_t *)NULL) {
 			xfree (r);
 			r = (regex_pcre_pool_t *)NULL;
 		}
@@ -164,8 +164,8 @@ regex_pcre_pool_delete (regex_pcre_pool_t *p) {
 	if (p != (regex_pcre_pool_t *)NULL) {
 		return CAF_ERROR;
 	}
-	if (p->pool != (lstdl_t *)NULL) {
-		lstdl_delete (p->pool, regex_pcre_delete_callback);
+	if (p->pool != (deque_t *)NULL) {
+		deque_delete (p->pool, regex_pcre_delete_callback);
 		xfree (p->name);
 		xfree (p);
 		return CAF_OK;
@@ -176,19 +176,19 @@ regex_pcre_pool_delete (regex_pcre_pool_t *p) {
 
 int
 regex_pcre_pool_match (regex_pcre_pool_t *p, const char *sub) {
-	lstdln_t *n;
+	caf_dequen_t *n;
 	regex_pcre_t *re;
 	if (p == (regex_pcre_pool_t *)NULL) {
 		return CAF_ERROR_SUB;
 	}
-	if (p->pool == (lstdl_t *)NULL) {
+	if (p->pool == (deque_t *)NULL) {
 		return CAF_ERROR_SUB;
 	}
 	n = p->pool->head;
-	if (n == (lstdln_t *)NULL) {
+	if (n == (caf_dequen_t *)NULL) {
 		return CAF_ERROR_SUB;
 	}
-	while (n != (lstdln_t *)NULL) {
+	while (n != (caf_dequen_t *)NULL) {
 		re = (regex_pcre_t *)n->data;
 		if ((regex_pcre_match (re, sub)) == CAF_OK) {
 			return re->id;

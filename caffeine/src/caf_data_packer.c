@@ -181,8 +181,8 @@ caf_pack_new (int id, const char *name) {
 		r = (caf_pack_t *)xmalloc (CAF_PACK_SZ);
 		r->id = id;
 		r->name = strdup(name);
-		r->units = lstdl_create ();
-		if (r->units == (lstdl_t *)NULL) {
+		r->units = deque_create ();
+		if (r->units == (deque_t *)NULL) {
 			xfree (r);
 			r = (caf_pack_t *)NULL;
 		}
@@ -197,8 +197,8 @@ caf_pack_delete (caf_pack_t *r) {
 		if (r->name != (char *)NULL) {
 			xfree (r->name);
 		}
-		if (r->units != (lstdl_t *)NULL) {
-			lstdl_delete (r->units, caf_unit_delete_callback);
+		if (r->units != (deque_t *)NULL) {
+			deque_delete (r->units, caf_unit_delete_callback);
 		}
 		xfree (r);
 		return CAF_OK;
@@ -219,7 +219,7 @@ caf_packet_new (int id, int pack_id, const char *pack_name) {
 				xfree (r);
 				r = (caf_packet_t *)NULL;
 			} else {
-				r->packets = lstdl_create ();
+				r->packets = deque_create ();
 			}
 		}
 	}
@@ -231,7 +231,7 @@ int
 caf_packet_delete (caf_packet_t *r) {
 	if (r != (caf_packet_t *)NULL) {
 		caf_pack_delete (r->pack);
-		lstdl_delete_nocb (r->packets);
+		deque_delete_nocb (r->packets);
 		return CAF_OK;
 	}
 	return CAF_ERROR;
@@ -244,10 +244,10 @@ caf_packet_addunit (caf_packet_t *r, int id, caf_unit_type_t type,
 	caf_unit_t *u = (caf_unit_t *)NULL;
 	if (r != (caf_packet_t *)NULL && type != CAF_UNIT_STRING) {
 		if (r->pack != (caf_pack_t *)NULL) {
-			if (r->pack->units != (lstdl_t *)NULL) {
+			if (r->pack->units != (deque_t *)NULL) {
 				u = caf_unit_new (id, type, length, 0, 0, 0, 0);
 				if (u != (caf_unit_t *)NULL) {
-					lstdl_push (r->pack->units, u);
+					deque_push (r->pack->units, u);
 					return CAF_OK;
 				}
 			}
@@ -263,11 +263,11 @@ caf_packet_addunitstr (caf_packet_t *r, int id, size_t length, void *u_start,
 	caf_unit_t *u = (caf_unit_t *)NULL;
 	if (r != (caf_packet_t *)NULL) {
 		if (r->pack != (caf_pack_t *)NULL) {
-			if (r->pack->units != (lstdl_t *)NULL) {
+			if (r->pack->units != (deque_t *)NULL) {
 				u = caf_unit_new (id, CAF_UNIT_STRING, length, u_start, u_end,
 				                  su_sz, eu_sz);
 				if (u != (caf_unit_t *)NULL) {
-					lstdl_push (r->pack->units, u);
+					deque_push (r->pack->units, u);
 					return CAF_OK;
 				}
 			}
@@ -283,11 +283,11 @@ caf_packet_addunitpstr (caf_packet_t *r, int id, size_t length,
 	caf_unit_t *u = (caf_unit_t *)NULL;
 	if (r != (caf_packet_t *)NULL) {
 		if (r->pack != (caf_pack_t *)NULL) {
-			if (r->pack->units != (lstdl_t *)NULL) {
+			if (r->pack->units != (deque_t *)NULL) {
 				u = caf_unit_new (id, CAF_UNIT_STRING, length, u_start,
 				                  (void *)NULL, 0, 0);
 				if (u != (caf_unit_t *)NULL) {
-					lstdl_push (r->pack->units, u);
+					deque_push (r->pack->units, u);
 					return CAF_OK;
 				}
 			}
@@ -350,8 +350,8 @@ caf_packet_getstr (caf_unit_t *u, void *b, size_t p) {
 
 size_t
 caf_packet_getsize (caf_packet_t *r) {
-	lstdl_t *l;
-	lstdln_t *n;
+	deque_t *l;
+	caf_dequen_t *n;
 	caf_unit_t *u;
 	size_t sz = 0;
 	if (r == (caf_packet_t *)NULL) {
@@ -361,9 +361,9 @@ caf_packet_getsize (caf_packet_t *r) {
 		return 0;
 	}
 	l = r->pack->units;
-	if (l != (lstdl_t *)NULL) {
+	if (l != (deque_t *)NULL) {
 		n = l->head;
-		while (n != (lstdln_t *)NULL) {
+		while (n != (caf_dequen_t *)NULL) {
 			u = (caf_unit_t *)n->data;
 			sz += (u->su_sz + u->eu_sz + u->length);
 			n = n->next;
@@ -375,7 +375,7 @@ caf_packet_getsize (caf_packet_t *r) {
 
 int
 caf_packet_parse (caf_packet_t *r, cbuffer_t *buf) {
-	lstdln_t *n = (lstdln_t *)NULL;
+	caf_dequen_t *n = (caf_dequen_t *)NULL;
 	caf_unit_t *u = (caf_unit_t *)NULL;
 	caf_unit_value_t *v = (caf_unit_value_t *)NULL;
 	void *ptr = (void *)NULL;
@@ -384,15 +384,15 @@ caf_packet_parse (caf_packet_t *r, cbuffer_t *buf) {
 	uint32_t *c32;
 	uint64_t *c64;
 	if (r != (caf_packet_t *)NULL && buf != (cbuffer_t *)NULL) {
-		if (r->pack != (caf_pack_t *)NULL && r->packets != (lstdl_t *)NULL) {
-			lstdl_delete_nocb (r->packets);
-			r->packets = lstdl_create ();
-			if (r->packets == (lstdl_t *)NULL) {
+		if (r->pack != (caf_pack_t *)NULL && r->packets != (deque_t *)NULL) {
+			deque_delete_nocb (r->packets);
+			r->packets = deque_create ();
+			if (r->packets == (deque_t *)NULL) {
 				return CAF_ERROR;
 			}
-			if (r->pack->units != (lstdl_t *)NULL) {
+			if (r->pack->units != (deque_t *)NULL) {
 				n = r->pack->units->head;
-				while (n != (lstdln_t *)NULL) {
+				while (n != (caf_dequen_t *)NULL) {
 					u = (caf_unit_t *)n->data;
 					switch (u->type) {
 					case CAF_UNIT_STRING:
@@ -422,7 +422,7 @@ caf_packet_parse (caf_packet_t *r, cbuffer_t *buf) {
 						break;
 					}
 					if (v != (caf_unit_value_t *)NULL) {
-						lstdl_push (r->packets, v);
+						deque_push (r->packets, v);
 						ptr = (void *)((size_t)ptr +
 						               caf_unit_get_size (u->type));
 					}
@@ -438,21 +438,21 @@ caf_packet_parse (caf_packet_t *r, cbuffer_t *buf) {
 
 int
 caf_packet_parse_machine (caf_packet_t *r, cbuffer_t *buf) {
-	lstdln_t *n = (lstdln_t *)NULL;
+	caf_dequen_t *n = (caf_dequen_t *)NULL;
 	caf_unit_t *u = (caf_unit_t *)NULL;
 	caf_unit_value_t *v = (caf_unit_value_t *)NULL;
 	void *ptr = (void *)NULL;
 	size_t pos = 0;
 	if (r != (caf_packet_t *)NULL && buf != (cbuffer_t *)NULL) {
-		if (r->pack != (caf_pack_t *)NULL && r->packets != (lstdl_t *)NULL) {
-			lstdl_delete_nocb (r->packets);
-			r->packets = lstdl_create ();
-			if (r->packets == (lstdl_t *)NULL) {
+		if (r->pack != (caf_pack_t *)NULL && r->packets != (deque_t *)NULL) {
+			deque_delete_nocb (r->packets);
+			r->packets = deque_create ();
+			if (r->packets == (deque_t *)NULL) {
 				return CAF_ERROR;
 			}
-			if (r->pack->units != (lstdl_t *)NULL) {
+			if (r->pack->units != (deque_t *)NULL) {
 				n = r->pack->units->head;
-				while (n != (lstdln_t *)NULL) {
+				while (n != (caf_dequen_t *)NULL) {
 					u = (caf_unit_t *)n->data;
 					switch (u->type) {
 					case CAF_UNIT_STRING:
@@ -476,7 +476,7 @@ caf_packet_parse_machine (caf_packet_t *r, cbuffer_t *buf) {
 						break;
 					}
 					if (v != (caf_unit_value_t *)NULL) {
-						lstdl_push (r->packets, v);
+						deque_push (r->packets, v);
 						ptr = (void *)((size_t)ptr +
 						               caf_unit_get_size (u->type));
 					}
@@ -492,7 +492,7 @@ caf_packet_parse_machine (caf_packet_t *r, cbuffer_t *buf) {
 
 cbuffer_t *
 caf_packet_translate (caf_packet_t *r) {
-	lstdln_t *un = (lstdln_t *)NULL;
+	caf_dequen_t *un = (caf_dequen_t *)NULL;
 	caf_unit_value_t *u = (caf_unit_value_t *)NULL;
 	cbuffer_t *buf = (cbuffer_t *)NULL;
 	size_t bsz = 0, pos = 0;
@@ -500,10 +500,10 @@ caf_packet_translate (caf_packet_t *r) {
 	uint32_t c32;
 	uint64_t c64;
 	if (r != (caf_packet_t *)NULL && buf != (cbuffer_t *)NULL) {
-		if (r->pack != (caf_pack_t *)NULL && r->packets != (lstdl_t *)NULL) {
-			if (r->pack->units != (lstdl_t *)NULL) {
+		if (r->pack != (caf_pack_t *)NULL && r->packets != (deque_t *)NULL) {
+			if (r->pack->units != (deque_t *)NULL) {
 				un = r->pack->units->head;
-				while (un != (lstdln_t *)NULL) {
+				while (un != (caf_dequen_t *)NULL) {
 					bsz += ((caf_unit_t *)un->data)->length;
 					un = un->next;
 				}
@@ -511,7 +511,7 @@ caf_packet_translate (caf_packet_t *r) {
 					buf = cbuf_create (bsz);
 					un = r->packets->head;
 					pos = (size_t)buf->data;
-					while (un != (lstdln_t *)NULL) {
+					while (un != (caf_dequen_t *)NULL) {
 						u = (caf_unit_value_t *)un->data;
 						switch (u->type) {
 						case CAF_UNIT_STRING:
@@ -552,15 +552,15 @@ caf_packet_translate (caf_packet_t *r) {
 
 cbuffer_t *
 caf_packet_translate_machine (caf_packet_t *r) {
-	lstdln_t *un = (lstdln_t *)NULL;
+	caf_dequen_t *un = (caf_dequen_t *)NULL;
 	caf_unit_value_t *u = (caf_unit_value_t *)NULL;
 	cbuffer_t *buf = (cbuffer_t *)NULL;
 	size_t bsz = 0, pos = 0;
 	if (r != (caf_packet_t *)NULL && buf != (cbuffer_t *)NULL) {
-		if (r->pack != (caf_pack_t *)NULL && r->packets != (lstdl_t *)NULL) {
-			if (r->pack->units != (lstdl_t *)NULL) {
+		if (r->pack != (caf_pack_t *)NULL && r->packets != (deque_t *)NULL) {
+			if (r->pack->units != (deque_t *)NULL) {
 				un = r->pack->units->head;
-				while (un != (lstdln_t *)NULL) {
+				while (un != (caf_dequen_t *)NULL) {
 					bsz += ((caf_unit_t *)un->data)->length;
 					un = un->next;
 				}
@@ -568,7 +568,7 @@ caf_packet_translate_machine (caf_packet_t *r) {
 					buf = cbuf_create (bsz);
 					un = r->packets->head;
 					pos = (size_t)buf->data;
-					while (un != (lstdln_t *)NULL) {
+					while (un != (caf_dequen_t *)NULL) {
 						u = (caf_unit_value_t *)un->data;
 						switch (u->type) {
 						case CAF_UNIT_STRING:

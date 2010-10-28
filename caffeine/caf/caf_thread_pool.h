@@ -26,7 +26,7 @@
 #define CAF_THREAD_POOL_H 1
 
 #include <pthread.h>
-#include <caf/caf_data_lstdl.h>
+#include <caf/caf_data_deque.h>
 
 /**
  * @defgroup      caf_thread_pool    Thread Pool Manager
@@ -74,7 +74,7 @@ struct pth_pool_s {
 	/** Thread Attributes */
 	pth_attri_t *attri;
 	/** Thread List */
-	lstdl_t *threads;
+	deque_t *threads;
 	/** Thread Routine */
 	CAF_PT_PROTOTYPE(rtn);
 };
