@@ -3,8 +3,8 @@ Caffeine, C Application Framework
 ===
 
 Caffeine is a C language based framework which uses C99, POSIX
-and SUSv3 standards, and system specific system calls Å\ Linux
-and FreeBSD for now Å\ to support the development of daemons and
+and SUSv3 standards, and system specific system calls -- Linux
+and FreeBSD for now -- to support the development of daemons and
 services. The idea is to have predefined algorithms to help you
 in some tasks for building your own daemons, command line
 applications and complex tasks such as integrating plugin
