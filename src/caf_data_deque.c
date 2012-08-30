@@ -279,18 +279,25 @@ deque_push (deque_t *lst, void *data) {
 caf_dequen_t *
 deque_pop (deque_t *lst) {
 	caf_dequen_t *ret = (caf_dequen_t *)NULL;
-	caf_dequen_t *ex;
+	caf_dequen_t *ex = (caf_dequen_t *)NULL;
 	if (lst != (deque_t *)NULL) {
-		ret = lst->tail;
-		if (ret != (caf_dequen_t *)NULL) {
-			ex = ret->prev;
-			if (ex != (caf_dequen_t *)NULL) {
-				ret->next = (void *)NULL;
-				ret->prev = (void *)NULL;
-				ex->next = (void *)NULL;
-				lst->tail = ex;
-				lst->size--;
-			}
+		if (deque_empty_list (lst) == CAF_OK) {
+			return ret;
+		} else if (deque_oneitem_list (lst) == CAF_OK) {
+			ret = lst->tail;
+			lst->head = (caf_dequen_t *)NULL;
+			lst->tail = (caf_dequen_t *)NULL;
+			ret->next = (void *)NULL;
+			ret->prev = (void *)NULL;
+			lst->size--;
+		} else {
+			ex = lst->tail->prev;
+			ret = lst->tail;
+			ret->next = (void *)NULL;
+			ret->prev = (void *)NULL;
+			ex->next = (void *)NULL;
+			lst->tail = ex;
+			lst->size--;
 		}
 	}
 	return ret;
