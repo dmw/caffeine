@@ -52,7 +52,7 @@ make
 
 ```
 
-In the bin directory resides a script called cmk.sh, it's script that
+In the bin directory resides a script called cmk.sh, it's a script that
 helps in the compilation of caffeine, setting verbose output and debug
 binaries generation, written to help in debugging tasks.
 
